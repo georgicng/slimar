@@ -1,0 +1,46 @@
+{% macro bold(name, primary) %}
+    {% if (primary == name) %}
+        btn-primary
+    {% else %}
+        btn-default
+    {% endif %}
+{% endmacro %}
+
+{% extends "./layout/layout.twig" %}
+
+{% block content %}
+{% import _self as check %}
+<div>
+   <div style="margin-bottom:10px">
+        <a href="index.php" class="btn {{ check.bold('latest', primary) }}">Latest</a>
+        <a href="index.php?s=rated" class="btn {{ check.bold('rated', primary) }}">Top Rated</a>
+        <a href="index.php?s=popular" class="btn {{ check.bold('popular', primary) }}">Popular</a>
+        <a href="index.php?s=random" class="btn {{ check.bold('random', primary) }}">Random</a>
+    </div>
+    <div class="row">
+        {% if games|length > 0 %}
+            {% for ind, g in games %}
+                <a href="game.php?g={{g['url']}}">
+                    <div class="col-sm-3 col-lg-3 col-md-4">						
+                        <div class='wrapper' >
+                            {% if ("hello" == "hello") %}
+                            <span style="background:#d72633;padding:5px 10px;border-radius:3px;color:white;position:absolute;margin:10px 10px;">NEW</span>
+                            {% endif %}
+                            <img class="img-responsive img-responsive2" src='{{g['image']}}' />
+                                                    
+                            <div class='description'>
+                                <p class='description_content'>{{g['title']}}</p>							
+                            </div>
+                        </div>						
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+                <div class="container">
+                    <div class="alert alert-warning" role="alert">There are no existing games</div>
+                </div>
+        {% endif %}						 
+    </div>
+	<a href="games.php" class="btn btn-primary">View ALL games</a>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<ul class="nav navbar-nav">
+    <li {% if (pagename == "home") %} class="active" {% endif %}>
+        <a href="index.php">Home </a>        
+    </li>
+	{% for index, cat in categories %}
+
+        <li>
+          <a href="cat.php?c={{ cat['title'] }}">{{ cat['title'] }}</a>
+        </li>
+	{% endfor %}
+</ul>

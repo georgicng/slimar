@@ -1,0 +1,166 @@
+{% extends "./layout/layout.twig" %}
+
+{% block content %}
+	<style>
+
+        @media (min-width: 1200px) {
+            .flash_container {
+            }
+        }
+
+        .fullscreen{
+            height: 100vh;
+            background:black;
+                width: 100vw;
+        }
+        .fullscreen-safari{
+            z-index: 9999; 
+            width: 100%; 
+            height: 100%; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+        }
+        .displaynone{
+            display:none;
+        }
+
+    </style>
+	<div id="player">
+		<div class="container-header blue-header" id="gameheader">{{ cur_game['title'] }}
+			<div style="Float:right;">
+				<button onclick="goFullscreen('player'); return false" style="background:none;border:none;color:white;">
+					<i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen
+                </button>
+            </div>
+		</div>
+		<div  class="img-responsive propersize flash_container">
+			{% if (not cur_game['file'])  %}
+				<div style="contentbg" style="padding:10px">
+				    <font>No game file has been added for this game. If you are an administrator you can edit this by the administration panel.</font>
+				</div>
+			{% endif %}
+			{% if (cur_game['type'] == "Flash")  %}
+                <object class="embed-responsive embed-responsive-16by9" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="myFlashContent" >
+                    <param name="movie" value="{{ cur_game['file'] }}">
+                    <!--[if !IE]>-->
+                    <object type="application/x-shockwave-flash" data="{{ cur_game['file'] }}" >
+                    <!--<![endif]-->
+                    <a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player"></a>
+                    <!-- [if !IE]>-->
+                    </object>
+                    <!--<![endif]-->
+                </object>
+			{% elseif ($cur_game['type'] == "HTML5")  %}
+				
+				<div class="embed-responsive embed-responsive-16by9">
+					{{ cur_game['file'] | raw }}					 
+				</div>
+				<br><br>
+			{% elseif ($cur_game['type'] == "HTML5-url")  %}
+				<!-- 16:9 aspect ratio -->
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive" width="100%" src="{{ cur_game['file'] }}"></iframe>
+                </div>
+				<br><br>
+			{% endif  %}		
+		</div>
+	</div>
+    <script type="text/javascript">
+        function goFullscreen(id) {
+            var element = document.getElementById(id);
+            var elementheader = document.getElementById("gameheader");
+            
+            
+            var userAgent = window.navigator.userAgent;
+            
+            
+            if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+                
+                    element.classList.add("fullscreen-safari");
+                    elementheader.classList.add("displaynone");
+                    
+            }
+            else {
+            
+            var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+                (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+                (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+                (document.msFullscreenElement && document.msFullscreenElement !== null);
+
+            var docElm = document.documentElement;
+            if (!isInFullScreen) {
+                element.classList.add("fullscreen");
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+                
+            } else {
+                element.classList.remove("fullscreen");
+                if (document.exitFullscreen) {
+                    element.classList.remove("fullscreen");
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+            
+            }
+        }
+    </script>
+	{% if (cur_game['id']) %}		
+		<div class="contentcontainer contentbg">
+			<div class="container-header blue-header">{{cur_game['title']}}</div>
+				<div style="padding:10px">
+					<div class="row">
+						<div class="col-sm-2 col-lg-2 col-md-2">											
+                            <div class='wrapper'>
+                                <img class="img-responsive img-responsive2 responsive-img2" src='{{cur_game['image']}}' />                            
+                            </div>
+						</div>
+						<div class="col-sm-4 col-lg-6 col-md-4">
+							<font style="font-size:20pt;">{{ cur_game['title'] }}</font><br>
+                            <B>Date:</b> {{ date('M d, Y', $cur_game['date']) }} - 
+                            <b>Category:</b> <a href="cat.php?c=<?php echo $cur_game_category['title']; ?>"> {{ cur_game_category['title'] }}</a>
+                            <br><br><B>Description:</b><br>
+                            {{ cur_game['description'] }}
+                            <br><br>
+						</div>
+						<div class="col-sm-4 col-lg-4 col-md-4" style="text-align:right;">
+                            {% if (total < 0) %}
+							    <span style="margin-left:-10px;color:red;font-weight:bold;padding:10px;background:#22252a;float:left;top:5px;">{{total}}</span>
+							{% else %}
+							    <span style="margin-left:-10px;color:green;font-weight:bold;padding:10px;background:#22252a;float:left;top:5px;">{{total}}</span>
+							{% endif %}
+							<form method="post" style="float:right;">
+								<button type="submit" class="btn {% if (rating['type'] == "pos") %} btn-fav {% else %} btn-fav2 {% endif %}" name="upvote"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Upvote</button>
+								<button type="submit" class="btn {% if (rating['type'] == "neg") %} btn-fav {% else %} btn-fav2 {% endif %}" name="downvote"><i class="fa fa-thumbs-down" aria-hidden="true"></i> Downvote</button>
+							</form>							
+							{% endif %}
+						</div>
+						{% if (in['id']) %}
+							{% if (fav['id']) %}
+								<form method="post" style="float:right;margin-right:15px;margin-top:5px;">
+									<button type="submit" class="btn btn-fav" name="fav_remove"><i class="fa fa-heart" aria-hidden="true"></i> Favourited</button>
+								</form>
+							{% else %}
+								<form method="post" style="float:right;margin-right:15px;margin-top:5px;">
+									<button type="submit" class="btn btn-fav2" name="fav_add"><i class="fa fa-heart-o" aria-hidden="true"></i> Add to favourites</button>
+								</form>
+							{% endif %}
+                        {% endif %}
+					</div>
+				</div>
+			</div> 
+            {{ include('partials/comments.twig') }}	  
+{% endblock %}

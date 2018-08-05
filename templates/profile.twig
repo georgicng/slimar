@@ -1,0 +1,257 @@
+{% extends "./layout/layout.twig" %}
+
+{% block content %}	
+    {% if (cur_user['id']) %}
+        {% if (in_perm['view_any_profile']== "1" || cur_user['viewprofile'] == "1" || cur_user['id'] == $in['id']) %}
+         <div class="row user-menu-container square">
+            <div class="col-md-12">
+                <div class="row coralbg white">
+                    <div class="col-md-5 no-pad">
+                        <div class="user-image">
+                            <img src="{{profilepic2}}"  class="img-responsive thumbnail" style="margin-top:20px;height:220px">
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-pad text-center">
+                        <div class="user-pad" style="margin-top:20px">
+                        <h2><span style="{{cur_user_perm['css']}}">{{cur_user['username'] | special}}</span><h2>
+						<h4 class="white">{{cur_user['gender']}} - {{ucfirst($cur_user_perm['name'])}} - {{cur_user['country']}}<br><Br><b>Games played:</b> {{cur_user['games_played']}}
+						<Br><b>Comments on games:</b> {{post_count}}
+						<br><b>Games rated:</b> {{rating_count}}</h4>
+                        <br>
+                       {% if (in['id'] && in['username'] != cur_user['username']) %}					   
+					   {% endif %}
+                    </div>
+                </div>               
+            </div>            
+        </div>
+		<div class="contentcontainer" >
+            <div class="" >
+                <div class="">
+			        <div class="container-header blue-header">Profile comments</div>
+                        <ul class="list-group" >
+				            <li class="list-group-item">
+                                <div class="row" style="margin-top:5px;">
+                                    <div class="col-xs-2 col-md-1 hidden-sm hidden-xs">
+							            {% if (in['id']) %}
+							                <img src="{{profilepic}}" class="img-circle" style="width:52px;height:52px" alt="" />
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-xs-12 col-md-11">
+                                        {% if (in['id']) %}
+                                        <div class="comment-text">
+                                            <form class="form" method="post">
+                                                <div class="form-group">
+                                                <input value="{{cur_user['id']}}" name="userid" style="display:none;"></input>
+                                                    <textarea style="resize: vertical;" class="form-control" name="message" id="exampleInputEmail1" placeholder="Write something..."></textarea>
+                                                    <input style="float:right;" class="btn btn-primary  btn-sm" type="submit" name="postcommentprofile" value="Submit">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+						        </div>
+				            </li>
+				        {% for (n1 in nodes2 ) %}
+                            <li class="list-group-item">
+                                <div class="row" style="margin-top:5px;">
+                                    <div class="col-xs-2 col-md-1 hidden-sm hidden-xs">
+                                        <a href="profile.php?u={{commentuser1['username']}}">
+                                        <img src="{{commentuser1_profilepic}}" class="img-circle " style="width:42px;height:42px" alt="" /></a>
+                                    </div>
+                                    <div class="col-xs-12 col-md-11">
+                                        <div>
+								            <div class="action" style="float:right;">
+								                {% if (in['id']) %}									
+									                <a href="#comment{{n1['id']}}">
+                                                        <button type="button" id="comment{{n1['id']}}" class="btn btn-success btn-xs" title="reply">
+                                                            <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                                                        </button>
+                                                    </a>
+                                                    {% if (commentuser1['us2ername'] == in["username"]) %}
+                                                        {% if (in['id']) %}
+                                                            <button type="button" class="btn btn-info btn-xs" title="like">
+                                                                <i class="fa fa-thumbs-up" aria-hidden="true"></i> Like
+                                                            </button>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% if (commentuser1['username'] == $in["username"] || in_perm['can_editcomment'] == "1") %}
+                                                        <button type="button" data-toggle="modal" data-target="#editcomment{{n1['id']}}" class="btn btn-warning btn-xs" title="Edit">
+                                                            <span class="glyphicon glyphicon-pencil"></span>
+                                                        </button>
+                                                    {% endif %}
+                                                    {% if (cur_user['username'] == $in["username"] || $commentuser1['username'] == in["username"] || in_perm['can_deletecomment'] == "1") %} 									
+                                                        {{ include('partials/modal_edit-comment.twig') }}
+                                                        {{ include('partials/modal_delete-comment.twig') }}
+                                                        <button type="button" data-toggle="modal" data-target="#delete{{n1['id']}}" class="btn btn-danger btn-xs" title="Delete">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    {% endif %}
+								                {% endif %}
+                                            </div>                                   
+                                            <div class="mic-info">
+                                                <a href="profile.php?u={{commentuser1['username']}}"><span style="{{commentuser1_perm['css']}};font-weight:Bold">{{commentuser1['username']}}</span></a>
+                                                <Small>on {{date('M d, Y h:ia T', $n1['date'])}} </small>
+                                            </div>
+                                        </div>
+                                        <div class="comment-text">
+                                            {{n1['message']}}
+                                        </div>
+                                        <!---replies-->
+                                        {% for (reply in replies) %}
+                                            <div class="row profilecomment_reply">
+                                                <div class="col-xs-2 col-md-1  hidden-sm hidden-xs">
+                                                    <a href="profile.php?u={{commentuser2['username']}}">
+                                                    <img src="{{commentuser1_profilepic}}" class="img-circle " style="width:42px;height:42px" alt="" /></a>
+                                                </div>
+                                                <div class="col-xs-2 col-md-1  visible-sm visible-xs">
+                                                </div>
+                                                <div class="col-xs-10 col-md-11 ">
+                                                    <div>
+                                                        <div class="action" style="float:right;">
+                                                            {% if (commentuser2['userna2me'] == in["username"]) %}
+                                                                {% if (in['id']) %}
+                                                                    <button type="button" class="btn btn-info btn-xs" title="like">
+                                                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i> Like
+                                                                    </button>
+                                                                {% endif %}
+                                                            {% endif %}									
+                                                            {% if (commentuser2['username'] == in["username"] || in_perm['can_editcomment'] == "1") %}
+                                                                <button type="button" data-toggle="modal" data-target="#editcomment{{n2['id']}}" class="btn btn-warning btn-xs" title="Edit">
+                                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                                </button>
+                                                            {% endif %}
+                                                            {% if (cur_user['username'] == $in["username"] || $commentuser2['username'] == $in["username"] || $in_perm['can_deletecomment'] == "1") %}
+                                                                {{ include('partials/modal_edit-comment.twig') }}
+                                                                {{ include('partials/modal_delete-comment.twig') }}
+                                                                <button type="button" data-toggle="modal" data-target="#delete{{n2['id']}}" class="btn btn-danger btn-xs" title="Delete">
+                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                </button>
+                                                            {% endif %}
+                                                        </div>                                   
+                                                        <div class="mic-info">
+                                                            <a href="profile.php?u={{commentuser2['username']}}"><span style="{{commentuser2_perm['css']}};font-weight:Bold">{{commentuser2['username']}}</span></a>
+                                                            <Small>on {{date('M d, Y h:ia T', $n2['date'])}} </small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comment-text">
+                                                        {{n2['message']}}
+                                                    </div>                                
+                                            <!-- replies here-->
+                                                </div>							
+                                            </div>
+				                        {% endfor %}				
+				                        <!-- replies here-->
+				                        <script>
+                                            $(document).ready(function(){
+                                                $("#comment{{n1['id']}}").click(function(){
+                                                    $( "#commentbox{{n1['id']}}" ).fadeIn( "slow", function() {});
+                                                });
+                                            });
+									    </script>	
+                                        <div class="row profilecomment_reply" id="commentbox{{n1['id']}}" style="display:none;">
+                                            <div class="col-xs-2 col-md-1  hidden-sm hidden-xs">
+                                            <img src="{{profilepic}}" class="img-circle" style="width:42px;height:42px" alt="" />
+                                            </div>
+                                            <div class="col-xs-2 col-md-1  visible-sm visible-xs">
+                                            </div>
+                                            <div class="col-xs-10 col-md-11 " >
+                                                <div>								
+                                                    {% if (in['id']) %}
+                                                        <div class="mic-info"  >
+                                                            <form class="form" method="post">
+                                                                <div class="form-group">
+                                                                <input value="{{cur_user['id']}}" name="userid" style="display:none;"></input>
+                                                                <input value="{{n1['id']}}" name="postid" style="display:none;"></input>
+                                                                    <textarea style="resize: vertical;" class="form-control" name="message" id="exampleInputEmail1" placeholder="Write something..."></textarea>
+                                                                    <input style="float:right;" class="btn btn-primary  btn-sm" type="submit" name="postreplyprofile" value="Submit">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    {% endif %}									
+                                                </div>                              
+                                            </div>
+                                        </div>
+						                <!--end of reply -->
+                                    </div>							
+                                </div>
+                            </li>					
+                        {% endfor %}
+                        <nav aria-label="Page navigation"style="padding-left:10px">
+                            <ul class="pagination">    
+                                {% if (page == 1) %}		
+                                    <li>
+                                        <a href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a> 
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="'.$currenturl.'&page='.$lastpage.'#comment" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for (pageNumber in range(1, $totalNumberOfPages) ) %}
+                                    {% if (not $pageNumber == "0") %}
+                                        <li><a href="{{currenturl}}&page={{pageNumber}}#comment">{{pageNumber}}</a></li>';
+                                    {% endif %}
+                                {% endfor %}
+                                {% if (page == totalNumberOfPages) %}	
+                                    <li>
+                                        <a href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="'.$currenturl.'&page='.$nextpage.'#comment" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}                                
+                            </ul>
+                        </nav>
+                    </ul>
+                </div> 
+            </div>                 				 
+		</div>
+	  </div>	  
+	  <div class="col-md-12" style="padding:10px;">
+        <div class="contentcontainer contentbg">
+	        <div class="container-header blue-header">Favourite games {{favourite_count}}</div>
+	            <div class="content-container">
+                    {% for (game2 in u2) %}		
+                        <div class="col-xs-3 col-sm-2 col-md-3">
+                            <a href="game.php?g={{game['url']}}" class="" >
+                                <img src="{{game['image']}}" style="border:4px solid #292c32;border-radius:3px;height:52px;width:52px;" alt="...">
+                            </a>
+                        </div>
+                    {% endif %}				 
+                </div>
+            </div>
+        </div>
+        <div class="contentcontainer contentbg">
+            <div class="container-header blue-header">Most played games</div>
+                <div class="content-container">
+                    {% for (game in u2) %}					
+                        <div class="col-xs-3 col-sm-2 col-md-3">
+                            <a href="game.php?g={{game['url']}}" class="" >
+                                <img src="{{game['image']}}" style="border:4px solid #292c32;border-radius:3px;height:52px;width:52px;" alt="...">
+                            </a>
+                        </div>
+	                {% endfor %}				 
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+{% endif %}
+{% else %}
+    <div class="col-md-12" style="padding:10px;">
+        <div class="contentcontainer">
+        <div class="title-pink">ERROR: User has hidden their profile </div>
+        The current profile you are trying to access is hidden!<br><Br><B>If you do not believe this error is correct, please report this to a site administrator, or try again!</b>	
+    </div>		
+{% endif %}
+
+{% endblock %}

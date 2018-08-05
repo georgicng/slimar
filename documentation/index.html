@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SlimarGame Documentation</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">      
+    <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/plugins/prism/prism.css">
+    <link rel="stylesheet" href="assets/plugins/elegant_font/css/style.css">
+    <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
+
+    
+</head> 
+
+<body class="body-blue">
+    <div class="page-wrapper">
+        <!-- ******Header****** -->
+        <header id="header" class="header">
+            <div class="container">
+                <div class="branding">
+                    <h1 class="logo">
+                          SlimarGame - Documentation
+                        
+                    </h1>
+                </div>
+            </div><!--//container-->
+        </header><!--//header-->
+        <div class="doc-wrapper">
+            <div class="container">
+            
+                <div class="doc-body">
+                    <div class="doc-content">
+                        <div class="content-inner">
+                           
+                            <section id="installation-section" class="doc-section">
+                                <h2 class="section-title">Installation</h2>
+                                <div id="step1"  class="section-block">
+                                    <h3 class="block-title">Installation requirements</h3>
+                                    <p>In order to successfully install and operate SlimarGame your server must meet the following requirements<br></p>
+									<p>
+										<tab>PHP 5.4 or higher<br></tab>
+										<tab>PHP PDO Extention<br></tab>
+										<tab>PHP Extention<br></tab>
+                                    </p>
+                                </div><!--//section-block-->
+                                <div id="step2"  class="section-block">
+                                    <h3 class="block-title">File permissions</h3>
+                                    <p>For a successful setup of SlimarGame, you will need to change folder permissions.<br>
+									<b>The following will need the file permissions to be to be set as <code>777</code></b>
+									
+									<br>
+									<tab>files/uploads<br></tab>
+									<tab>inc/details.php<br></tab>
+									<a href="http://www.dummies.com/web-design-development/wordpress/navigation-customization/how-to-change-file-permissions-using-filezilla-on-your-ftp-site/">A simple guide on how to do this using FileZilla can be found here</a>
+                                    </p>
+                                    
+                                </div><!--//section-block-->
+                                <div id="step3"  class="section-block">
+                                    <h3 class="block-title">Installing SlimarGame</h3>
+                                    <p>Now you are ready to install SlimarGame. Firstly you will need to upload the contents of the downloaded ZIP file to a webserver that has the requirements listed above. After you have uploaded your files, you will now need to create a database. The installation wizard is very simple and easy to use.</p>
+									<br><p>
+									<h4>Step 1</h4>
+									When going to your website, you should be greeted with an installation wizard which looks like the below image. The url should be something similar to <code>yourdomain.com/install/</code>. The first page will contain information about permissions that will be set. Make sure these permissions are set before continuing. Once ready, proceed by clicking "Install SlimarGame"
+									</p>
+									<img src="assets/images/install1.png" width="80%">
+                                    </p>
+									<br><p>
+									<h4>Step 2</h4>
+									This is an important step, to make sure your database is installed correctly. By this point you should have already created a new database. Simply enter your database details in below. If you are unsure, contact your web host for information.
+									</p>
+									<img src="assets/images/install2.png" width="80%">
+                                    </p>
+									<br><p>
+									<h4>Step 3</h4>
+									This step should contain a notice stating that the configuration file was succesfully generated. If for some reason you have experienced an error, please return to step 1 and make sure the permissions are correct!
+									</p>
+									<img src="assets/images/install3.png" width="80%">
+                                    </p>
+									<br><p>
+									<h4>Step 4</h4>
+									This last step of the wizard will state that your installation was successful. You will be provided with the default login. <code>admin@admin.com - admin123</code>.<br><b>As soon as you are able to login, please change these immediately! </b>
+									</p>
+									<img src="assets/images/install4.png" width="80%">
+                                    </p>
+									<br><p>
+									<h4>Step 5</h4>
+									As soon as you are logged in, and after you have changed the default email and password, you should straight away head to the administration panel, and fix up the site settings. The main settings that should be changed are, the title, email address and of course the site url. Once finished, your site is ready!
+									</p>
+									</p>
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            
+                            <section id="addinggames" class="doc-section">
+                                <h2 class="section-title">Adding games</h2>
+								<p>
+								Adding games into SlimarGame is simple. You have 4 choices on how to do so. 
+								<br>1. Upload SWF file <br>2. SWF file url<br> 3. File url HTML5, <br> 4. Embedded HTML5
+								</p>
+								
+								<p>
+								You can download your very own SWF files across the internet. A quick simple search SWF game download will find you plenty. But here are some sites you can download them from:
+								<br><a href="http://www.kongregate.com/games_for_your_site" target="_new">Kongregate</a>
+								<br><a href="http://www.notdoppler.com/webmasters.php" target="_new">NotDoppler</a>
+								<br><a href="https://www.miniclip.com/webmasters/en/" target="_new">Miniclip</a>
+								<br>Once downloaded simply go to your administration panel, and edit a game after adding and upload the downloaded SWF.<br><br>You may also be able to use a direct link to the swf, if you upload it yourself by FTP or to a different website.<br><br>Adobe Flash is outdated, and is no longer being used on many websites. Many browsers have pulled their support, instead forcing HTML5. You will be able to find many HTML5 games and also add them to your site using SlimarGame. With the HTML File url choice, you can direct a HTML5 game page directly to your website. Or you can use an embedded script code to add the game.
+								
+								
+								</p>
+								</section>
+								
+								<section id="code-section" class="doc-section">
+                                <h2 class="section-title">Login & Registeration</h2>
+                                <div class="section-block">
+                                    <p>
+										SlimarGame provides two already set up login pages, and also a login in the top navigation. After login, cookies will be set for the users login. This will contain the user id, and the password. At each action throughout the site, this password and id will be checked from the database to see if it is correct, to be secure. Once logged in, the user will be redirected to the administrators chosen page. By default this will be the<code> dashboard.php</code>.
+										<br><Br>Users are able to create an account by going to the registeration page. This page will be <code>signup.php</code>. If wanting to, the administrator can choose to turn registeration off by the Administration Panel under site settings. This will disallow anyone to register.<br><br>On both the login, and registeration are opptional captchas. These can be turned off indivudually for either registeration or login by the site settings in the admin panel.
+										<br><br>SlimarGame contains a password reset feature, to allow users to reset their password incase they forget it. The user will be able to enter their email address, and an email will be sent out. The website administrator MUST enter their email address and web host email server in the site settings in the administration panel for this to correctly function.
+                                    </p>
+                                    
+                                </div>
+								
+								
+                            <section id="extending-section" class="doc-section">
+                                <h2 class="section-title">Extending the usage of SlimarGame</h2>
+                                <div class="section-block">
+                                    <p>You can use the SlimarGame system for many different projects. You can use it as a standlone website as it stands currently, or you can use it to build a new website as a starting point, or you can integrate it into your existing website. Below you will find out how to use the features of SlimarGame to your advantage.
+                                    </p>
+									<p><h4>Page requirements</h4>
+									At the top of <b>EVERY</b> page, should be the below code. This is the requirement of the config.php file. This config is the most important thing for the use of SlimarGame. The config file controls the database, functions, and manages the user features.
+									<br><code class="language-php">&lt;?php 
+									<br>
+									ob_start();
+									require "inc/config.php";
+									<br>
+									?&gt;</code></pre>
+									
+									</p><br>
+									<p><h4>Getting site information</h4>
+									You can easily recieve any particular site information. Put the following codes anywhere that is relevant to you
+									<br><b>Site title:</b> <code class="language-php">&lt;?php echo $i['title']; ?&gt;</code></pre>
+									<br><b>Site url:</b> <code class="language-php">&lt;?php echo $i['url']; ?&gt;</code></pre>
+									
+									</p>
+									<br>
+									<p><h4>Getting signed in user information</h4>
+									This will help you retrieve the current signed in users information.
+									<br><b>Username:</b> <code class="language-php">&lt;?php echo $in['username']; ?&gt;</code></pre>
+									<br><b>Usergroup [ID]:</b> <code class="language-php">&lt;?php echo $i['usergroup']; ?&gt;</code></pre>
+									<br><b>Usergroup [Name]:</b> <code class="language-php">&lt;?php echo $in_perm['name']; ?&gt;</code></pre>
+									<br><b>First name:</b> <code class="language-php">&lt;?php echo $in['firstname']; ?&gt;</code></pre>
+									<br><b>Country:</b> <code class="language-php">&lt;?php echo $in['country']; ?&gt;</code></pre>
+									<br><b>Gender:</b> <code class="language-php">&lt;?php echo $in['gender']; ?&gt;</code></pre>
+									<br><b>Email address:</b> <code class="language-php">&lt;?php echo $in['email']; ?&gt;</code></pre>
+									<br><b>URL to profile picture:</b> <code class="language-php">&lt;?php echo $in['profilepic']; ?&gt;</code></pre>
+									</p>
+									<br>
+									<p><h4>Checking if statements</h4>
+									Using if statements around certain things will allow you to check if certain things are true.
+									<br><b>If is logged in</b> 
+										<code class="language-php">&lt;?php if($in['id']){ ?&gt;</code> [Show if logged in here]
+										<code class="language-php">&lt;?php } ?&gt;</code>
+									</pre><br>
+									
+									<br><b>If not logged in</b> 
+										<code class="language-php">&lt;?php if(!$in['id']){ ?&gt;</code> [Show if not logged in here]
+										<code class="language-php">&lt;?php } ?&gt;</code>
+									</pre><br>
+									
+									<br><b>If has administration rights</b> 
+										<code class="language-php">&lt;?php if($in_perm['has_admin'] == "1"){ ?&gt;</code> [Show if admin]
+										<code class="language-php">&lt;?php } ?&gt;</code>
+									</pre><br>
+									
+									<br><b>If verified</b> 
+										<code class="language-php">&lt;?php if($in['verified'] == "1"){ ?&gt;</code> [Show verified here]
+										<code class="language-php">&lt;?php } ?&gt;</code>
+									</pre><br>
+									
+									<br><b>If has certain permission</b> 
+										<code class="language-php">&lt;?php if($in_perm['(PERMISSION HERE)'] == "1"){ ?&gt;</code> [Show if permission true here]
+										<code class="language-php">&lt;?php } ?&gt;</code>
+									</pre><br>
+									</p>
+									<br>
+									<p><h4>User logging in and registeration</h4>
+									<h5>Login</h5>
+									Allowing users to login or register by any form is simple. 
+									<br><br>
+									
+									The form must have <code>method="post"</code>. One input with the type <b>email</b> and  <code>name="email"</code>, another input with the type <b>password</b> and <code>name="password"</code>.<br>To finish this form off, it must have a input button with <code>name="login"</code>. You should also include a PHP if statement to check if captchas are enabled. Check the below example to check how this is done.
+									<br><br><b>Example complete code:</b><br>
+									<pre class="language-php" style="text-align:left">
+&lt;form method="post"&gt;
+	&lt;input placeholder='Email address' name='email' type='email'>
+	&lt;input placeholder='Password' name='password' type='password'>	
+	
+	&lt;?php if($i['captcha'] == "1"){ ?> 
+		&lt;img src="inc/captcha.php" style="float:left;"/>
+		&lt;input placeholder='Captcha' maxlength="4" style="width:225px"  name="captcha" type="text">
+	&lt;?php }?>
+	
+	&lt;input type="submit" name="login" value="Login">
+&lt;/form>
+									</pre>
+									
+									</p>
+									<p>
+									<h5>Registeration</h5>
+									As the same with the login, the form must have <code>method="post"</code>. Text field with <code>name="username"</code, text with <code>name="firstname"</code>, email input with <code>name="email"</code>, date type with <code>name="dob"</code>, password input with <code>name="password"</code>, a password input with <code>name="password2"</code>, and a text input with <code>name="refer"</code>. An input button should be included with <code>name="register"</code>. As again, you should also include a PHP if statement to check if captchas are enabled. Check the below example.
+									
+									<pre class="language-php" style="text-align:left">
+&lt;form class="form" method="post">
+	&lt;input type="text" name="username" placeholder="Username" required>
+	&lt;input type="text" name="firstname" placeholder="First name" required>
+	&lt;input type="email" name="email" placeholder="Email address" required>
+	&lt;input type="date" name="dob" placeholder="Email address" required>
+	&lt;input type="password" name="password" placeholder="Password" required>
+    &lt;input type="password" name="password2" placeholder="Password" required>
+    &lt;input type="text" name="refer" placeholder="" value="<?php echo $_GET['refer']; ?>">
+                                             
+	<?php if($i['captcha_reg'] == "1"){ ?>
+		&lt;img src="inc/captcha.php" style="float:left;"/>
+		&lt;input placeholder='Captcha' style="width:170px;padding:9px;color:#272727;" maxlength="4" name="captcha" type="text">
+	<?php } ?>
+			
+	&lt;input type="submit" name="register" class="btn btn-pink btn-block" value="Register">
+&lt;/form>									
+									</pre>
+									
+									</p>
+									</section>
+									  <section id="integration-section" class="doc-section">
+                                <h2 class="section-title">Integration</h2>
+								<p>
+								If you already have a PHP powered website, you may be wanting to integrate SlimarGame into it. Below you will be able to learn how to do this.
+								</p>
+								
+								<p>
+								1. First you should make sure you have copied over the contents of the <code>inc/</code> directory. You may remove the folder themes if wanting to. <br>
+								2. Every page that you create/have should have the below code at the top of the page 
+								<br><code class="language-php">&lt;?php 
+									<br>
+									ob_start();
+									require "inc/config.php";
+									<br>
+									?&gt;</code></pre>
+								<br>3. Your website should now be partly operated by SlimarGame. Make sure if you have not done so already, to run the installation wizard to set up your database and details.php file.
+								<br>4. To get certain information like site title, or signed in user, please check out the above information under "Extending the usage of SlimarGame.
+								
+								<br><Br>You will be able to go through the example pages provided with SlimarGame to find out more. Example to find out how to secure your website go check out secure.php.
+								</p>
+								</section>
+								
+								
+								
+                        </div><!--//content-inner-->
+                    </div><!--//doc-content-->
+                    <div class="doc-sidebar hidden-xs">
+                        <nav id="doc-nav">
+                            <ul id="doc-menu" class="nav doc-menu" data-spy="affix">
+                                
+                                <li>
+                                    <a class="scrollto" href="#installation-section">Installation & setup</a>
+                                   
+                                </li>
+								<li>
+                                    <a class="scrollto" href="#addinggames">Adding games</a>
+                                   
+                                </li>
+                                <li>
+                                    <a class="scrollto" href="#code-section">Login & Registeration</a>
+                                   
+                                </li>
+								 <li>
+                                    <a class="scrollto" href="#extending-section">Extending the use</a>
+                                   
+                                </li>
+								<li>
+                                    <a class="scrollto" href="#integration-section">Integration</a>
+                                   
+                                </li>
+                                
+                            </ul><!--//doc-menu-->
+                        </nav>
+                    </div><!--//doc-sidebar-->
+                </div><!--//doc-body-->              
+            </div><!--//container-->
+        </div><!--//doc-wrapper-->
+        
+     
+    <!-- Main Javascript -->          
+    <script type="text/javascript" src="assets/plugins/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>    
+    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>                                                                
+    <script type="text/javascript" src="assets/plugins/jquery-match-height/jquery.matchHeight-min.js"></script>
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    
+</body>
+</html> 
+

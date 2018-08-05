@@ -1,0 +1,21 @@
+<div class="modal fade" id="editcomment{{n1['id']}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit comment</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form" method="post">
+                    <div class="form-group">
+                        <input value="{{cur_user['id']}}" name="userid" style="display:none;"></input>
+                        <textarea style="resize: vertical;" class="form-control" name="message" id="exampleInputEmail1" placeholder="">{{n1['message']}}</textarea>
+                    </div>
+
+                    <input type="submit" name="editcomment{{n1['id']}}" class="btn btn-warning" value="Edit">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>        
+        </div>
+    </div>
+</div>
