@@ -1,0 +1,23 @@
+<div class="row profilecomment_reply" id="commentbox{{n1['id']}}" style="display:none;">
+    <div class="col-xs-2 col-md-1  hidden-sm hidden-xs">
+        <img src="{{profilepic}}" class="img-circle" style="width:42px;height:42px" alt="" />
+    </div>
+    <div class="col-xs-2 col-md-1  visible-sm visible-xs">
+    </div>
+    <div class="col-xs-10 col-md-11 ">
+        <div>
+            {% if (in['id']) %}
+            <div class="mic-info">
+                <form class="form" method="post">
+                    <div class="form-group">
+                        <input value="{{cur_user['id']}}" name="userid" style="display:none;"></input>
+                        <input value="{{n1['id']}}" name="postid" style="display:none;"></input>
+                        <textarea style="resize: vertical;" class="form-control" name="message" id="exampleInputEmail1" placeholder="Write something..."></textarea>
+                        <input style="float:right;" class="btn btn-primary  btn-sm" type="submit" name="postreplyprofile" value="Submit">
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

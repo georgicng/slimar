@@ -1,146 +1,158 @@
-{% extends "./layout/layout_full.twig" %}
-
-{% block content %}
-    <div class="col-md-6 " style="padding:10px;">
+{% extends "./layout/layout_full.twig" %} {% block content %}
+<div class="col-md-6 " style="padding:10px;">
     <div class="contentcontainer">
-        <div class="container-header blue-header">Change account settings</div>			
+        <div class="container-header blue-header">Change account settings</div>
+        <form method="post">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" name="email" value="{{in['email']}}" id="exampleInputEmail1" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <label for="name">First name</label>
+                <input type="text" class="form-control" id="name" name="firstname" placeholder="First name" value="{{in['firstname']}}">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputFile">Country</label>
+                <select name="country" class="form-control">
+                    {% for country in countries %}
+                    <option {% if (in[ 'country']==c ountry) %} selected {% endif %} value="{{country}}">{{country}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="timeZone">Timezone
+                    <br />
+                    <select id="timeZone" class="form-control" name="timezone">
+                        {{ timezone | raw }}
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail2">Date of birth</label>
+                <input type="date" name="dob" class="form-control" value="{{in['dob']}}" required>
+            </div>
+            <div class="form-group">
+                <label for="hide_offline">Hide offline
+                    <small>Other users won't be able to see if you are online</small>
+                    <br />
+                    <select id="hide_offline" name="hide_offline">
+                        <option {% if (in[ 'hide_offline']=="0" ) %} selected {% endif %} value="0">No</option>
+                        <option {% if (in[ 'hide_offline']=="1" ) %} selected {% endif %} value="1">Yes</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="viewprofile">Profile hidden
+                    <small>Hide your profile from users</small>
+                    <br />
+                    <select id="viewprofile" name="viewprofile">
+                        <option {% if (in[ 'viewprofile']=="0" ) %} selected {% endif %} value="0">No</option>
+                        <option {% if (in[ 'viewprofile']=="1" ) %} selected {% endif %} value="1">Yes</option>
+                    </select>
+                </label>
+            </div>
+            <input type="submit" style="float:left;" class="btn btn-primary" value="Update information" name="updatesettings">
+        </form>
+    </div>
+</div>
+
+<div class="col-md-6" style="padding:10px;">
+    <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#collapsePassword" aria-expanded="false"
+        aria-controls="collapsePassword" style="width:100%;text-align:left;">
+        Change password
+    </button>
+    <div class="collapse" id="collapsePassword">
+        <div class="well">
             <form method="post">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" name="email" value="{{in['email']}}" id="exampleInputEmail1" placeholder="Email">
+                    <label>Current password</label>
+                    <input type="password" class="form-control" placeholder="Current password" name="currentpassword"></input>
                 </div>
                 <div class="form-group">
-                    <label for="name">First name</label>
-                    <input type="text" class="form-control" id="name" name="firstname" placeholder="First name" value="{{in['firstname']}}">
+                    <label>New password</label>
+                    <input type="password" class="form-control" placeholder="New password" name="newpassword"></input>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputFile">Country</label>
-                    <select name="country" class="form-control">				
-                        {% for (country in countries) %}
-                            <option {% if (in['country'] == $country) %} selected {% endif %} value="{{country}}">{{country}}</option>
-                        {% endfor %}
-                    </select>
+                    <label>Confirm new password</label>
+                    <input type="password" class="form-control" placeholder="Confirm password" name="confirmpassword"></input>
                 </div>
-                <div class="form-group">
-                    <label for="timeZone">Timezone<br />
-                        <select id="timeZone" class="form-control" name="timezone">
-                            {{ timezone | raw }}
-                        </select>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label  for="exampleInputEmail2">Date of birth</label>
-                    <input type="date" name="dob" class="form-control" value="{{in['dob']}}" required>
-                </div>			  
-                <div class="form-group">
-                    <label for="hide_offline">Hide offline <small>Other users won't be able to see if you are online</small><br />
-                        <select id="hide_offline" name="hide_offline">
-                            <option {% if (in['hide_offline'] == "0") %}  selected {% endif %} value="0">No</option>
-                            <option {% if (in['hide_offline'] == "1") %}  selected {% endif %} value="1">Yes</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label for="viewprofile">Profile hidden <small>Hide your profile from users</small><br />
-                        <select id="viewprofile" name="viewprofile">
-                            <option {% if (in['viewprofile'] == "0") %}  selected {% endif %} value="0">No</option>
-                            <option {% if (in['viewprofile'] == "1") %}  selected {% endif %} value="1">Yes</option>
-                        </select>
-                    </label>
-                </div>
-                <input type="submit" style="float:left;"class="btn btn-primary" value="Update information" name="updatesettings">
-            </form>				 
+                <input type="submit" class="btn btn-primary" value="Update password" name="updatepassword">
+            </form>
         </div>
     </div>
-	  
-	<div class="col-md-6" style="padding:10px;">
-	    <button class="btn btn-success" type="button" data-toggle="collapse" data-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword" style="width:100%;text-align:left;">
-            Change password
+    <div class="contentcontainer" style="margin-top:10px">
+        <div class="container-header blue-header">Update profile picture</div>
+        {% if (gravatar_cond == "true") %}
+        <div style="background:#e1e1e1;padding:5px;">
+            <img src="https://d13yacurqjgara.cloudfront.net/users/4085/screenshots/2072398/gravatar.png" width="50px"> Gravatar has been detected with your email address
+        </div>
+        {% endif %}
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseGravatar" aria-expanded="false"
+            aria-controls="collapseGravatar" style="width:100%;text-align:left;">
+            Set Gravatar as profile picture
         </button>
-		<div class="collapse" id="collapsePassword">
-			<div class="well">
-				<form method="post">
-                    <div class="form-group">
-                        <label>Current password</label>
-                        <input type="password" class="form-control" placeholder="Current password" name="currentpassword"></input>
-                    </div>				
-                    <div class="form-group">
-                        <label>New password</label>
-                        <input type="password" class="form-control" placeholder="New password" name="newpassword"></input>
-                    </div>				
-                    <div class="form-group">
-                        <label>Confirm new password</label>
-                        <input type="password" class="form-control" placeholder="Confirm password" name="confirmpassword"></input>
-                    </div>
-				    <input type="submit" class="btn btn-primary" value="Update password" name="updatepassword">
-				</form>
-			</div>
-		</div>
-	    <div class="contentcontainer" style="margin-top:10px">
-		    <div class="container-header blue-header">Update profile picture</div>
-                {% if (gravatar_cond == "true") %}
-                    <div style="background:#e1e1e1;padding:5px;">
-                        <img src="https://d13yacurqjgara.cloudfront.net/users/4085/screenshots/2072398/gravatar.png" width="50px"> Gravatar has been detected with your email address
-                    </div>
-                {% endif %}			
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseGravatar" aria-expanded="false" aria-controls="collapseGravatar" style="width:100%;text-align:left;">
-                    Set Gravatar as profile picture
-                </button>
-			    <div class="collapse" id="collapseGravatar">
-			        <div class="well">
-				        <div class="form-group">To update or setup Gravatar, <a href="https://en.gravatar.com/connect/">click here</a> <br><br>
-				            {% if (gravatar_cond == "true") %}
-				                <form method="post">
-                                    <label for="usegravatar">Use gravatar<br />
-                                        <select id="usegravatar" name="usegravatar">
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
-                                    </label>
-				                    <img src="<?php echo gravatar}}" style="height:100px;float:right;">
-				                    <br>
-				                    <button type="submit" name="enablegravatar" class="btn btn-default">Submit</button>
-				                </form>
-				            {% else %}
-				                No gravatar has been linked to this email: <b>{{in['email']}}</b>
-                            {% endif %}
-				        </div>
-			        </div>			 
-			    </div>			
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAvatar" aria-expanded="false" aria-controls="collapseAvatar" style="width:100%;text-align:left;">
-                    Upload new profile picture
-                </button>
-                <div class="collapse" id="collapseAvatar">
-                    <div class="well">
-                        <form method="post" enctype="multipart/form-data">
-			                <label>Upload Avatar</label>
-                            <div class="form-group">
-                                <input type="file" class="btn btn-default" name="fileToUpload" id="fileToUpload">
-                                <input type="submit" style="float:left;"class="btn btn-primary" value="Upload Image" name="uploadavatar">
-                            </div>
-		                </form>
-			        </div>
-			    </div>
-		        <br><br>
-		        <div class="container-header blue-header">Update profile information </div>
+        <div class="collapse" id="collapseGravatar">
+            <div class="well">
+                <div class="form-group">To update or setup Gravatar,
+                    <a href="https://en.gravatar.com/connect/">click here</a>
+                    <br>
+                    <br> {% if (gravatar_cond == "true") %}
                     <form method="post">
-                        <div class="form-group">
-                            <label for="hide_offline">Gender<br />
-                                <select id="hide_offline" name="gender">
-                                    <option value="Male" {% if (in['gender'] == "Male") %}  selected {% endif %}>Male</option>
-                                    <option value="Female" {% if (in['gender'] == "Female") %}  selected {% endif %}>Female</option>
-                                    <option value="(unspecified)" {% if (in['gender'] == "(unspecified)") %}  selected {% endif %}>(unspecified)</option>
-                                </select>
-				            </label>
-			            </div>			  
-                        <div class="form-group">
-                            <label for="name">About</label></b>
-                            <textarea class="form-control" name="aboutme" style="height:100px">{{in['aboutme']}}</textarea>
-                        </div>
-			            <input type="submit" style="float:left;"class="btn btn-primary" value="Update information" name="updateabout">
-	                </form>
-		        </div>
+                        <label for="usegravatar">Use gravatar
+                            <br />
+                            <select id="usegravatar" name="usegravatar">
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </label>
+                        <img src="<?php echo gravatar}}" style="height:100px;float:right;">
+                        <br>
+                        <button type="submit" name="enablegravatar" class="btn btn-default">Submit</button>
+                    </form>
+                    {% else %} No gravatar has been linked to this email:
+                    <b>{{in['email']}}</b>
+                    {% endif %}
+                </div>
             </div>
-	    </div>
+        </div>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseAvatar" aria-expanded="false"
+            aria-controls="collapseAvatar" style="width:100%;text-align:left;">
+            Upload new profile picture
+        </button>
+        <div class="collapse" id="collapseAvatar">
+            <div class="well">
+                <form method="post" enctype="multipart/form-data">
+                    <label>Upload Avatar</label>
+                    <div class="form-group">
+                        <input type="file" class="btn btn-default" name="fileToUpload" id="fileToUpload">
+                        <input type="submit" style="float:left;" class="btn btn-primary" value="Upload Image" name="uploadavatar">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="container-header blue-header">Update profile information </div>
+        <form method="post">
+            <div class="form-group">
+                <label for="hide_offline">Gender
+                    <br />
+                    <select id="hide_offline" name="gender">
+                        <option value="Male" {% if (in[ 'gender']=="Male" ) %} selected {% endif %}>Male</option>
+                        <option value="Female" {% if (in[ 'gender']=="Female" ) %} selected {% endif %}>Female</option>
+                        <option value="(unspecified)" {% if (in[ 'gender']=="(unspecified)" ) %} selected {% endif %}>(unspecified)</option>
+                    </select>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="name">About</label>
+                </b>
+                <textarea class="form-control" name="aboutme" style="height:100px">{{in['aboutme']}}</textarea>
+            </div>
+            <input type="submit" style="float:left;" class="btn btn-primary" value="Update information" name="updateabout">
+        </form>
     </div>
+</div>
+</div>
+</div>
 {% endblock %}

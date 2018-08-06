@@ -1,41 +1,34 @@
-{% macro bold(name, primary) %}
-    {% if (primary == name) %}
-        btn-primary
-    {% else %}
-        btn-default
-    {% endif %}
-{% endmacro %}
-
-{% extends "./layout/layout.twig" %}
-
-{% block content %}
-    {% import _self as check %}					
-    <div style="margin-bottom:10px">
-        <a href="cat.php?c={{category['title']}}" {% if (sort == '') %}class="btn btn-primary"{% else %} class="btn btn-default" {% endif %}>Latest</a>
-        <a href="cat.php?c={{category['title']}}&s=rated" {% if (sort == "rated") %}class="btn btn-primary"{% else %} class="btn btn-default" {% endif %}>Top Rated</a>
-        <a href="cat.php?c={{category['title']}}&s=popular" {% if (sort == "popular") %}class="btn btn-primary"{% else %} class="btn btn-default" {% endif %}>Popular</a>
-        <a href="cat.php?c={{category['title']}}&s=random" {% if (sort == "random") %}class="btn btn-primary"{% else %} class="btn btn-default" {% endif %}>Random</a>
+{% macro bold(name, primary) %} {% if (primary == name) %} btn-primary {% else %} btn-default {% endif %} {% endmacro %}
+{% extends "./layout/layout.twig" %} {% block content %} {% import _self as check %}
+<div style="margin-bottom:10px">
+    <a href="cat.php?c={{category['title']}}" {% if (sort=='' ) %}class="btn btn-primary" {% else %} class="btn btn-default"
+        {% endif %}>Latest</a>
+    <a href="cat.php?c={{category['title']}}&s=rated" {% if (sort=="rated" ) %}class="btn btn-primary" {% else %} class="btn btn-default"
+        {% endif %}>Top Rated</a>
+    <a href="cat.php?c={{category['title']}}&s=popular" {% if (sort=="popular" ) %}class="btn btn-primary" {% else %} class="btn btn-default"
+        {% endif %}>Popular</a>
+    <a href="cat.php?c={{category['title']}}&s=random" {% if (sort=="random" ) %}class="btn btn-primary" {% else %} class="btn btn-default"
+        {% endif %}>Random</a>
+</div>
+<div class="row">
+    {% for ind,g in games %}
+    <a href="game.php?g={{g['url']}}">
+        <div class="col-sm-3 col-lg-3 col-md-4">
+            <div class='wrapper'>
+                {% if ("hello" == "hello") %}
+                <span style="background:#d72633;padding:5px 10px;border-radius:3px;color:white;position:absolute;margin:10px 10px;">NEW</span>
+                {% endif %}
+                <img class="img-responsive img-responsive2" src='{{g[' image ']}}' />
+                <div class='description'>
+                    <p class='description_content'>{{g['title']}}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %} {% if (count | length == 0) %}
+    <div class="container">
+        <div class="alert alert-warning" role="alert">No games were found. Please try a different search</div>
     </div>
-	<div class="row">
-		{% for (ind,g in games) %}
-            <a href="game.php?g={{g['url']}}">
-                <div class="col-sm-3 col-lg-3 col-md-4">						
-					<div class='wrapper' >
-						{% if ("hello" == "hello") %}
-						    <span style="background:#d72633;padding:5px 10px;border-radius:3px;color:white;position:absolute;margin:10px 10px;">NEW</span>
-						{% endif %}
-						<img class="img-responsive img-responsive2" src='{{g['image']}}' />												
-						<div class='description'>
-							<p class='description_content'>{{g['title']}}</p>							
-						</div>
-					</div>						
-				</div>
-            </a>
-        {% endfor %}
-        {% if (count | length == 0) %}
-            <div class="container">
-                <div class="alert alert-warning" role="alert">No games were found. Please try a different search</div>
-            </div>                
-        {% endif %}
-    </div>			
+    {% endif %}
+</div>
 {% endblock %}

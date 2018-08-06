@@ -1,0 +1,40 @@
+<div class="row profilecomment_reply">
+    <div class="col-xs-2 col-md-1  hidden-sm hidden-xs">
+        <a href="profile.php?u={{commentuser2['username']}}">
+            <img src="{{commentuser1_profilepic}}" class="img-circle " style="width:42px;height:42px" alt="" />
+        </a>
+    </div>
+    <div class="col-xs-2 col-md-1  visible-sm visible-xs">
+    </div>
+    <div class="col-xs-10 col-md-11 ">
+        <div>
+            <div class="action" style="float:right;">
+                {% if (commentuser2['userna2me'] == in["username"]) %} {% if (in['id']) %}
+                <button type="button" class="btn btn-info btn-xs" title="like">
+                    <i class="fa fa-thumbs-up" aria-hidden="true"></i> Like
+                </button>
+                {% endif %} {% endif %} {% if (commentuser2['username'] == in["username"] || in_perm['can_editcomment'] == "1") %}
+                <button type="button" data-toggle="modal" data-target="#editcomment{{n2['id']}}" class="btn btn-warning btn-xs" title="Edit">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                {% endif %} {% if (cur_user['username'] == in["username"] || commentuser2['username'] == in["username"] || in_perm['can_deletecomment']
+                == "1") %} {{ include('partials/modal_edit-comment.twig') }} {{ include('partials/modal_delete-comment.twig')
+                }}
+                <button type="button" data-toggle="modal" data-target="#delete{{n2['id']}}" class="btn btn-danger btn-xs" title="Delete">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                {% endif %}
+            </div>
+            <div class="mic-info">
+                <a href="profile.php?u={{commentuser2['username']}}">
+                    <span style="{{commentuser2_perm['css']}};font-weight:Bold">{{commentuser2['username']}}</span>
+                </a>
+                <Small>on {{date('M d, Y h:ia T', n2['date'])}} </small>
+            </div>
+        </div>
+        <div class="comment-text">
+            {{n2['message']}}
+        </div>
+        <!-- replies here-->
+    </div>
+</div>

@@ -37,7 +37,7 @@ if ($in['id']) {
         $gamesplayed2['month_played'] = date("F", strtotime("first day of this month"));
         R::store($gamesplayed2);
     } elseif ($gameplayed == 0) {
-        $entry = R::dispense('games_played');
+        $entry = R::xdispense('games_played');
         $stmt = $dbh->prepare("INSERT INTO games_played (user_id, game_id, time, month_played, times_played) VALUES (:user_id, :game_id, :time, :month, 1)");
         $entry->user_id = $in['id'];
         $entry->game_id = $cur_game['id'];

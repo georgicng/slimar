@@ -1,0 +1,79 @@
+<li class="list-group-item">
+    <div class="row" style="margin-top:5px;">
+        <div class="col-xs-2 col-md-1 hidden-sm hidden-xs">
+            <a href="profile.php?u={{commentuser1['username']}}">
+                <img src="{{commentuser1_profilepic}}" class="img-circle " style="width:42px;height:42px" alt="" />
+            </a>
+        </div>
+        <div class="col-xs-12 col-md-11">
+            <div>
+                <div class="action" style="float:right;">
+                    {% if (in['id']) %}
+                    <a href="#comment{{n1['id']}}">
+                        <button type="button" id="comment{{n1['id']}}" class="btn btn-success btn-xs" title="reply">
+                            <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                        </button>
+                    </a>
+                    {% if (commentuser1['us2ername'] == in["username"]) %} {% if (in['id']) %}
+                    <button type="button" class="btn btn-info btn-xs" title="like">
+                        <i class="fa fa-thumbs-up" aria-hidden="true"></i> Like
+                    </button>
+                    {% endif %} {% endif %} {% if (commentuser1['username'] == in["username"] || in_perm['can_editcomment'] == "1") %}
+                    <button type="button" data-toggle="modal" data-target="#editcomment{{n1['id']}}" class="btn btn-warning btn-xs" title="Edit">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </button>
+                    {% endif %} {% if (cur_user['username'] == in["username"] || commentuser1['username'] == in["username"] || in_perm['can_deletecomment']
+                    == "1") %} {{ include('partials/modal_edit-comment.twig') }} {{ include('partials/modal_delete-comment.twig')
+                    }}
+                    <button type="button" data-toggle="modal" data-target="#delete{{n1['id']}}" class="btn btn-danger btn-xs" title="Delete">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                    {% endif %} {% endif %}
+                </div>
+                <div class="mic-info">
+                    <a href="profile.php?u={{commentuser1['username']}}">
+                        <span style="{{commentuser1_perm['css']}};font-weight:Bold">{{commentuser1['username']}}</span>
+                    </a>
+                    <Small>on {{date('M d, Y h:ia T', n1['date'])}} </small>
+                </div>
+            </div>
+            <div class="comment-text">
+                {{n1['message']}}
+            </div>
+            <!---replies-->
+            {% for reply in replies %} {% endfor %}
+            <!-- replies here-->
+            <script>
+                $(document).ready(function () {
+                    $("#comment{{n1['id']}}").click(function () {
+                        $("#commentbox{{n1['id']}}").fadeIn("slow", function () {});
+                    });
+                });
+            </script>
+            <div class="row profilecomment_reply" id="commentbox{{n1['id']}}" style="display:none;">
+                <div class="col-xs-2 col-md-1  hidden-sm hidden-xs">
+                    <img src="{{profilepic}}" class="img-circle" style="width:42px;height:42px" alt="" />
+                </div>
+                <div class="col-xs-2 col-md-1  visible-sm visible-xs">
+                </div>
+                <div class="col-xs-10 col-md-11 ">
+                    <div>
+                        {% if (in['id']) %}
+                        <div class="mic-info">
+                            <form class="form" method="post">
+                                <div class="form-group">
+                                    <input value="{{cur_user['id']}}" name="userid" style="display:none;"></input>
+                                    <input value="{{n1['id']}}" name="postid" style="display:none;"></input>
+                                    <textarea style="resize: vertical;" class="form-control" name="message" id="exampleInputEmail1" placeholder="Write something..."></textarea>
+                                    <input style="float:right;" class="btn btn-primary  btn-sm" type="submit" name="postreplyprofile" value="Submit">
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!--end of reply -->
+        </div>
+    </div>
+</li>

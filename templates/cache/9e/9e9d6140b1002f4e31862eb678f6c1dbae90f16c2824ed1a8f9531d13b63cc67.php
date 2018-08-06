@@ -44,7 +44,7 @@ class __TwigTemplate_636c380c37c28050c79e6b8815a0590a70c30e002daf2cffcab0ddcb894
         // line 16
         echo $context["check"]->macro_bold("rated", ($context["primary"] ?? null));
         echo "\">Top Rated</a>
-        <a href=\"index.php?s=popular\"class=\"btn ";
+        <a href=\"index.php?s=popular\" class=\"btn ";
         // line 17
         echo $context["check"]->macro_bold("popular", ($context["primary"] ?? null));
         echo "\">Popular</a>
@@ -175,7 +175,7 @@ class __TwigTemplate_636c380c37c28050c79e6b8815a0590a70c30e002daf2cffcab0ddcb894
    <div style=\"margin-bottom:10px\">
         <a href=\"index.php\" class=\"btn {{ check.bold('latest', primary) }}\">Latest</a>
         <a href=\"index.php?s=rated\" class=\"btn {{ check.bold('rated', primary) }}\">Top Rated</a>
-        <a href=\"index.php?s=popular\"class=\"btn {{ check.bold('popular', primary) }}\">Popular</a>
+        <a href=\"index.php?s=popular\" class=\"btn {{ check.bold('popular', primary) }}\">Popular</a>
         <a href=\"index.php?s=random\" class=\"btn {{ check.bold('random', primary) }}\">Random</a>
     </div>
     <div class=\"row\">

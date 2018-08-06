@@ -15,7 +15,7 @@ $cat = Request\get('c');
 $search = Request\post('search-text');
 
 if (!empty($search)) {
-    if (!empty(Request\get('go')) { 
+    if (!empty(Request\get('go'))) { 
         //Extra input security. Only letters and numbers are allowed
         if (preg_match("/[^A-Za-z0-9\ ]/", $search)) {
             $searchvalue = "error-wrong";
@@ -45,4 +45,4 @@ $shouldTwigDebug = true;
 Twig\init('./templates', './templates/cache', $shouldTwigDebug)
     ->addExtension(new Twig_Extension_Debug());
     
-echo Twig\render('cat.twig', $data);
+echo Twig\render('search.twig', $data);

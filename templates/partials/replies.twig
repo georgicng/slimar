@@ -1,0 +1,12 @@
+<!---replies-->
+{% for reply in replies %} {{ include('partials/reply.twig') }} {% endfor %}
+<!-- replies here-->
+<script>
+    $(document).ready(function () {
+        $("#comment{{n1['id']}}").click(function () {
+            $("#commentbox{{n1['id']}}").fadeIn("slow", function () {});
+        });
+    });
+</script>
+{{ include('partials/reply_form.twig') }}
+<!--end of reply -->
