@@ -28,42 +28,55 @@
 
     <ul class="nav menu">
         
-        <li <?php if($pagename=="home") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="home") {
+    echo 'class="active"';
+}?>>
             <a href="index.php"> <i class="fa fa-home" aria-hidden="true"></i> Dashboard</a>
         </li>
-        <li <?php if($pagename=="manage_games") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="manage_games") {
+    echo 'class="active"';
+}?>>
             <a href="manage_games.php"><i class="fa fa-gamepad" aria-hidden="true"></i> Games</a>
         </li>
-        <li <?php if($pagename=="manage_categories") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="manage_categories") {
+    echo 'class="active"';
+}?>>
             <a href="manage_categories.php"><i class="fa fa-folder" aria-hidden="true"></i> Categories</a>
         </li>
-        <li <?php if($pagename=="manage_pages") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="manage_pages") {
+    echo 'class="active"';
+}?>>
             <a href="manage_pages.php"><i class="fa fa-folder" aria-hidden="true"></i> Pages</a>
         </li>
-        <li <?php if($pagename=="manage_users") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="manage_menus") {
+    echo 'class="active"';
+}?>>
+            <a href="manage_menus.php"><i class="fa fa-folder" aria-hidden="true"></i> Menus</a>
+        </li>
+        <li <?php if ($pagename=="manage_users") {
+    echo 'class="active"';
+}?>>
             <a href="manage_users.php"><i class="fa fa-user" aria-hidden="true"></i> Users</a>
         </li>
         <hr>
             
-        <li <?php if($pagename=="activitylog") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="activitylog") {
+    echo 'class="active"';
+}?>>
             <a href="activitylog.php"><i class="fa fa-list" aria-hidden="true"></i> Activity log</a>
         </li>
-        <li <?php if($pagename=="site_settings") { echo 'class="active"';
-       }?>>
+        <li <?php if ($pagename=="site_settings") {
+    echo 'class="active"';
+}?>>
             <a href="site_settings.php"><i class="fa fa-cog" aria-hidden="true"></i> Site settings</a>
         </li>
         
         
         
     </ul>
-    <div style="background:#0f1115;position: fixed;bottom: 0;width: 100%;padding:5px;font-size:9pt;" <?php if($pagename=="site_settings") { echo 'class="active"';
-   }?>>
+    <div style="background:#0f1115;position: fixed;bottom: 0;width: 100%;padding:5px;font-size:9pt;" <?php if ($pagename=="site_settings") {
+    echo 'class="active"';
+}?>>
     <?php echo $i['title'];?> &copy; 2017. All rights reserved
         <a href="../"><span style="color:#57595e;float:right;">Return to homepage ></span></a>
     </div>
