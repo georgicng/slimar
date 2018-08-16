@@ -17,7 +17,7 @@ $data = array_merge(
     $variables,
     [
         'pagename' => $page['title'],
-        'page' => $page
+        'page' => $page['content']
     ]
 );
 

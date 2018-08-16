@@ -1,13 +1,25 @@
 <?php
 //require_once SITE_ROOT.'/inc/config.php';
 require "BootstrapMenu.php";
+
+use RedBeanPHP\Facade as R;
+
 $str = '[{"text":"Home", "href": "#home", "title": "Home"}, {"text":"About", "href": "#", "title": "About", "children": [{"text":"Action", "href": "#action", "title": "Action"}, {"text":"Another action", "href": "#another", "title": "Another action"}]}, {"text":"Something else here", "href": "#something", "title": "Something else here"}]';
-$qMenu = new BootstrapMenu(array('data'=>$str));
-$qMenu->setActiveItem('http://codeignitertutoriales.com');
-$qMenu->insert(array("text"=>'Ooh!', "href"=>'http://codeignitertutoriales.com', "title"=>'Awesome'), 'Another action', 'About');
-$qMenu->insert(array("text"=>'Ultimo item', "href"=>'https://github.com/davicotico', "title"=>'My Github'));
-$qMenu->replace(array('text'=>'About Wow', 'href'=>'about', 'title'=>'Hey'), 'Home');
-$menu = $qMenu->html(); ?>
+
+$menu = R::findOne('menus', ' position = ?', ['main']);
+//error_log('menu: '.html_entity_decode($menu['content']));
+$header_menu = new BootstrapMenu(
+    array(
+        'data'=>html_entity_decode(html_entity_decode($menu['content']))
+    )
+);
+$menu = R::findOne('menus', ' position = ?', ['footer']);
+//error_log('menu 2: '.json_encode($menu));
+$footer_menu =  new BootstrapMenu(
+    array(
+        'data'=>html_entity_decode($menu['content'])
+    )
+);
 
 return [
     'categories' => include __DIR__.'/data/categories.php',
@@ -19,5 +31,6 @@ return [
     'success' => $success,
     'profilepic' =>  $profilepic,
     'currenturl' => $currenturl,
-    'menu' => $menu
+    'header_menu' => $header_menu,
+    'footer_menu' => $footer_menu
 ];
