@@ -140,7 +140,8 @@ if (empty($_GET['p'])) {
                                     $stmt1->execute(); 
                                     $last_id = $stmt1->fetch();
                                     $latestid = $last_id['id'] + 1;
-                                    $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+                                    //$currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+                                    $currenturl = $i['url'];
                                             
                                     $random = rand();
                                     $stmt = $dbh->prepare("INSERT INTO games (id, title, description, category_id, status, url) VALUES (:id, :title, :description, :category_id, :status, :url)");
