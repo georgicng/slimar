@@ -1,5 +1,9 @@
 {% extends "./layout/layout.twig" %} {% block content %}
 <div class="content-container">
-    {{ page | raw }}
+    {% if (page) %}
+        {{ page | raw }}
+    {% else %}
+        <div class="alert alert-warning"> Page not found </div>
+    {% endif %}
 </div>
 {% endblock %}

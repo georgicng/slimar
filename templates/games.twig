@@ -12,10 +12,10 @@
 {% import _self as check %}
 <div>
    <div style="margin-bottom:10px">
-        <a href="index.php" class="btn {{ check.bold('latest', primary) }}">Latest</a>
-        <a href="index.php?s=rated" class="btn {{ check.bold('rated', primary) }}">Top Rated</a>
-        <a href="index.php?s=popular" class="btn {{ check.bold('popular', primary) }}">Popular</a>
-        <a href="index.php?s=random" class="btn {{ check.bold('random', primary) }}">Random</a>
+        <a href="games.php" class="btn {{ check.bold('latest', primary) }}">Latest</a>
+        <a href="games.php?s=rated" class="btn {{ check.bold('rated', primary) }}">Top Rated</a>
+        <a href="games.php?s=popular" class="btn {{ check.bold('popular', primary) }}">Popular</a>
+        <a href="games.php?s=random" class="btn {{ check.bold('random', primary) }}">Random</a>
     </div>
     <div class="row">
         {% if games|length > 0 %}
@@ -41,6 +41,5 @@
                 </div>
         {% endif %}						 
     </div>
-	<a href="games.php" class="btn btn-primary">View ALL games</a>
 </div>
 {% endblock %}

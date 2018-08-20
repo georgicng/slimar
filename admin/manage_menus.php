@@ -25,7 +25,6 @@ if (empty($_GET['p'])) {
 <head>
 <?php include "inc/head.php"; ?>
 <link rel="stylesheet" href="css/bootstrap-iconpicker.min.css">
-<script src="js/jquery-1.11.1.min.js"></script>
 </head>
 
 <body>
@@ -143,13 +142,11 @@ if (empty($_GET['p'])) {
         $stmt1->bindValue(':id', $_GET['id']);
         $stmt1->execute();
         $menu = $stmt1->fetch();
-        error_log(json_encode($_POST));
             
         if (isset($_POST['updatemenu'])) {
             $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
             activitylog(''.$in['username'].'', 'updated menu '.$menu['name'].'', ''.time().'', 'Admin');
             $sql = "UPDATE menus SET name='".$_POST['name']."', status='".$_POST['status']."', position='".$_POST['position']."', content='".htmlentities($_POST['content'])."' WHERE id=".$menu['id']."";
-            error_log('sql: ', $sql);
             $query = $dbh->prepare($sql);
             $query->execute();
             $success = "Menu updated";
@@ -168,29 +165,28 @@ if (empty($_GET['p'])) {
                                     <div class="panel-heading">Add Menu Item</div>
                                     <div class="panel-body">
                                         <form id="frmEdit" class="form-horizontal">
-                                            <input type="hidden" name="mnu_icon" id="mnu_icon">
                                             <div class="form-group">
-                                                <label for="mnu_text" class="col-sm-2 control-label">Text</label>
+                                                <label for="text" class="col-sm-2 control-label">Text</label>
                                                 <div class="col-sm-10">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control item-menu" id="mnu_text" name="mnu_text" placeholder="Text">
+                                                        <input type="text" class="form-control item-menu" id="text" name="text" placeholder="Text">
                                                         <div class="input-group-btn">
-                                                            <button id="mnu_iconpicker" class="btn btn-default" data-iconset="fontawesome" data-icon="" type="button"></button>
+                                                            <button type="button" id="menuList_icon" class="btn btn-default" data-iconset="fontawesome"></button>
                                                         </div>
                                                         <input type="hidden" name="icon" class="item-menu">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="mnu_href" class="col-sm-2 control-label">URL</label>
+                                                <label for="href" class="col-sm-2 control-label">URL</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control item-menu" id="mnu_href" name="mnu_href" placeholder="URL">
+                                                    <input type="text" class="form-control item-menu" id="href" name="href" placeholder="URL">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="mnu_target" class="col-sm-2 control-label">Target</label>
+                                                <label for="target" class="col-sm-2 control-label">Target</label>
                                                 <div class="col-sm-10">
-                                                    <select id="mnu_target" name="mnu_target" class="form-control item-menu">
+                                                    <select id="target" name="target" class="form-control item-menu">
                                                     <option value="_self">Self</option>
                                                     <option value="_blank">Blank</option>
                                                     <option value="_top">Top</option>
@@ -198,9 +194,9 @@ if (empty($_GET['p'])) {
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="mnu_title" class="col-sm-2 control-label"><a href="https://www.jqueryscript.net/tooltip/">Tooltip</a></label>
+                                                <label for="title" class="col-sm-2 control-label"><a href="https://www.jqueryscript.net/tooltip/">Tooltip</a></label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control item-menu" id="mnu_title" name="mnu_title" placeholder="Text">
+                                                    <input type="text" class="form-control item-menu" id="title" name="title" placeholder="Text">
                                                 </div>
                                             </div>                                            
                                         </form>
@@ -211,7 +207,7 @@ if (empty($_GET['p'])) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading clearfix">
                                         <h5 class="pull-left">Create/Edit Menu</h5>
@@ -268,63 +264,6 @@ if (empty($_GET['p'])) {
 				</div>
 			</div>
         </div>
-        <script>
-             $(document).ready(function() {
-                // icon picker options
-                var iconPickerOpt = {};
-
-                // menu builder options
-                var options = {
-                    hintCss: {'border': '1px dashed #13981D'},
-                    placeholderCss: {'background-color': 'gray'},
-                    ignoreClass: 'btn',
-                    opener: {
-                        active: true,
-                        as: 'html',
-                        close: '<i class="fa fa-minus"></i>',
-                        open: '<i class="fa fa-plus"></i>',
-                        openerCss: {'margin-right': '10px'},
-                        openerClass: 'btn btn-success btn-xs'
-                    }
-                };
-
-                // initialize the menu builder
-                editor = new MenuEditor('menuList', {
-                    listOptions: options, 
-                    iconPicker: iconPickerOpt, 
-                    labelEdit: 'Edit', 
-                    labelRemove: 'X'
-                });
-                //[{"href":"http://home.com","icon":"fa fa-home","text":"Home"},{"icon":"fa fa-bar-chart-o","text":"Opcion2"},{"icon":"fa fa-cloud-upload","text":"Opcion3"},{"icon":"fa fa-crop","text":"Opcion4"},{"icon":"fa fa-flask","text":"Opcion5"},{"icon":"fa fa-search","text":"Opcion7","children":[{"icon":"fa fa-plug","text":"Opcion7-1","children":[{"icon":"fa fa-filter","text":"Opcion7-2","children":[{"icon":"fa fa-map-marker","text":"Opcion6"}]}]}]}];
-                var arrayJson = $('#content').val();
-
-                editor.setData(arrayJson);
-
-                editor.setForm($('#frmEdit'));
-                editor.setUpdateButton($('#btnUpdate'));                
-                
-                $("#btnUpdate").click(function(){
-                    editor.update();
-                });
-                $('#btnAdd').click(function(){
-                    editor.add();
-                });
-
-
-                //var str = editor.getString();
-                //$("#myTextarea").text(str);
-                $('#frmMenu').submit(function() {
-                    console.log('menu: ', editor.getString());
-                    menu = editor.getString();
-                    $("#content").val(menu);
-                });
-
-                $('#btnOut').on('click', function () {
-                    $("#frmMenu").submit();
-                });
-            });
-        </script>
-
         <?php
     } ?>
 		<?php if ($menu == "delete") {
@@ -363,13 +302,11 @@ if (empty($_GET['p'])) {
     } ?>
 		          
     </div>	<!--/.main-->
-
-    
+    <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src='js/iconset/iconset-fontawesome-4.7.0.min.js'></script>
     <script src='js/bootstrap-iconpicker.js'></script>
-    <script src='js/jquery-menu-editor.min.js'></script>
-
+    <script src='js/jquery-menu-editor.min.js'></script>    
     <script>
         !function ($) {
             $(document).on("click","ul.nav li.parent > a > span.icon", function(){		  
@@ -385,6 +322,48 @@ if (empty($_GET['p'])) {
         $(window).on('resize', function () {
             if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
         });
+
+         <?php if ($page == "edit") { ?>
+            $(document).ready(function() {
+                //icon picker options
+                var iconPickerOptions = {searchText: 'Search...', labelHeader: '{0} of {1} Pages.'};
+                //sortable list options
+                var sortableListOptions = {
+                    placeholderCss: {'background-color': 'cyan'}
+                };
+
+                // initialize the menu builder
+                editor = new MenuEditor('menuList', {
+                    listOptions: sortableListOptions, 
+                    iconPicker: iconPickerOptions, 
+                    labelEdit: 'Edit'
+                });
+
+                var arrayJson = $('#content').val();
+
+                editor.setData(arrayJson);
+
+                editor.setForm($('#frmEdit'));
+                editor.setUpdateButton($('#btnUpdate'));                
+                
+                $("#btnUpdate").click(function(){
+                    editor.update();
+                });
+
+                $('#btnAdd').click(function(){
+                    editor.add();
+                });
+
+                $('#frmMenu').submit(function() {
+                    menu = editor.getString();
+                    $("#content").val(menu);
+                });
+
+                $('#btnOut').on('click', function () {
+                    $("#frmMenu").submit();
+                });
+            });
+         <?php } ?>
 
     </script>	
 </body>

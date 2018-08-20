@@ -4,19 +4,18 @@ $admin = true;
 require "../inc/config.php";
 
 //This will be required for the active page in navigation
-$pagename = "manage_usergroups";
+$pagename = "manage_categories";
 //Sets last active time for forums [This is to check if the user is online or not]
 
-if(!$in_perm['has_admin']) {
+if (!$in_perm['has_admin']) {
     header("location: ../index.php");
     exit;
 }
 
-$p = $_GET['p'];
-if(empty($_GET['p'])) {
+if (empty($_GET['p'])) {
     $page = "home";
-}else{
-    $page = $p;
+} else {
+    $page = $_GET['p'];
 }
 ?>
 
@@ -51,14 +50,14 @@ if(empty($_GET['p'])) {
                     <div class="panel-body">
         <?php
         //Post comment
-        if(isset($_POST["addusergroup"])) {
+        if(isset($_POST["addcategory"])) {
                         
             if($in["username"]) {
                             
                 $name = $_POST['category_name'];
                             
                             
-                activitylog(''.$in['username'].'', 'commented on a profile', ''.time().'');
+                activitylog(''.$in['username'].'', 'added a new category', ''.time().'');
                 $stmt = $dbh->prepare("INSERT INTO games_categories (title, status) VALUES (:title, '1')");
                 $stmt->bindParam(':title', $name);
                             
@@ -71,8 +70,8 @@ if(empty($_GET['p'])) {
                         <form method="post">
                             <div class="form-group">
                                 <input type="text" name="category_name" placeholder="Name of new category" class="form-control"></input>
-                                 <input type="submit" style="float:left;"class="btn btn-primary" value="Add category" name="addusergroup">
                             </div>
+                            <input type="submit" style="float:left;"class="btn btn-primary" value="Add category" name="addcategory">
                         </form>
                     </div>
                 </div>
@@ -129,17 +128,17 @@ if(empty($_GET['p'])) {
         $stmt1 = $dbh->prepare("SELECT * FROM games_categories WHERE `id` = :id"); 
         $stmt1->bindValue(':id', $_GET['id']);
         $stmt1->execute(); 
-        $group = $stmt1->fetch();
+        $category = $stmt1->fetch();
+        error_log("out: ".json_encode($_POST));   
             
-            
-        if(isset($_POST['updateusergroup'])) {
-
+        if (isset($_POST['updatecategory'])) {
+            error_log("In: ".json_encode($_POST));
             $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-            activitylog(''.$in['username'].'', 'updated usergroup '.$group['name'].'', ''.time().'', 'Admin');
+            activitylog(''.$in['username'].'', 'updated category '.$category['title'].'', ''.time().'', 'Admin');
                     
-            $sql = $dbh->prepare("UPDATE games_categories SET title='".$_POST['title']."', status='".$_POST['status']."' WHERE id=".$group['id']."");
-            $sql->execute();
-            $success = "Account updated";
+            $update_query = $dbh->prepare("UPDATE games_categories SET title='".$_POST['title']."', status='".$_POST['status']."' WHERE id='".$_GET['id']."'");
+            $update_query->execute(); 
+            $success = "Category updated";
             header("location: manage_categories.php");
 
         }
@@ -147,28 +146,25 @@ if(empty($_GET['p'])) {
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Edit category: <?php echo $group['title']; ?></div>
+                    <div class="panel-heading">Edit category: <?php echo $category['title']; ?></div>
                     <div class="panel-body">
                     
                         <form method="post">
                             <div class="form-group">
                                 <label>Name of category</label>
-                                <input type="text" name="title" value="<?php echo $group['title']; ?>" class="form-control"></input>
+                                <input type="text" name="title" value="<?php echo $category['title']; ?>" class="form-control"></input>
                             </div>
                             <hr>
                             <div class="form-group">
                                 <label>Status</label>
                                 <select name="status" class="form-control">
-                                    <option <?php if($group['status'] == "1") { echo 'selected'; 
+                                    <option <?php if($category['status'] == "1") { echo 'selected'; 
                                    } ?> value="1">Active</option>
-                                    <option <?php if($group['status'] == "0") { echo 'selected'; 
+                                    <option <?php if($category['status'] == "0") { echo 'selected'; 
                                    } ?> value="0">Inactive</option>
                                 </select>
                             </div>
-                            
-                            
-                            
-                             <input type="submit" style="float:left;"class="btn btn-primary" value="Update category" name="updateusergroup">
+                             <input type="submit" style="float:left;"class="btn btn-primary" value="Update category" name="updatecategory">
                         </form>
                     </div>
                 </div>
@@ -178,36 +174,33 @@ if(empty($_GET['p'])) {
     <?php } ?>
     <?php if ($page == "delete") { 
         //Gathers users
-        $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `id` = :id"); 
+        $stmt1 = $dbh->prepare("SELECT * FROM games_categories WHERE `id` = :id"); 
         $stmt1->bindValue(':id', $_GET['id']);
         $stmt1->execute(); 
-        $group = $stmt1->fetch();
+        $category = $stmt1->fetch();
             
-        if($_POST['deletegroup']) {
-            activitylog(''.$in['username'].'', 'deleted usergroup: '.$group['name'].'', ''.time().'', 'Admin');
-                
-            $sql = $dbh->prepare("UPDATE users SET usergroup='1' WHERE usergroup=".$group['id']."");
-            $sql->execute();
-            $sql = "DELETE FROM `usergroups` WHERE id = '".$group["id"]."'";
+        if($_POST['deletecategory']) {
+            activitylog(''.$in['username'].'', 'deleted category: '.$category['name'].'', ''.time().'', 'Admin');
+            $sql = "DELETE FROM `games_categories` WHERE id = '".$category["id"]."'";
             $dbh->exec($sql);
-            header("location: manage_usergroups.php");   
+            header("location: manage_categories.php");   
         }
             
         ?>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Delete <?php echo $group['name']; ?></div>
+                    <div class="panel-heading">Delete <?php echo $category['name']; ?></div>
                     <div class="panel-body">
-                    <form method="post">
-                    <div class="form-group">
-                <label for="viewprofile">Are you sure you would like to delete this user group? This can not be undone!!<br />
+                        <form method="post">
+                            <div class="form-group">
+                                <label for="viewprofile">Are you sure you would like to delete this category? This can not be undone!!<br />
                     
-                </label>
-              </div>
-              <input type="submit" style="float:left;margin-right:10px;"class="btn btn-primary" value="Delete user group" name="deletegroup"> 
-                 <a class="btn btn-primary" href="manage_usergroups.php">Cancel</a>
-                    </form>    
+                                </label>
+                            </div>
+                            <input type="submit" style="float:left;margin-right:10px;"class="btn btn-primary" value="Delete category" name="deletecategory"> 
+                            <a class="btn btn-primary" href="manage_categories.php">Cancel</a>
+                        </form>    
                     </div>
                 </div>
             </div>

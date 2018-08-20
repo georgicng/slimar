@@ -1,4 +1,6 @@
-{% extends "./layout/layout.twig" %} {% block content %}
+{% extends "./layout/layout.twig" %}
+
+{% block content %}
 <style>
     @media (min-width: 1200px) {
         .flash_container {}
@@ -129,7 +131,7 @@
             <div class="col-sm-4 col-lg-6 col-md-4">
                 <font style="font-size:20pt;">{{ cur_game['title'] }}</font>
                 <br>
-                <B>Date:</b> {{ date('M d, Y', cur_game['date']) }} -
+                <B>Date:</b> {{ date }} -
                 <b>Category:</b>
                 <a href="cat.php?c={{cur_game_category['title']}}"> {{ cur_game_category['title'] }}</a>
                 <br>
@@ -172,6 +174,5 @@
     <div class="content-container">
         {{ include('partials/comments.twig') }}
     </div>
-</div>
 </div>
 {% endblock %}

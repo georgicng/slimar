@@ -1,17 +1,9 @@
 <?php
 //Checks if details file exists
-if (isset($admin) && $admin == true) {
-    if (file_exists("../inc/details.php")) {
-        $installed = 1;
-    } else {
-        $installed = 0;
-    }
+if (file_exists(__DIR__."/details.php")) {
+    $installed = 1;
 } else {
-    if (file_exists("inc/details.php")) {
-        $installed = 1;
-    } else {
-        $installed = 0;
-    }
+    $installed = 0;
 }
 
 ini_set('display_errors', 'off');
@@ -38,14 +30,16 @@ if ($installed == 1) {
     include "class_users.php";
 
     //Sets up timezone for user
-    if (!$in['timezone']) { //If no set timezone for user, use ip to find closest
-        $user_ip = getip();
-        $geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-        $country = $geo["geoplugin_countryName"];
-        $state = $geo["geoplugin_region"];
-        date_default_timezone_set("".$country."/".$state."");
-    } else { //Gets user set timezone
-        date_default_timezone_set("".$in['timezone']."");
+    if (isset($in)) {
+        if (!$in['timezone']) { //If no set timezone for user, use ip to find closest
+            $user_ip = getip();
+            $geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+            $country = $geo["geoplugin_countryName"];
+            $state = $geo["geoplugin_region"];
+            date_default_timezone_set($country."/".$state);
+        } else { //Gets user set timezone
+            date_default_timezone_set($in['timezone']);
+        }
     }
     
     $stmt = $dbh->prepare("SELECT * FROM site_statistics WHERE `name` = 'pageviews'");
@@ -77,7 +71,7 @@ if ($installed == 1) {
 
 //Checks if website is offline
 $sitemaintainance = "".$i["offline"]."";
-if ($in_perm['has_admin'] != "1") {
+if (isset($in_perm) && $in_perm['has_admin'] != "1") {
     if ($pagename != "maintenance") {
         if ($sitemaintainance == '1') {
             header("Location: maintenance.php");

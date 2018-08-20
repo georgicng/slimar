@@ -9,15 +9,21 @@ use Siler\Twig;
 use Siler\Http\Request;
 use Siler\Http\Response;
 
+//TODO: redirect to 404 page if id is not provided
 $id = Request\get('p');
-$page = R::load('pages', $id);
+
+if (is_numeric($id)) {
+    $page = R::load('pages', $id);
+} else {
+    $page = R::findOne('pages', ' slug = ?', [$id]);
+}
 
 
 $data = array_merge(
     $variables,
     [
-        'pagename' => $page['title'],
-        'page' => $page['content']
+        'pagename' => !empty($page)? $page['title'] : "Oops",
+        'page' => !empty($page)? $page['content'] : false
     ]
 );
 

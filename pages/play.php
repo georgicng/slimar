@@ -21,7 +21,7 @@ if ($cur_game['id']) {
     $cur_game_category = R::findOne('games_categories', ' id = ?', [$cur_game['category_id']]);
 }
 
-if ($in['id']) {
+if (isset($in['id'])) {
     $user = R::load('users', $in['id']);
     $user->games_played = $user->games_played + 1;
     R::store($user);
@@ -47,7 +47,7 @@ if ($in['id']) {
     }
 }
 
-if ($in['id']) {
+if (isset($in['id'])) {
     $positive = R::count('games_rating', ' game_id = ? && type = ?', [$cur_game['id'], 'pos']);
     $negative = R::count('games_rating', ' game_id = ? && type = ?', [$cur_game['id'], 'neg']);
     $rating = R::findOne('games_rating', ' game_id = ? && user_id = ?', [$cur_game['id'], $in['id']]);
@@ -146,6 +146,8 @@ if (!empty(Request\post('postreplyprofile'))) {
     }
 }
 
+//Comment list
+
 if (Request\get('page') == "") {
     $page = 1;
 } else {
@@ -208,7 +210,7 @@ $data = array_merge(
         'pagename' => "Game",
         'fav' => $fav,
         'rating' => $positive - $negative,
-        'date' => date('M d, Y', $cur_game['date']),
+        'date' => date_format(date_create($cur_game['date']), 'M d, Y'),
         'cur_game' => $cur_game,
         'cur_game_category' => $cur_game_category
     ]

@@ -1,4 +1,4 @@
 <ul class="list-group">
-    {{ include('partials/comment_form.twig') }} {% for (n1 in nodes2 ) %} {{ include('partials/comment.twig') }} {% endfor %}
+    {{ include('partials/comment_form.twig') }} {% for n1 in nodes2  %} {{ include('partials/comment.twig') }} {% endfor %}
     {{ include('partials/comment_pagination.twig') }}
 </ul>

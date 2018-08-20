@@ -24,6 +24,7 @@ if (empty($_GET['p'])) {
 <html>
 <head>
 <?php include "inc/head.php"; ?>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
 </head>
 
 <body>
@@ -238,12 +239,7 @@ if (empty($_GET['p'])) {
 
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/chart.min.js"></script>
-	<script src="js/chart-data.js"></script>
-	<script src="js/easypiechart.js"></script>
-	<script src="js/easypiechart-data.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-	<script src="js/bootstrap-table.js"></script>
 	
 	<script>
 		!function ($) {

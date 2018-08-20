@@ -15,7 +15,7 @@
                 <label for="exampleInputFile">Country</label>
                 <select name="country" class="form-control">
                     {% for country in countries %}
-                    <option {% if (in[ 'country']==c ountry) %} selected {% endif %} value="{{country}}">{{country}}</option>
+                    <option {% if (in[ 'country']==country) %} selected {% endif %} value="{{country}}">{{country}}</option>
                     {% endfor %}
                 </select>
             </div>

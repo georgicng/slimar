@@ -25,12 +25,12 @@ return [
     'categories' => include __DIR__.'/data/categories.php',
     'notifications' => include __DIR__.'/data/notifications.php',
     'i' => $i,
-    'in' => $in,
-    'in_perm' => $in_perm,
-    'error' => $error,
-    'success' => $success,
-    'profilepic' =>  $profilepic,
-    'currenturl' => $currenturl,
+    'in' => isset($in)? $in : null,
+    'in_perm' => isset($in_perm)? $in_perm : null,
+    'error' => isset($error)? $error : null,
+    'success' =>isset($success)? $success : null,
+    'profilepic' =>  isset($profilepic)? $profilepic : null,
+    'currenturl' => isset($currenturl)? $currenturl : null,
     'header_menu' => $header_menu,
     'footer_menu' => $footer_menu
 ];
