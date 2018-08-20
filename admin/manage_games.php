@@ -232,7 +232,7 @@ if (empty($_GET['p'])) {
                             if (isset($_POST['updategame_settings'])) {
                                 if ($in["username"]) {
                                             
-                                    $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+                                    $currenturl = $i['url'];
                                     activitylog(''.$in['username'].'', 'edited game: '.$game['title'].'', ''.time().'', 'Admin');
                                                 
                                     $sql = $dbh->prepare("UPDATE games SET title='".$_POST['title']."', description='".$_POST['description']."', category_id='".$_POST['category_id']."', status='".$_POST['status']."' WHERE id=".$game['id']."");
@@ -369,7 +369,7 @@ if (empty($_GET['p'])) {
                             
                                         if (move_uploaded_file($_FILES["imageToUpload"]["tmp_name"], $target_file2)) {
                                 
-                                            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+                                            $currenturl = $i['url'];
                             
                                             $sql = $dbh->prepare("UPDATE games SET image='".$currenturl."/files/uploads/".$new_name."' WHERE id=".$game['id']."");
                                             $sql->execute();
@@ -469,7 +469,7 @@ if (empty($_GET['p'])) {
                                     } else {
                             
                                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file2)) {
-                                            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";                            
+                                            $currenturl = $i['url'];                            
                                             $sql = $dbh->prepare("UPDATE games SET file='".$currenturl."/files/uploads/".$new_name."', type='Flash' WHERE id=".$game['id']."");
                                             $sql->execute();
                                             $success = "".$currenturl."/files/uploads/".$new_name."";
