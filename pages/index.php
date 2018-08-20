@@ -9,11 +9,10 @@ use Siler\Twig;
 use Siler\Http\Request;
 use Siler\Http\Response;
 
-$sort = Request\get('s');
 $primary = null;
 $query = ' status = ?';
 
-switch ($sort) {
+switch (Request\get('s')) {
     case "rated":
         $primary = "rated";
         $query .= ' ORDER BY current_votes DESC LIMIT 30';
@@ -36,7 +35,7 @@ $data = array_merge(
     [
         'pagename' => "Home",
         'games' => R::find('games', $query, [1]),
-        'sort' => $sort,
+        'sort' => !empty(Request\get('s'))? Request\get('s') : '',
         'primary' => $primary
     ]
 );

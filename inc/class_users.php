@@ -1,5 +1,5 @@
 <?php
-// [* SlimarUSER *] //
+// [* SlimarUSER *] set user cookie//
 if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
     $id = $_COOKIE['id'];
 
@@ -48,14 +48,12 @@ if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
     }
 }
 
-?>
-<?php
+//process login
 session_start();
 if (isset($_POST['login'])) {
-    if (!$in["username"]) {
+    if (!isset($in["username"])) {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $remember = $_POST['remember'];
         
         $stmt = $dbh->prepare("SELECT * FROM users WHERE `email` = :email");
         $stmt->bindValue(':email', $email);
@@ -64,7 +62,9 @@ if (isset($_POST['login'])) {
         $row = $stmt->fetch();
         
         
-        if (!$i['captcha'] == "1" || isset($_POST["captcha"])&&$_POST["captcha"]!=""&&$_SESSION["code"]==$_POST["captcha"]) {
+        if (!$i['captcha'] == "1" || isset($_POST["captcha"])
+            && $_POST["captcha"] != "" && $_SESSION["code"] == $_POST["captcha"]
+        ) {
             if ($stmt->rowCount()  < 1) {
                 $error = "The email you have entered does not exist";
             } else {
@@ -74,15 +74,15 @@ if (isset($_POST['login'])) {
                     //correct password
                     //Activity log
                     activitylog(''.$row ['username'].'', 'Logged in', ''.time().'');
-                    if (isset($_POST['checkboxName'])) { //sets cookie
-                    
-                        setcookie("id", $row["id"], time()+3600);
-                        setcookie("password", $row["password"], time()+3600);
-                        header("location: ".$i['loginurl']."");
-                    } else { //sets session
-              
+                    if (isset($_POST['remember'])) { 
+                        //sets cookie
                         setcookie("id", $row["id"], time()+(60*60*60*24*5));
                         setcookie("password", $row["password"], time()+(60*60*60*24*5));
+                        header("location: ".$i['loginurl']."");
+                    } else {
+                        //sets session 
+                        setcookie("id", $row["id"], time()+3600);
+                        setcookie("password", $row["password"], time()+3600);
                         header("location: ".$i['loginurl']."");
                     }
                 } else {
@@ -95,11 +95,8 @@ if (isset($_POST['login'])) {
     } else {
     }
 }
-?>
 
-
-<?php
-
+//process registration
 if (isset($_POST['register'])) {
     if (!$in["username"]) {
         $username = $_POST['username'];
@@ -188,10 +185,7 @@ if (isset($_POST['register'])) {
     } else {
     }
 }
-?>
 
-
-<?php
 //Post comment
 if (isset($_POST["postcommentprofile"])) {
     if ($in["username"]) {
@@ -216,8 +210,7 @@ if (isset($_POST["postcommentprofile"])) {
         }
     }
 }
-?>
-<?php
+
 //Post reply
 if (isset($_POST['postreplyprofile'])) {
     if ($in["username"]) {
@@ -245,9 +238,7 @@ if (isset($_POST['postreplyprofile'])) {
         }
     }
 }
-?>
 
-<?php
 //Sets last active time for online users
 if (isset($in['id'])) {
     $currenttime = time();
@@ -256,11 +247,7 @@ if (isset($in['id'])) {
         $sql->execute();
     }
 }
-?>
-
-
-
-<?php 
+ 
 //Private messaging
 if (isset($_POST['sendmessage'])) {
     if ($in["username"]) {
@@ -289,9 +276,7 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 }
-?>
-
-<?php
+ 
 //Upload avatar
 if (isset($_POST["uploadavatar"])) {
     $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
@@ -347,9 +332,6 @@ if (isset($_POST["uploadavatar"])) {
     }
 }
 
-?>
-
-<?php
 //Enabling gravatar
 if (isset($_POST['enablegravatar'])) {
     if ($in["username"]) {
@@ -370,10 +352,7 @@ if (isset($_POST['enablegravatar'])) {
         }
     }
 }
-?>
-
-
-<?php
+ 
 //Update about
 if (isset($_POST['updateabout'])) {
     if ($in["username"]) {
@@ -385,8 +364,7 @@ if (isset($_POST['updateabout'])) {
         header("location: ".$currenturl."/account_settings.php");
     }
 }
-?>
-<?php
+ 
 //Update settings
 if (isset($_POST['updatesettings'])) {
     if ($in["username"]) {
@@ -398,8 +376,7 @@ if (isset($_POST['updatesettings'])) {
         header("location: ".$currenturl."/account_settings.php");
     }
 }
-?>
-<?php
+ 
 //Update password
 if (isset($_POST['updatepassword'])) {
     if ($in["username"]) {
@@ -430,4 +407,3 @@ if (isset($_POST['updatepassword'])) {
         }
     }
 }
-?>

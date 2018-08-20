@@ -15,7 +15,7 @@ if ($in['id']) {
     exit;
 }
 
-$refer = \Request\get('refer');
+$refer = Request\get('refer');
 
 $data = array_merge(
     $variables,

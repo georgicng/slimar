@@ -12,20 +12,26 @@ $version = 1.0;
 //Grabs database information
 if ($installed == 1) {
     require "details.php";
-    
+   
     //Attempt to connect to database using above details.php
     try {
-        $dbh = new PDO("mysql:host=$hostname;dbname=$database", $username, $password);
-    } catch (PDOException $e) { //if can't grab database information show error page
+        $GLOBALS['dbh'] = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
+    } catch (PDOException $e) { 
+        //if can't grab database information show error page
         echo '<h2>This website can not connect to the database</h2><br><br>';
         exit;
     }
+    $dbh = $GLOBALS['dbh'];
         
     //This grabs basic site information from database. Example of use: $i["field name"];
+    
     $sql = "SELECT * FROM site_settings";
-    foreach ($dbh->query($sql) as $i) {
-        include "class_functions.php";
+    //$i = $dbh->query($sql);
+    foreach ($dbh->query($sql) as $row) {
+        $i = $row;
+        error_log('settings: '.json_encode($i));
     }
+    include "class_functions.php";
     //This grabs user signed in information
     include "class_users.php";
 

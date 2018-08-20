@@ -3,8 +3,10 @@ RewriteEngine on
 # If file/directory's present, serving it directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_METHOD} !POST [NC]
 # Else, redirecting the request to the index.php file
 RewriteRule . index.php
 #RewriteCond %{QUERY_STRING} ^$ [NC]
 #RewriteRule ^/?$ index.php?p=home [L]
+
 
