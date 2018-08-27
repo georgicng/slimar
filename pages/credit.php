@@ -83,6 +83,6 @@ $data = array_merge(
 $shouldTwigDebug = true;
 $twig = Twig\init('./templates', './templates/cache', $shouldTwigDebug);
 $twig->addExtension(new Twig_Extension_Debug());
-$twig->addExtension(new Umpirsky\Twig\Extension\PhpFunctionExtension());
+//$twig->addExtension(new Umpirsky\Twig\Extension\PhpFunctionExtension());
 
 echo Twig\render('credit.twig', $data);
