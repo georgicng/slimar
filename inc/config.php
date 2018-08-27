@@ -27,9 +27,10 @@ if ($installed == 1) {
     
     $sql = "SELECT * FROM site_settings";
     //$i = $dbh->query($sql);
+    $i = [];
     foreach ($dbh->query($sql) as $row) {
-        $i = $row;
-        error_log('settings: '.json_encode($i));
+        $i[$row['s_key']] = $row['s_value'];
+        //error_log('settings: '.json_encode($i));
     }
     include "class_functions.php";
     //This grabs user signed in information

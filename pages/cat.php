@@ -1,8 +1,8 @@
 <?php
-require_once SITE_ROOT.'/inc/config.php';
-require_once SITE_ROOT.'/lib/db.php';
-
-$variables = include SITE_ROOT.'/lib/variables.php';
+//require_once SITE_ROOT.'/inc/config.php';
+//require_once SITE_ROOT.'/lib/db.php';
+//$variables = include SITE_ROOT.'/lib/variables.php';
+global $variables;
 
 use RedBeanPHP\Facade as R;
 use Siler\Twig;

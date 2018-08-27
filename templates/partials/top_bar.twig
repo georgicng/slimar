@@ -53,19 +53,29 @@
             <li><a href="signup.php">REGISTER</a></li>
         {% else %}
             {% if (in_perm['has_admin']) %}
-                        <li class="dark"><a class="dark" href="admin/">Admin panel</a></li>{% endif %}
-                <li class="dropdown">
-                    <a href="#" class="light" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{profilepic}}" class="profilepic" width="25px" height="25px">
-                        <b>{{in['username']}}</b> <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                        <li><a class="white" href="profile.php?u={{in['username']}}">My profile</a></li>
-                        <li><a class="white" href="account_settings.php">Account settings</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a class="white" href="logout.php">Logout</a></li>
-                    </ul>
-                </li>
+                        <li class="dark"><a class="dark" href="admin/">Admin panel</a></li>
             {% endif %}
+            <li class = "btn-group">   
+                <button type = "button" class = "btn btn-default dropdown-toggle" data-toggle = "dropdown">
+                    N{{i['balance']}} <span class = "caret"></span>
+                </button>                
+                <ul class = "dropdown-menu" role = "menu">
+                   <li><a href = "credit.php">Load Credit</a></li>
+                   <li><a href = "payout.php">Request Payout</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="light" class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="{{profilepic}}" class="profilepic" width="25px" height="25px">
+                    <b>{{in['username']}}</b> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    <li><a class="white" href="profile.php?u={{in['username']}}">My profile</a></li>
+                    <li><a class="white" href="account_settings.php">Account settings</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a class="white" href="logout.php">Logout</a></li>
+                </ul>
+            </li>
+        {% endif %}
     </ul>
   </div>
 </nav>

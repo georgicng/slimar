@@ -4,6 +4,12 @@
 require "BootstrapMenu.php";
 
 use RedBeanPHP\Facade as R;
+global $i;
+global $in;
+
+//error_log("i: ".json_encode($i));
+//error_log("in: ".json_encode($in));
+
 
 $menu = R::findOne('menus', ' position = ?', ['main']);
 //error_log('header menu: '.json_encode($menu));

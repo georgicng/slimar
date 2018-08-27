@@ -1,6 +1,9 @@
 <?php
 define('SITE_ROOT', __DIR__);
 require SITE_ROOT . '/vendor/autoload.php';
+require_once SITE_ROOT.'/inc/config.php';
+require_once SITE_ROOT.'/lib/db.php';
+$variables = include SITE_ROOT.'/lib/variables.php';
 
 use Siler\Route;
 
@@ -19,3 +22,5 @@ Route\route(['get', 'post'], '/members.php', 'pages/members.php');
 Route\route(['get', 'post'], '/profile.php', 'pages/profile.php');
 Route\route(['get', 'post'], '/account_settings.php', 'pages/account_settings.php');
 Route\route(['get', 'post'], '/page.php', 'pages/page.php');
+Route\route(['get', 'post'], '/credit.php', 'pages/credit.php');
+Route\route(['get', 'post'], 'win.php', 'pages/win.php');

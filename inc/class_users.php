@@ -279,7 +279,7 @@ if (isset($_POST['sendmessage'])) {
  
 //Upload avatar
 if (isset($_POST["uploadavatar"])) {
-    $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+    $currenturl = $i['url'];
 
     $target_dir = "files/uploads/";
     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
@@ -318,7 +318,7 @@ if (isset($_POST["uploadavatar"])) {
     // if everything is ok, try to upload file
     } else {
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file2)) {
-            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+            $currenturl = $i['url'];
     
     
             activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
@@ -336,14 +336,14 @@ if (isset($_POST["uploadavatar"])) {
 if (isset($_POST['enablegravatar'])) {
     if ($in["username"]) {
         if ($_POST['usegravatar'] == "1") {
-            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+            $currenturl = $i['url'];
             activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
             $sql = $dbh->prepare("UPDATE users SET gravatar='1' WHERE id=".$in['id']."");
             $sql->execute();
             $success = "Gravatar activated";
             header("location: ".$currenturl."/account_settings.php");
         } else {
-            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+            $currenturl = $i['url'];
             activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
             $sql = $dbh->prepare("UPDATE users SET gravatar='0' WHERE id=".$in['id']."");
             $sql->execute();
@@ -357,7 +357,7 @@ if (isset($_POST['enablegravatar'])) {
 if (isset($_POST['updateabout'])) {
     if ($in["username"]) {
         activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
-        $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+        $currenturl = $i['url'];
         $sql = $dbh->prepare("UPDATE users SET aboutme='".$_POST['aboutme']."', gender='".$_POST['gender']."' WHERE id=".$in['id']."");
         $sql->execute();
         $success = "Profile updated";
@@ -368,7 +368,7 @@ if (isset($_POST['updateabout'])) {
 //Update settings
 if (isset($_POST['updatesettings'])) {
     if ($in["username"]) {
-        $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+        $currenturl = $i['url'];
         activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
         $sql = $dbh->prepare("UPDATE users SET email='".$_POST['email']."', firstname='".$_POST['firstname']."', country='".$_POST['country']."', timezone='".$_POST['timezone']."', dob='".$_POST['dob']."', hide_offline='".$_POST['hide_offline']."', viewprofile='".$_POST['viewprofile']."' WHERE id=".$in['id']."");
         $sql->execute();
@@ -383,7 +383,7 @@ if (isset($_POST['updatepassword'])) {
         $currentpassword = "".$_POST['currentpassword']."";
         $newpassword = "".$_POST['newpassword']."";
         $confirmpassword = "".$_POST['confirmpassword']."";
-        $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+        $currenturl = $i['url'];
             
         if ($newpassword == $confirmpassword) {
             $stmt = $dbh->prepare("SELECT * FROM users WHERE `id` = '".$in['id']."'");

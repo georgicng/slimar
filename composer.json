@@ -1,5 +1,7 @@
 {
     "require": {
-        "gabordemooij/redbean": "^5.1"
+        "gabordemooij/redbean": "^5.1",
+        "yabacon/paystack-php": "^2.1",
+        "umpirsky/twig-php-function": "^0.2.0"
     }
 }

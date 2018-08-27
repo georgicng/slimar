@@ -53,6 +53,11 @@
 }?>>
             <a href="manage_menus.php"><i class="fa fa-folder" aria-hidden="true"></i> Menus</a>
         </li>
+        <li <?php if ($pagename=="manage_payments") {
+    echo 'class="active"';
+}?>>
+            <a href="manage_payments.php"><i class="fa fa-folder" aria-hidden="true"></i> Payments</a>
+        </li>
         <li <?php if ($pagename=="manage_users") {
     echo 'class="active"';
 }?>>
