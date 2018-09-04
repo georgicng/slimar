@@ -58,6 +58,16 @@
 }?>>
             <a href="manage_payments.php"><i class="fa fa-folder" aria-hidden="true"></i> Payments</a>
         </li>
+        <li <?php if ($pagename=="manage_requests") {
+    echo 'class="active"';
+}?>>
+            <a href="manage_requests.php"><i class="fa fa-folder" aria-hidden="true"></i> Payment Requests</a>
+        </li>
+        <li <?php if ($pagename=="manage_payouts") {
+    echo 'class="active"';
+}?>>
+            <a href="manage_payouts.php"><i class="fa fa-folder" aria-hidden="true"></i> Payouts</a>
+        </li>
         <li <?php if ($pagename=="manage_users") {
     echo 'class="active"';
 }?>>

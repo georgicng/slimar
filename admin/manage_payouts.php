@@ -4,7 +4,7 @@ $admin = true;
 require "../inc/config.php";
 
 //This will be required for the active page in navigation
-$pagename = "manage_payments";
+$pagename = "manage_payouts";
 //Sets last active time for forums [This is to check if the user is online or not]
 
 if (!$in_perm['has_admin']) {
@@ -34,72 +34,30 @@ if (empty($_GET['p'])) {
         <div class="row">
             <ol class="breadcrumb">
                 <li><a href="index.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
-                <li><a href="manage_payments.php"> Manage Payments</a></li>
+                <li><a href="manage_payouts.php"> Manage Payouts</a></li>
             </ol>
         </div><!--/.row-->
         <br>
-    <?php if ($_GET['success'] == "user") {
+    <?php if ($_GET['success']) {
     ?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> Payment successfully updated</a>
+                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $success ?></a>
         </div>
     <?php
-} ?>
+} elseif ($_GET['error']) {
+        ?>
+        <div class="alert bg-success" role="alert">
+                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $error ?></a>
+        </div>
+    <?php
+    }  ?>
         
     <?php if ($page == "home") {
         ?>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Add new payment</div>
-                    <div class="panel-body">
-        <?php
-        //Post comment
-        if (isset($_POST["addpayment"])) {
-            if ($in["username"]) {
-                $userId = $_POST['payment_userId'];
-                $amount= $_POST['payment_amount'];
-                $reference = $_POST['payment_reference'];
-                $date = date("Y-m-d H:i:s");
-                $comment = $_POST['payment_comment'];
-                            
-                            
-                activitylog(''.$in['username'].'', 'added a new payment', ''.time().'');
-                $stmt = $dbh->prepare("INSERT INTO payments (userid, amount, reference, date, comment) VALUES (:userid, :amount, :reference, :date, :coment)");
-                $stmt->bindParam(':userid', $userid);
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':reference', $reference);
-                $stmt->bindParam(':date', $date);
-                $stmt->bindParam(':comment', $comment);
-                            
-                $stmt->execute();
-            }
-        } ?>
-                        <form method="post">
-                            <div class="form-group">
-                                <input type="text" name="payment_username" placeholder="User Name" id="payment_username" class="form-control"></input>
-                                <input type="hidden" name="payment_userid" value="<?php echo $payment['userid']; ?>" id="payment_userid">
-                            </div>
-                            <div class="form-group">
-                                <input type="number" name="payment_amount" placeholder="Amount" class="form-control"></input>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" name="payment_reference" placeholder="Payment reference code" class="form-control"></input>
-                            </div>
-                            <div class="form-group">
-                                <textarea name="payment_comment" placeholder="Enter comment" class="form-control"></textarea>
-                            </div>
-                            <input type="submit" style="float:left;"class="btn btn-primary" value="Add payment" name="addpayment">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div><!--/.row-->
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Manage Payments</div>
+                    <div class="panel-heading">Manage Payouts</div>
                     <div class="panel-body">
                         <table class="table">
                             <thead>
@@ -107,12 +65,13 @@ if (empty($_GET['p'])) {
                                 <th>ID</th>
                                 <th>User</th>
                                 <th>Amount</th>
+                                <th>Status</th>
                                 <th>Reference</th>
                                 <th>View</th>
                             </tr>
                             </thead>
         <?php
-        $sql = "SELECT p.*, u.username FROM payments as p join users as u on p.userid = u.id ORDER BY date desc";
+        $sql = "SELECT p.*, u.username FROM payouts as p join users as u on p.userid = u.id ORDER BY date desc";
         $stm = $dbh->prepare($sql);
         $stm->execute();
         $payments = $stm->fetchAll();
@@ -123,11 +82,12 @@ if (empty($_GET['p'])) {
                             <tr>
                                 <td><?php echo $payment['id']; ?></td>
                                 <td><?php echo $payment['username']; ?></td>
-                                <td><?php echo $payment['amount']; ?></td>                                
+                                <td><?php echo $payment['amount']; ?></td>
+                                <td><?php echo $payment['status']; ?></td>                                 
                                 <td><?php echo $payment['reference']; ?></td>                                
                                 <td>
-                                    <a href='manage_payments.php?p=view&id=<?php echo $payment['id']; ?>' class='btn btn-primary btn-xs'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> View</a> 
-                                    <a href='manage_payments.php?p=reverse&id=<?php echo $payment['id']; ?>' class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Reverse</a> </td>
+                                    <a href='manage_payouts.php?p=view&id=<?php echo $payment['id']; ?>' class='btn btn-primary btn-xs'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> View</a> 
+                                    <a href='manage_payouts.php?p=reverse&id=<?php echo $payment['id']; ?>' class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Reverse</a> </td>
                             </tr>
         <?php
         } ?>
@@ -141,28 +101,29 @@ if (empty($_GET['p'])) {
 
     <?php if ($page == "view") {
         //Gathers users permissions
-        $stmt1 = $dbh->prepare("SELECT * from payments WHERE `id` = :id");
+        $stmt1 = $dbh->prepare("SELECT * from payouts WHERE `id` = :id");
         $stmt1->bindValue(':id', $_GET['id']);
         $stmt1->execute();
-        $payment = $stmt1->fetch();
-        error_log("payment: ".json_encode($payment));
-            
-        if (isset($_POST['updatepayment'])) {
-            error_log("In: ".json_encode($_POST));
-            $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
-            activitylog(''.$in['username'].'', 'commented on payment '.$payment['id'].'', ''.time().'', 'Admin');
-                    
-            $update_query = $dbh->prepare("UPDATE payments SET comment='".$_POST['comment']."' WHERE id='".$_GET['id']."'");
-            $update_query->execute();
-            $success = "Payment updated";
-            header("location: manage_payments.php");
-        } ?>
+        $payment = $stmt1->fetch(); ?>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">View Payment: <?php echo $payment['reference']; ?></div>
+                    <div class="panel-heading">View Payout: <?php echo $payment['id']; ?></div>
                     <div class="panel-body">
-                    
+                        <?php if ($_GET['error'] && empty($payment['reference'])) {
+            ?>
+                            <a href='<?php echo add_query_vars('make_transfer.php', ['id' => $payment['id']]) ?>' class='btn btn-primary btn-xs'>
+                                <i class='fa fa-pencil-square-o' aria-hidden='true'></i> Retry Transaction
+                            </a>
+                        <?php
+        } elseif ($_GET['error'] && !empty($payment['reference'])) {
+            ?>
+                            <a href='<?php echo add_query_vars('make_transfer.php', ['id' => $payment['id'], 'retry' => true]) ?>' class='btn btn-primary btn-xs'>
+                                <i class='fa fa-pencil-square-o' aria-hidden='true'></i> Resend token
+                            </a>
+                       <?php
+        } else {
+            ?>
                         <form method="post">
                             <div class="form-group">
                                 <label>Username</label>
@@ -179,11 +140,17 @@ if (empty($_GET['p'])) {
                                 <input type="text" name="reference" value="<?php echo $payment['reference']; ?>" class="form-control" readonly></input>
                             </div>
                             <div class="form-group">
-                                <label>Comment</label>
-                                <textarea name="comment" placeholder="Enter comment" class="form-control"><?php echo $payment['comment']; ?></textarea>
+                                <label>Request</label>
+                                <input type="type" class="form-control" value="<?php echo $payment['request_id']; ?>" />
                             </div>
-                             <input type="submit" style="float:left;"class="btn btn-primary" value="Update category" name="updatepayment">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <input type="type" class="form-control" value="<?php echo $payment['status']; ?>" />
+                            </div>
+                            <a href='manage_payouts.php' class='btn btn-primary btn-xs'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> Back</a>
                         </form>
+                       <?php
+        } ?> 
                     </div>
                 </div>
             </div>
@@ -200,13 +167,13 @@ if (empty($_GET['p'])) {
             
         if ($_POST['reversepayment']) {
             //TODO: prevent reversal if user is online and playing a game
-            activitylog(''.$in['username'].'', 'revered payment: '.$payment['id'].'', ''.time().'', 'Admin');
-            $update_query = $dbh->prepare("UPDATE payments SET contra = '1' WHERE id='".$_GET['id']."'");
+            activitylog(''.$in['username'].'', 'reverted payment transfer: '.$payment['id'].'', ''.time().'', 'Admin');
+            $update_query = $dbh->prepare("UPDATE payouts SET contra = '1' WHERE id='".$_GET['id']."'");
             $update_query->execute();
             $balance = $payment['balance'] - $payment['amount'];
             $update_query = $dbh->prepare("UPDATE users SET balance = '".$balance."' WHERE id='".$payment['userid']."'");
             $update_query->execute();
-            header("location: manage_payments.php");
+            header("location: manage_payouts.php");
         } ?>
         <div class="row">
             <div class="col-lg-12">
@@ -220,7 +187,7 @@ if (empty($_GET['p'])) {
                                 </label>
                             </div>
                             <input type="submit" style="float:left;margin-right:10px;"class="btn btn-primary" value="Reverse" name="reversepayment"> 
-                            <a class="btn btn-primary" href="manage_payments.php">Cancel</a>
+                            <a class="btn btn-primary" href="manage_payouts.php">Cancel</a>
                         </form>    
                     </div>
                 </div>

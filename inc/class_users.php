@@ -407,3 +407,69 @@ if (isset($_POST['updatepassword'])) {
         }
     }
 }
+
+//Process Payout
+if (isset($_POST['payout'])) {
+    if ($in["username"]) {
+        $errors = [];
+        $bank = filter_var($_POST['bank'], FILTER_SANITIZE_NUMBER_INT);
+        $amount = filter_var($_POST['amount'], FILTER_SANITIZE_NUMBER_FLOAT);
+        $account_number = filter_var($_POST['account_number'], FILTER_SANITIZE_NUMBER_INT);
+        $account_name = filter_var($_POST['account_name'], FILTER_SANITIZE_STRING);
+        $account_type = filter_var($_POST['account_type'], FILTER_SANITIZE_STRING);
+
+        if (empty($amount)) {
+            $errors[] = "amount cannot be empty";
+        }
+
+        if (empty($bank)) {
+            $errors[] = "Please select a Bank";
+        }
+
+        if (empty($account_name)) {
+            $errors[] = "Account name cannot be empty";
+        }
+
+        if (empty($account_number)) {
+            $errors[] = "account number cannot be empty";
+        }
+
+        if (empty($account_type)) {
+            $errors[] = "Please select an Account type";
+        }
+            
+            
+        if (empty($errors)) {
+            activitylog(''.$in['username'].'', 'created a payment request', ''.time().'');
+            $stmt =  $dbh->prepare("INSERT INTO payout_request (user_id, bank, account_name, account_number, account_type, amount, date_added, recipient, data, error, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :recipient, :data, :error, :status)");
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':bank', $bank);
+            $stmt->bindParam(':account_name', $account_name);
+            $stmt->bindParam(':account_number', $account_number);
+            $stmt->bindParam(':account_type', $account_type);
+            $stmt->bindParam(':status', 'pending');
+            $stmt->bindParam(':user_id', $in["id"]);
+            $stmt->bindParam(':date-added', date("Y-m-d H:i:s"));
+            try
+            {
+                $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+                $recipient = getRecipient($key, $account_name, $bank, $account_number);
+                $stmt->bindParam(':recipient', $recipient->data['recipient_code']);
+                $stmt->bindParam(':error', '');
+                $stmt->bindParam(':data', serialize($recipient->data));
+                
+            } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                $stmt->bindParam(':recipient', false);
+                $stmt->bindParam(':error', $e->getMessage());
+                $stmt->bindParam(':data', serialize($e->getResponseObject()));
+            }
+            $stmt->execute();
+
+            //deduct requested amount from balance and keep on hold
+            $success = "Request has been submitted successfully";
+        } 
+       
+    } else {
+
+    }
+}

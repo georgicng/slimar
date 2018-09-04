@@ -331,6 +331,156 @@ function getCountryCodes()
     return $return;
 }
 
+//List of Nigerian Banks
+function getBankList()
+{
+    $supported_banks = [];
+    $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+    $paystack = new Yabacon\Paystack($key);
+    try
+    {
+        $banks = $paystack->bank->getList();
+        foreach ($banks->data as $bank) {
+            $supported_banks[] = [ 'id' => $bank['code'], 'name' => $bank['name'] ];
+        }
+        error_log(json_encode($supported_banks));
+
+    } catch(\Yabacon\Paystack\Exception\ApiException $e){
+        $supported_banks = array(
+            array('id' => '1','name' => 'Access Bank'),
+            array('id' => '2','name' => 'Citibank'),
+            array('id' => '3','name' => 'Diamond Bank'),
+            array('id' => '4','name' => 'Dynamic Standard Bank'),
+            array('id' => '5','name' => 'Ecobank Nigeria'),
+            array('id' => '6','name' => 'Fidelity Bank Nigeria'),
+            array('id' => '7','name' => 'First Bank of Nigeria'),
+            array('id' => '8','name' => 'First City Monument Bank'),
+            array('id' => '9','name' => 'Guaranty Trust Bank'),
+            array('id' => '10','name' => 'Heritage Bank Plc'),
+            array('id' => '11','name' => 'Keystone Bank Limited'),
+            array('id' => '12','name' => 'Providus Bank Plc'),
+            array('id' => '13','name' => 'Skye Bank'),
+            array('id' => '14','name' => 'Stanbic IBTC Bank Nigeria Limited'),
+            array('id' => '15','name' => 'Standard Chartered Bank'),
+            array('id' => '16','name' => 'Sterling Bank'),
+            array('id' => '17','name' => 'Suntrust Bank Nigeria Limited'),
+            array('id' => '18','name' => 'Union Bank of Nigeria'),
+            array('id' => '19','name' => 'United Bank for Africa'),
+            array('id' => '20','name' => 'Unity Bank Plc'),
+            array('id' => '21','name' => 'Wema Bank'),
+            array('id' => '22','name' => 'Zenith Bank')
+        );
+    }
+    return $supported_banks;
+}
+
+function getRecipient($key, $accname, $bank, $accnumber) {
+    $paystack = new Yabacon\Paystack($key);
+    return $paystack->transferrecipient->initialize(
+        [
+            'type' => 'nuban',
+            'name' => $accname,
+            'bank_code' => $bank,
+            'account_number' => $accnumber,
+        ]
+    );
+}
+
+function makeTransfer($key, $amount, $recipient, $reason = "Winnings") {
+    $paystack = new Yabacon\Paystack($key);
+    return $paystack->transfer->initialize(
+        [
+            'source' => 'balance',
+            'amount' => $amount,
+            'reason' => $reason,
+            'recipient' => $recipient,
+        ]
+    );
+}
+
+function sendOTP($key, $code, $token) 
+{
+    $paystack = new Yabacon\Paystack($key);
+    return $paystack->transfer->finalizeTransfer(
+        [
+            'transfer_code' => $code,
+            'otp' => $token,
+        ]
+    );
+}
+
+function resendOTP($key, $code) 
+{
+    $paystack = new Yabacon\Paystack($key);
+    return $paystack->transfer->resendOtp(
+        [
+            'transfer_code' => $code,
+        ]
+    );
+}
+
+/**
+ *  Like array_merge, but will recursively merge array values.
+ *
+ *  @param array $a1
+ *      The array to be merged into.
+ *  @param array $a2
+ *      The array to merge in. Overwrites $a1, when string keys conflict.
+ *      Numeric keys will just be appended.
+ *  @return array
+ *      The array, post-merge.
+ */
+function merge_query_var_arrays($a1, $a2) {
+    foreach ($a2 as $k2 => $v2)
+        if (is_string($k2))
+            $a1[$k2] = isset($a1[$k2]) && is_array($v2) ? merge_query_var_arrays($a1[$k2], $v2) : $v2;
+        else
+            $a1[] = $v2;
+    return $a1;
+}
+
+/**
+ *  @param string $query_string
+ *      The URL or query string to add to.
+ *  @param string|array $vars_to_add
+ *      Either a string in var=val&[...] format, or an array.
+ *  @return string
+ *      The new query string. Duplicate vars are overwritten.
+ */
+function add_query_vars($query_string, $vars_to_add) {
+    if (is_string($vars_to_add))
+        parse_str($vars_to_add, $vars_to_add);
+    if (preg_match('/.*\?/', $query_string, $match))
+        $query_string = preg_replace('/.*\?/', '', $query_string);
+    parse_str($query_string, $query_vars);
+
+    $query_vars = merge_query_var_arrays($query_vars, $vars_to_add);
+    return @$match[0] . http_build_query($query_vars);
+}
+
+//Get bank from id
+function getBank($id)
+{
+    $banks = getBankList();
+    foreach ($banks as $key => $bank) {
+        if ($id == $key) {
+            return $bank;
+        }
+    }
+    return false;
+}
+
+//Get value from post or get
+function getSetValue($name)
+{
+    if (! empty($_POST[$name])) {
+        return $_POST[$name];
+    } elseif (! empty($_GET[$name])) {
+        return $_GET[$name];
+    }
+    return '';
+}
+
 /**
  * Calculates the offset from UTC for a given timezone
  *

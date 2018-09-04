@@ -6,7 +6,7 @@ if (!$in['id']) {
     header("location: index.php");
     exit;
 }
-
+//check if he already has a payment request or if he has a minium debit
 use RedBeanPHP\Facade as R;
 use Siler\Twig;
 use Siler\Http\Request;
@@ -16,6 +16,9 @@ $data = array_merge(
     $variables,
     [
         'pagename' => "Request Payout",
+        'banks' => getBankList(),
+        'maximum' => 5000,
+        'minimum' => 1000
     ]
 );
 

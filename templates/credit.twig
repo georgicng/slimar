@@ -86,13 +86,19 @@
         };
         // Send the data to save using post
         var posting = $.post(window.location, orderObj);
+        $.LoadingOverlay("show");
     
         posting.done(function( data ) {
             /* check result from the attempt */
             console.log(data);
+            $.LoadingOverlay("hide");
             payWithPaystack(data.data);
+
         });
-        posting.fail(function( data ) { /* and if it failed... */ });
+        posting.fail(function( data ) { 
+            /* and if it failed... */ 
+            $.LoadingOverlay("hide");
+        });
     }
 
     function payWithPaystack(data){
@@ -111,9 +117,13 @@
               }
            ]
         },
-        callback: function(response){           
+        callback: function(response){
+            $.LoadingOverlay("show");           
             var verifying = $.get( window.location+'?reference=' + response.reference);
-            verifying.done(function( data ) { /* give value saved in data */ });
+            verifying.done(function( data ) { 
+                /* give value saved in data */ 
+                $.LoadingOverlay("hide");
+            });
           },
           onClose: function(){
             alert('Click "Buy" to retry payment.');
