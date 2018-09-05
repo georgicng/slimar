@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $admin = true;
+require '../vendor/autoload.php';
 require "../inc/config.php";
 
 //This will be required for the active page in navigation
@@ -24,27 +25,38 @@ $stmt1->bindValue(':id', $id);
 $stmt1->execute();
 $payout = $stmt1->fetch();
 
+$stmt1 = $dbh->prepare("SELECT * from payout_requests WHERE `id` = :id");
+$stmt1->bindValue(':id', $payout['request_id']);
+$request = $stmt1->fetch();
+
+if ($request['status'] != 'Approved') {
+    $error = 'Payment request has not been approved';    
+    header("location: ".add_query_vars('manage_requests.php', ['error' => $error]));
+} 
+
 try
 {  
     //initaiate payment transfer
     $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key']; 
     if (empty($payout['reference'])) {
         $transfer = makeTransfer($key, $payout['amount'] * 100, $payout['recipient']);
-        $stmt =  $dbh->prepare("UPDATE payouts SET (reference, data, date_modified, status) VALUES (:reference, :data, :date_modified, :status)");
-        $stmt->bindParam(':reference', $transfer->data['transfer_code']);
+        $stmt =  $dbh->prepare("UPDATE payouts SET reference = :reference, data = :data, date_modified = :date_modified, status = :status");
+        $stmt->bindParam(':reference', $transfer->data->transfer_code);
         $stmt->bindParam(':data', serialize($transfer->data));
-        $stmt->bindParam(':status', $transfer->data['status']);
+        $stmt->bindParam(':status', $transfer->data->status);
         $stmt->bindParam(':date_modified', date("Y-m-d H:i:s"));                
         $stmt->execute();
     }
 
     //retry OTP
     if (!empty($_GET['retry'])) {
+        //wrap in try catch block
         resendOTP($key, $payout['reference']);
     } 
 
     //send OTP to paystack
     if (isset($_POST["sendOTP"]) && !empty($_POST["otp"]) && !empty($payout['reference'])) {
+        //wrap in try catch block
         $transfer = sendOTP($key, $payout['reference'], $_POST["otp"]);
         $success = 'OTP sent successfully, transaction finalized';    
         header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));

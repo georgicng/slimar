@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $admin = true;
+require '../vendor/autoload.php';
 require "../inc/config.php";
 
 //This will be required for the active page in navigation
@@ -41,13 +42,13 @@ if (empty($_GET['p'])) {
     <?php if ($_GET['success']) {
     ?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['success']; ?>
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['success']; ?>
         </div>
     <?php
 } elseif ($_GET['error']) {
         ?>
             <div class="alert bg-error" role="alert">
-                        <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['error']; ?>
+                <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['error']; ?>
             </div>
         <?php
     } ?>
@@ -60,6 +61,7 @@ if (empty($_GET['p'])) {
                     <div class="panel-heading">Add new payment request</div>
                     <div class="panel-body">
         <?php
+        $banks = getBankList();
         //Post comment
         if (isset($_POST["addrequest"])) {
             if ($in["username"]) {
@@ -69,24 +71,64 @@ if (empty($_GET['p'])) {
                 $account_number = $_POST['request_account-number'];
                 $account_name = $_POST['request_account-name'];
                 $account_type = $_POST['request_account-type'];
-                $status = 'pending';
+                $status = 'Pending';
                 $date = date("Y-m-d H:i:s");
                 $comment = $_POST['request_comment'];
                             
-                            
-                activitylog(''.$in['username'].'', 'added a new payment request', ''.time().'');
-                $stmt =  $dbh->prepare("INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :status)");
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':bank', $bank);
-                $stmt->bindParam(':account_name', $account_name);
-                $stmt->bindParam(':account_number', $account_number);
-                $stmt->bindParam(':account_type', $account_type);
-                $stmt->bindParam(':status', $status);
-                $stmt->bindParam(':user_id', $user_id);
-                $stmt->bindParam(':date_added', $date);
-                $stmt->bindParam(':comment', $comment);
-                            
-                $stmt->execute();
+                //Todo validation and balance check
+                $sql = "SELECT * FROM users WHERE id = ".$user_id;
+                $stm = $dbh->prepare($sql);
+                $stm->execute();
+                $user = $stm->fetch();
+
+                if ($amount < $user['balance']) {
+                    //set holding balance
+                    $holding = $amount;
+                    $balance = $user['balance'] - $amount;
+                    $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$user_id);
+                    $stmt->bindParam(':holding', $holding);
+                    $stmt->bindParam(':balance', $balance);
+                    $stmt->execute();
+                    
+                    //send email
+                    $subject = "Transfer request";
+                    $message = "Your transfer request has been submitted successfully and waiting for approval.".
+                        "You will be updated on the status of your request shortly";
+                    mailer($user['email'], $subject, $message);
+
+                    activitylog(''.$in['username'].'', 'added a new payment request', ''.time().'');
+                    $stmt =  $dbh->prepare("INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :status)");
+                    $stmt->bindParam(':amount', $amount);
+                    $stmt->bindParam(':bank', $bank);
+                    $stmt->bindParam(':account_name', $account_name);
+                    $stmt->bindParam(':account_number', $account_number);
+                    $stmt->bindParam(':account_type', $account_type);
+                    $stmt->bindParam(':status', $status);
+                    $stmt->bindParam(':user_id', $user_id);
+                    $stmt->bindParam(':date_added', $date);
+                    $stmt->bindParam(':comment', $comment);
+
+                    //get recipient detail for transfer
+                    try
+                    {
+                        $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+                        $recipient = getRecipient($key, $account_name, $bank, $account_number);
+                        $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$user_id);
+                        $stmt->bindParam(':recipient', $recipient->data->recipient_code);
+                        $stmt->bindParam(':error', '');
+                        $stmt->bindParam(':data', serialize($recipient->data));
+                        $stmt->execute();
+                        
+                    } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                        $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$user_id);
+                        $stmt->bindParam(':recipient', false);
+                        $stmt->bindParam(':error', $e->getMessage());
+                        $stmt->bindParam(':data', serialize($e->getResponseObject()));
+                        $stmt->execute();
+                    }
+                }
+                
+                
             }
         } ?>
                         <form method="post">
@@ -98,7 +140,12 @@ if (empty($_GET['p'])) {
                                 <input type="number" name="request_amount" placeholder="Amount" class="form-control"></input>
                             </div>
                             <div class="form-group">
-                                <input type="text" name="request_bank" placeholder="PEnter bank" class="form-control"></input>
+                                <select name="request_bank" class="form-control">
+                                    <option value="">Select Bank</option>
+                                    <?php foreach ($banks as $bank) { ?>
+                                        <option value="<?php echo $bank['id'] ?>"><?php echo $bank['name'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <input type="text" name="request_account-number" placeholder="Enter account number" class="form-control"></input>
@@ -185,7 +232,7 @@ if (empty($_GET['p'])) {
             activitylog(''.$in['username'].'', 'approved payment request'.$request['id'].'', ''.time().'', 'Admin');
             
             //update request
-            $update_query = $dbh->prepare("UPDATE payout_requests SET status='approved', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
+            $update_query = $dbh->prepare("UPDATE payout_requests SET status='Approved', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
             $update_query->execute();
             
             //create payout request for processing
@@ -211,8 +258,25 @@ if (empty($_GET['p'])) {
             //update request status
             $update_query = $dbh->prepare("UPDATE payout_requests SET status='rejected', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
             $update_query->execute();
+           
+            $sql = "SELECT * FROM users WHERE id = ".$user_id;
+            $stm = $dbh->prepare($sql);
+            $stm->execute();
+            $user = $stm->fetch();
             
-            //TODO - send reject email here
+            //restore user balance
+            $holding = 0;
+            $balance = $user['balance'] + $user['holding'];
+            $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$user_id);
+            $stmt->bindParam(':holding', $holding);
+            $stmt->bindParam(':balance', $balance);
+            $stmt->execute();
+            
+            //send email
+            $subject = "Transfer request Rejected";
+            $message = "We are sorry to inform you that your transfer request has been rejected due to the following reason:".$comment;
+            mailer($user['email'], $subject, $message);
+            
             $success = "Payment request status updated";
             header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
         } ?>

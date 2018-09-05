@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $admin = true;
+require '../vendor/autoload.php';
 require "../inc/config.php";
 
 //This will be required for the active page in navigation

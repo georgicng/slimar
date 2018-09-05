@@ -36,5 +36,19 @@ switch ($event->event) {
         $payment['modified_date'] = date("Y-m-d H:i:s");
         R::store($payment);
         break;
+    case 'transfer.success':
+        $recipient = $event->data->recipient->recipient_code;
+        $payout = R::findOne('payouts', ' recipient = ? and status = ?', [$recipient, 'otp']);
+        $payout['status'] = 'Completed';
+        $payout['date_modified'] = date("Y-m-d H:i:s");
+        R::store($payout);        
+        $user = R::load('users', $payout['user_id']);
+        $user['holding'] = 0;
+        R::store($user); 
+        //send email
+        $subject = "Transfer Completed";
+        $message = "Your transfer has been made.";
+        mailer($user['email'], $subject, $message);
+        break;
 }
 exit();

@@ -61,7 +61,7 @@
         <li <?php if ($pagename=="manage_requests") {
     echo 'class="active"';
 }?>>
-            <a href="manage_requests.php"><i class="fa fa-folder" aria-hidden="true"></i> Payment Requests</a>
+            <a href="manage_requests.php"><i class="fa fa-folder" aria-hidden="true"></i> Payout Requests</a>
         </li>
         <li <?php if ($pagename=="manage_payouts") {
     echo 'class="active"';

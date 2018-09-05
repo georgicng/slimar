@@ -1,6 +1,7 @@
 <?php
 global $variables;
 global $in;
+global $error;
 
 if (!$in['id']) {
     header("location: index.php");
@@ -21,7 +22,9 @@ $data = array_merge(
         'minimum' => 1000
     ]
 );
-
+if ($errors) {
+    $data['errors'] = $errors;
+}
 $shouldTwigDebug = true;
 Twig\init('./templates', './templates/cache', $shouldTwigDebug)
     ->addExtension(new Twig_Extension_Debug());

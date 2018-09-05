@@ -422,6 +422,10 @@ if (isset($_POST['payout'])) {
             $errors[] = "amount cannot be empty";
         }
 
+        if ($amount > $i['balance']) {
+            $errors[] = "you cannot withdraw more than what you have in your account";
+        }
+
         if (empty($bank)) {
             $errors[] = "Please select a Bank";
         }
@@ -441,7 +445,7 @@ if (isset($_POST['payout'])) {
             
         if (empty($errors)) {
             activitylog(''.$in['username'].'', 'created a payment request', ''.time().'');
-            $stmt =  $dbh->prepare("INSERT INTO payout_request (user_id, bank, account_name, account_number, account_type, amount, date_added, recipient, data, error, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :recipient, :data, :error, :status)");
+            $stmt =  $dbh->prepare("INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, recipient, data, error, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :recipient, :data, :error, :status)");
             $stmt->bindParam(':amount', $amount);
             $stmt->bindParam(':bank', $bank);
             $stmt->bindParam(':account_name', $account_name);
@@ -450,20 +454,41 @@ if (isset($_POST['payout'])) {
             $stmt->bindParam(':status', 'pending');
             $stmt->bindParam(':user_id', $in["id"]);
             $stmt->bindParam(':date-added', date("Y-m-d H:i:s"));
+            $stmt->execute();
+            
+            //set holding balance
+            $holding = $amount;
+            $balance = $i['balance'] - $amount;
+            $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$i['id']);
+            $stmt->bindParam(':holding', $holding);
+            $stmt->bindParam(':balance', $balance);
+            $stmt->execute();
+            
+            //send email
+            $subject = "Transfer request";
+            $message = "Your transfer request has been submitted successfully and waiting for approval.".
+                "You will be updated on the status of your request shortly";
+            mailer($i['email'], $subject, $message);
+            
+            //get recipient detail for transfer
             try
             {
                 $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
                 $recipient = getRecipient($key, $account_name, $bank, $account_number);
-                $stmt->bindParam(':recipient', $recipient->data['recipient_code']);
+                $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$i['id']);
+                $stmt->bindParam(':recipient', $recipient->data->recipient_code);
                 $stmt->bindParam(':error', '');
                 $stmt->bindParam(':data', serialize($recipient->data));
+                $stmt->execute();
                 
             } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$i['id']);
                 $stmt->bindParam(':recipient', false);
                 $stmt->bindParam(':error', $e->getMessage());
                 $stmt->bindParam(':data', serialize($e->getResponseObject()));
+                $stmt->execute();
             }
-            $stmt->execute();
+            
 
             //deduct requested amount from balance and keep on hold
             $success = "Request has been submitted successfully";
