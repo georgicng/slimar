@@ -43,7 +43,7 @@ $negative = R::count('games_rating', ' game_id = ? && type = ?', [$cur_game['id'
 $data = array_merge(
     $variables,
     [
-        'pagename' => "Game",
+        'pagename' => $cur_game['title'],
         'fav' => $fav,
         'rating' => $positive - $negative,
         'date' => date('M d, Y', $cur_game['date']),

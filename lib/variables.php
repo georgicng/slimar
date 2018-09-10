@@ -2,6 +2,7 @@
 //require_once SITE_ROOT.'/inc/config.php';
 //require_once SITE_ROOT.'/lib/db.php';
 require "BootstrapMenu.php";
+require "FooterMenu.php";
 
 use RedBeanPHP\Facade as R;
 global $i;
@@ -20,7 +21,7 @@ $header_menu = new BootstrapMenu(
 );
 $menu = R::findOne('menus', ' position = ?', ['footer']);
 //error_log('footer menu: '.json_encode($menu));
-$footer_menu =  new BootstrapMenu(
+$footer_menu =  new FooterMenu(
     array(
         'data'=>html_entity_decode($menu['content'])
     )

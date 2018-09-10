@@ -23,4 +23,5 @@ Route\route(['get', 'post'], '/profile.php', 'pages/profile.php');
 Route\route(['get', 'post'], '/account_settings.php', 'pages/account_settings.php');
 Route\route(['get', 'post'], '/page.php', 'pages/page.php');
 Route\route(['get', 'post'], '/credit.php', 'pages/credit.php');
+Route\route(['get', 'post'], '/payout.php', 'pages/payout.php');
 Route\route(['get', 'post'], 'win.php', 'pages/win.php');

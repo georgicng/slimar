@@ -27,6 +27,11 @@ if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
                 $stmt1->bindValue(':id', $in['usergroup']);
                 $stmt1->execute();
                 $in_perm = $stmt1->fetch();
+
+                //set initial balance
+                if (empty($in['balance'])) {
+                    $in['balance'] = 0;
+                }
             
                 //Gets user profile picture
                 if (if_gravatar("".$in['email']."") == "true" 

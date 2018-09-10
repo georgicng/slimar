@@ -1,40 +1,83 @@
 {% extends "./layout/layout.twig" %}
 
 {% block content %}
-    <div class="row">
+    <div class="content">
         {% if (cur_game['id']) %}
-            <div class="col-sm-4 col-lg-5 col-md-4">                                    
-                <div class='wrapper'>
-                    <img class="img-responsive" src='{{ cur_game['image'] }}' />                
-                </div>                
-            </div>            
-            <div class="col-sm-6 col-lg-7 col-md-7">            
-                <font style="font-size:20pt;">{{ cur_game['title'] }}</font><br>
-                <B>Date:</b> {{ date }} - 
-                <b>Category:</b> <a href="cat.php?c={{ cur_game_category['title']  }}"> {{ cur_game_category['title']  }}</a> - 
-                <b>Rating:</b> 
-                
-                {% if (rating < 0) %}
-                    <span style="color:red;font-weight:bold;">  {{ rating }}</span>
-                {% else %}	
-                    <span style="color:green;font-weight:bold;"> {{ rating }}</span>
-                {% endif %}	
-                <br><br><B>Description:</b><br>
-                {{ cur_game['description'] | raw }}
-                <br><br>
-                <a style="float:left;margin-right:10px" href="play.php?g={{ cur_game['url'] }}" class="btn btn-primary">Play Game</a>			
-                {% if (fav['id']) %}
-                    <form method="post" style="float:left;">
-                        <button type="submit" class="btn btn-fav" name="fav_remove"><i class="fa fa-heart" aria-hidden="true"></i> Favourited</button>
-                    </form>
-                {% else %}
-                    <form method="post" style="float:left;">
-                        <button type="submit" class="btn btn-fav2" name="fav_add"><i class="fa fa-heart-o" aria-hidden="true"></i> Add to favourites</button>
-                    </form>
-                {% endif %}					
+            <div class='banner'>
+                <img class="w-100" src='{{ cur_game[' image']?: '//placehold.it/650x250' }}'/>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="action-bar pull-right">
+                        <a class="btn btn-primary" href="play.php?g={{ cur_game['url'] }}">Play Game</a>
+                        {% if (fav['id']) %}
+                            <form method="post" style="float:left;">
+                                <button type="submit" class="btn btn-fav" name="fav_remove">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                    Favourited</button>
+                            </form>
+                        {% else %}
+                            <form method="post" style="float:left;">
+                                <button type="submit" class="btn btn-fav2" name="fav_add">
+                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                    Add to favourites</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="descriprion">
+                        <h2>Game Description</h2>
+                        <div class="description-text">{{ cur_game['description'] | raw }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col">
+                    <div class="meta">
+                        <b>Date:</b> {{ date }}
+                       <br>
+                        <b>Category:</b> <a href="cat.php?c={{ cur_game_category['title']  }}">{{ cur_game_category['title']  }}</a>
+                        <br>
+                        <b>Rating:</b>
+
+                        {% if (rating < 0) %}
+                            <span style="color:red;font-weight:bold;">
+                                {{ rating }}</span>
+                        {% else %}
+                            <span style="color:green;font-weight:bold;">
+                                {{ rating }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="action-bar pull-right">
+                        <a class="btn btn-primary" href="play.php?g={{ cur_game['url'] }}">Play Game</a>
+                        {% if (fav['id']) %}
+                            <form method="post" style="float:left;">
+                                <button type="submit" class="btn btn-fav" name="fav_remove">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                    Favourited</button>
+                            </form>
+                        {% else %}
+                            <form method="post" style="float:left;">
+                                <button type="submit" class="btn btn-fav2" name="fav_add">
+                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                    Add to favourites</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         {% else %}
-            <div class="col-sm-6 col-lg-7 col-md-7"><b style="color:#cf000f;">Notice:</b> This game does not exist!</div>
-        {% endif %}	
-    </div>     
+            <div class="alert alert-danger" role="alert">
+                <strong>Notice</strong>
+                This game does not exist!
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
