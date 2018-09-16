@@ -6,6 +6,7 @@ nb-configuration.xml
 Session.vim
 *.tmproj
 *.tmproject
+*.zip
 tmtags
 Thumbs.db
 Desktop.ini
