@@ -3,11 +3,18 @@
 //require_once SITE_ROOT.'/lib/db.php';
 //$variables = include SITE_ROOT.'/lib/variables.php';
 global $variables;
+global $i;
+global $in;
 
 use RedBeanPHP\Facade as R;
 use Siler\Twig;
 use Siler\Http\Request;
 use Siler\Http\Response;
+
+if (!$in['username']) {
+    header("location: error.php");
+    exit;
+}
 
 $url = Request\get('g');
 $cur_game = R::findOne('games', ' url = ?', [$url]);
@@ -38,11 +45,11 @@ if (isset($in['id'])) {
         R::store($gamesplayed2);
     } elseif ($gameplayed == 0) {
         $entry = R::xdispense('games_played');
-        $stmt = $dbh->prepare("INSERT INTO games_played (user_id, game_id, time, month_played, times_played) VALUES (:user_id, :game_id, :time, :month, 1)");
         $entry->user_id = $in['id'];
         $entry->game_id = $cur_game['id'];
         $entry->time = time();
-        $$entry->month = date("F", strtotime("first day of this month"));
+        $entry->month_played = date("F", strtotime("first day of this month"));
+        $entry->times_played = 1;
         R::store($entry);
     }
 }
@@ -217,7 +224,10 @@ $data = array_merge(
 );
 
 $shouldTwigDebug = true;
-Twig\init('./templates', './templates/cache', $shouldTwigDebug)
-    ->addExtension(new Twig_Extension_Debug());
+$twig = Twig\init('./templates', './templates/cache', $shouldTwigDebug);
+$twig->addExtension(new Twig_Extension_Debug());
+$twig->addGlobal('_session', $_SESSION);
+$twig->addGlobal('_post', $_POST);
+$twig->addGlobal('_get', $_GET);
 
 echo Twig\render('play.twig', $data);

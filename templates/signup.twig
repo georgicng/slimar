@@ -1,49 +1,42 @@
 {% extends "./layout/layout_full.twig" %}
 
 {% block content %} 
-
-    <div class="row my-3">                               
-        <div class="offset-md-2 col-md-8"><h2>{{ pagename }}</h2></div>
-    </div>
-    <div class="row">   
+    <div class="row my-5">   
         <div class="col-md-8 offset-md-2">
+            <h2>{{ pagename }}</h2>
             {% if (i['registeration'] == "1") %}
                 <form class="form" method="post">
                     <div class="row">
                         <div class="col form-group">
-                                <label for="exampleInputEmail2">Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ _post.username ? _post.username }}" required>
                         </div>
                         <div class="col form-group">
-                                <label for="exampleInputEmail2">First name</label>
-                                <input type="text" name="firstname" class="form-control" placeholder="First name" required>
+                                <label for="firstname">First name</label>
+                                <input type="text" name="firstname" id="firstname" class="form-control" placeholder="First name" value="{{ _post.firstname ? _post.firstname }}" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col form-group">
-                                <label  for="exampleInputEmail2">Email address</label>
-                                <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                                <label  for="email">Email address</label>
+                                <input type="email" name="email" id="email"  class="form-control" placeholder="Email address" value="{{ _post.email ? _post.email }}" required>
                         </div>
                         <div class="col form-group">
-                                <label  for="exampleInputEmail2">Date of birth</label>
-                                <input type="date" name="dob" class="form-control" placeholder="Email address" required>
+                                <label for="refer">OPTIONAL: Referred by <small>Enter username of user that invited you</small></label>
+                                <input type="text" name="refer" id="refer" class="form-control" placeholder="" value="{{ _post.refer ? _post.refer }}">                                            
                         </div>
                     </div>
                     <div class="row">
                         <div class="col form-group">
-                                <label for="exampleInputPassword2">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="Password" required>                                            
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>                                            
                         </div>
                         <div class="col form-group">
-                                <label for="exampleInputPassword2">Confirm Password</label>
-                                <input type="password" name="password2" class="form-control" placeholder="Password" required>                                            
+                                <label for="password2">Confirm Password</label>
+                                <input type="password" name="password2" name="password2" class="form-control" placeholder="Password" required>                                            
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col form-group">
-                                <label for="referral">OPTIONAL: Referred by <small>Enter username of user that invited you</small></label>
-                                <input type="text" name="refer" class="form-control" placeholder="" value="{{ refer }}">                                            
-                        </div>
+                    <div class="row">                        
                         <div class="col form-group">
                             {% if (i['captcha_reg'] == "1") %}
                                 <img src="inc/captcha.php" style="float:left;"/>
@@ -52,7 +45,7 @@
                         </div>
                     </div>
                         <div class="form-group">
-                            <input type="submit" name="register" class="btn btn-pink btn-block" value="Register">                                        
+                            <input type="submit" name="register" class="btn btn-primary btn-block" value="Register">                                        
                         </div>
                 </form> 
             {% else %}

@@ -12,43 +12,46 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
         <!-- CSS Files -->
-        <link href="files/css/bootstrap.min.css" rel="stylesheet"/>
-        <link href="files/css/now-ui-kit.css?v=1.2.0" rel="stylesheet"/>
+        <!--link href="files/css/bootstrap.min.css" rel="stylesheet"/-->
+        <link href="files/css/now-ui-kit.css" rel="stylesheet"/>
     </head>
 
-    <body class="{{pagename}}" id="page">
+    <body class="{{pagename}} sidebar-collapse menu-on-left" id="page">
         {{ include('partials/top_bar.twig') }}
         {{ include('partials/breadcrumbs.twig') }}
-        <div class="container">
-            {% if (pagename == 'Profile') %}
-                {{ include('partials/modal.twig')}}
-            {% endif %}
-            <div class="row">
-                <div class="visible-lg-2 col-lg-2" style="padding:10px;padding-top:0px;">
-                    {{ include('partials/left_sidebar.twig') }}
-                </div>
-                <div class="col-md-8 col-lg-8">
-                    {% if (error) %}
-                        {{ include('partials/alert_error.twig')}}
+        <div class="wrapper">
+            <div class="section">
+                <div class="container">
+                    {% if (pagename == 'Profile') %}
+                        {{ include('partials/modal.twig')}}
                     {% endif %}
-                    {% if (success) %}
-                        {{ include('partials/alert_success.twig')}}
-                    {% endif %}
-                    <div class="container">
-                        <div class="row my-3">                                
-                            <div class="col-md-6"><h2>{{ pagename }}</h2></div>
-                            <div class="col-md-6">{{ include('partials/page_header.twig') }}</div>
+                    <div class="row">
+                        <div class="d-none d-lg-block col-lg-2" style="padding:10px;padding-top:0px;">
+                            {{ include('partials/left_sidebar.twig') }}
                         </div>
-                        <div class="content-wrapper">
-                            {% block content %}{% endblock %}
+                        <div class="col-md-8 col-lg-8">
+                            {% if (error) %}
+                                {{ include('partials/alert_error.twig')}}
+                            {% endif %}
+                            {% if (success) %}
+                                {{ include('partials/alert_success.twig')}}
+                            {% endif %}
+                            <div class="container">
+                                <div class="row my-3">                                
+                                    <div class="col-md-6"><h2>{{ pagename }}</h2></div>
+                                    <div class="col-md-6">{{ include('partials/page_header.twig') }}</div>
+                                </div>
+                                <div class="content-wrapper">
+                                    {% block content %}{% endblock %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-2" style="padding:10px;padding-top:0px;">
+                            {{ include('partials/right_sidebar.twig') }}
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 col-lg-2" style="padding:10px;padding-top:0px;">
-                    {{ include('partials/right_sidebar.twig') }}
-                </div>
             </div>
-        </div>
-        {{ include('partials/footer.twig') }}
+            {{ include('partials/footer.twig') }}
     </body>
 </html>

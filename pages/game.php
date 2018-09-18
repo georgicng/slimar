@@ -3,6 +3,8 @@
 //require_once SITE_ROOT.'/lib/db.php';
 //$variables = include SITE_ROOT.'/lib/variables.php';
 global $variables;
+global $i;
+global $in;
 
 use RedBeanPHP\Facade as R;
 use Siler\Twig;
@@ -12,7 +14,7 @@ use Siler\Http\Response;
 if (!empty(Request\post('fav_add'))) {
     $entry = R::dispense('users_favourites');
     $entry->game_id = $cur_game['id'];
-    $entry->user_id = $$in['id'];
+    $entry->user_id = $in['id'];
     R::store($entry);
     header("location: ".$currenturl."/game.php?g=".$cur_game['url']."");
 }
@@ -46,7 +48,7 @@ $data = array_merge(
         'pagename' => $cur_game['title'],
         'fav' => $fav,
         'rating' => $positive - $negative,
-        'date' => date('M d, Y', $cur_game['date']),
+        'date' => date('M d, Y', strtotime($cur_game['date'])),
         'cur_game' => $cur_game,
         'cur_game_category' => $cur_game_category
     ]

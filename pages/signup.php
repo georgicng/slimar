@@ -3,6 +3,7 @@
 //require_once SITE_ROOT.'/lib/db.php';
 //$variables = include SITE_ROOT.'/lib/variables.php';
 global $variables;
+global $in;
 
 use RedBeanPHP\Facade as R;
 use Siler\Twig;
@@ -26,7 +27,10 @@ $data = array_merge(
 );
 
 $shouldTwigDebug = true;
-Twig\init('./templates', './templates/cache', $shouldTwigDebug)
-    ->addExtension(new Twig_Extension_Debug());
+$twig = Twig\init('./templates', './templates/cache', $shouldTwigDebug);
+$twig->addExtension(new Twig_Extension_Debug());
+$twig->addGlobal('_session', $_SESSION);
+$twig->addGlobal('_post', $_POST);
+$twig->addGlobal('_get', $_GET);
     
 echo Twig\render('signup.twig', $data);

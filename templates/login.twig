@@ -1,36 +1,41 @@
 {% extends "./layout/layout_full.twig" %}
 
 {% block content %}
-    <div class="row my-3">                               
-        <div class="offset-md-3 col-md-6"><h2>{{ pagename }}</h2></div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 offset-3">		
+    <div class="col-md-4 ml-auto mr-auto">
+        <div class="card card-login card-plain">
             <form class="form" method="post" id="login-nav">
-                <div class="form-group">
-                        <label class="sr-only" for="exampleInputEmail2">Email address</label>
-                        <input type="email" name="email" class="form-control" placeholder="Email address" required>
+                <div class="card-header text-center text-dark">
+                    <h2>{{ pagename }}</h2>
                 </div>
-                <div class="form-group">
-                        <label class="sr-only" for="exampleInputPassword2">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>                                             
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="sr-only" for="email">Email address</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required">
+                    </div>
+                    <div class="form-group">
+                        {% if (i['captcha'] == "1") %}
+                            <img src="inc/captcha.php" style="float:left;"/>
+                            <input placeholder='Captcha' style="width:170px;padding:9px;color:#272727;" maxlength="4" name="captcha" type="text">
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="form-group">
-                    {% if (i['captcha'] == "1") %}
-                        <img src="inc/captcha.php" style="float:left;"/>
-                        <input placeholder='Captcha' style="width:170px;padding:9px;color:#272727;" maxlength="4" name="captcha" type="text">
-                    {% endif %}
+                <div class="card-footer text-dark">
+                    <div class="form-group">
+                        <input type="submit" name="login" class="btn btn-primary btn-block" value="Login">
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
+                        <label for="remember">
+                            Remember Me</label>
+                    </div>
+                    <a href="signup.php">Register</a><br>
+                    <a href="forgotpass.php">Forgot Password?</a>
                 </div>
-                <div class="form-group">
-                    <input type="submit" name="login" class="btn btn-pink btn-block" value="Login">
-                </div>			
-                <div class="form-group text-center">
-                    <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
-                    <label for="remember"> Remember Me</label>
-                </div>
-                <a href="signup.php">Register</a><br>
-                <a href="forgotpass.php">Forgot Password?</a>
-            </form>		
+            </form>
         </div>
-    </div> 
+    </div>
 {% endblock %}

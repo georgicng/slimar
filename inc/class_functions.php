@@ -334,10 +334,10 @@ function getCountryCodes()
 //List of Nigerian Banks
 function getBankList()
 {
+    //Todo: make it a pure function
     global $i;
     global $in;
     $supported_banks = [];
-    error_log(json_encode($i).' '. json_encode($in));
     $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
     $paystack = new Yabacon\Paystack($key);
     try {

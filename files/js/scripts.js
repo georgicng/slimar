@@ -57,6 +57,10 @@ var ScriptLibrary = (function() {
 									btnClicked.addClass("active");
 							}
 						});
+
+						$('[data-toggle="offcanvas"], #navToggle').on('click', function () {
+							$('.offcanvas-collapse').toggleClass('open')
+						});
 					}
 				}
 			}

@@ -103,14 +103,16 @@ if (isset($_POST['login'])) {
 
 //process registration
 if (isset($_POST['register'])) {
-    if (!$in["username"]) {
-        $username = $_POST['username'];
-        $firstname = $_POST['firstname'];
-        $email = $_POST['email'];
+    if (!isset($in["username"])) {
+        error_log('processing registration');
+        error_log("post: ".json_encode($_POST));
+        $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
+        $firstname = filter_var($_POST['firstname'], FILTER_SANITIZE_STRING);
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $dob = $_POST['dob'];
-        $password = $_POST['password'];
-        $password2 = $_POST['password2'];
-        $refer = $_POST['refer'];
+        $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+        $password2 = filter_var($_POST['password2'], FILTER_SANITIZE_STRING);
+        $refer = filter_var($_POST['refer'], FILTER_SANITIZE_STRING);
         
         $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
         $stmt->bindValue(':username', $username);
@@ -138,50 +140,60 @@ if (isset($_POST['register'])) {
         $stmt->execute();
         $rowemail = $stmt->fetch();
         
-        if (!$i['captcha_reg'] == "1" || isset($_POST["captcha"])&&$_POST["captcha"]!=""&&$_SESSION["code"]==$_POST["captcha"]) {
+        if (!$i['captcha_reg'] == "1" || isset($_POST["captcha"]) && $_POST["captcha"] != "" && $_SESSION["code"]==$_POST["captcha"]) {
             if ($rowusername['username']) {
                 $error = "The username that you have entered already exists! Try logging in <a href='login.php'>here</a>";
             } elseif ($rowemail['email']) {
                 $error = "The email that you have entered already exists! Try logging in <a href='login.php'>here</a>";
             } else {
-                if (!$password == $password2) {
+                if ($password != $password2) {
                     $error = "The two passwords you entered do not match";
                 } else {
                     $password_hashed = password_hash($password, PASSWORD_DEFAULT);
                     $profilepic = $i['defaultpic'];
+                    error_log('password hash: '.$password_hashed);
                 
                     $stmt = $dbh->prepare("SELECT * FROM users ORDER BY id desc LIMIT 1");
                     $stmt->execute();
                     $getlastid = $stmt->fetch();
                     $lastid = $getlastid['id'] + 1;
-        
+                    error_log('register id: '.$lastid);
                 
                     $joindate = time();
                     $join_month = date("F", strtotime("first day of this month"));
-                    activitylog(''.$username.'', 'Registered', ''.time().'');
-                    $stmt = $dbh->prepare("INSERT INTO users (id, username, password, email, firstname, dob, profilepic, joindate, join_month, verified, referral) VALUES (:id, :username, :password, :email, :firstname, :dob, :profilepic, :joindate, :join_month, :verified, :referral)");
-                    $stmt->bindParam(':id', $lastid);
-                    $stmt->bindParam(':username', $username);
-                    $stmt->bindParam(':password', $password_hashed);
-                    $stmt->bindParam(':email', $email);
-                    $stmt->bindParam(':firstname', $firstname);
-                    $stmt->bindParam(':dob', $dob);
-                    $stmt->bindParam(':profilepic', $profilepic);
-                    $stmt->bindParam(':joindate', $joindate);
-                    $stmt->bindParam(':join_month', $join_month);
-                    if ($i['verify'] == "0") {
-                        $verified = "1";
-                        $stmt->bindParam(':verified', $verified);
-                    } else {
-                        $verified = "0";
-                        $stmt->bindParam(':verified', $verified);
-                    }
-                    $stmt->bindParam(':referral', $userreferred);
-                    $stmt->execute();
-                
-                    setcookie("id", $lastid, time()+(60*60*60*24*5));
-                    setcookie("password", $password_hashed, time()+(60*60*60*24*5));
-                    header("location: index.php");
+                    try {
+                        $sql = "INSERT INTO users (username, password, email, firstname, balance, profilepic, joindate, join_month, verified, referral) ".
+                            " VALUES (:username, :password, :email, :firstname, :balance, :profilepic, :joindate, :join_month, :verified, :referral)";
+                        $stmt = $dbh->prepare($sql);
+                        //$stmt->bindParam(':id', $lastid);
+                        $stmt->bindParam(':username', $username);
+                        $stmt->bindParam(':password', $password_hashed);
+                        $stmt->bindParam(':email', $email);
+                        $stmt->bindParam(':firstname', $firstname);
+                        $stmt->bindParam(':balance', 500);
+                        $stmt->bindParam(':profilepic', $profilepic);
+                        $stmt->bindParam(':joindate', $joindate);
+                        $stmt->bindParam(':join_month', $join_month);
+                        if ($i['verify'] == "0") {
+                            $verified = "1";
+                            $stmt->bindParam(':verified', $verified);
+                        } else {
+                            $verified = "0";
+                            $stmt->bindParam(':verified', $verified);
+                        }
+                        $stmt->bindParam(':referral', $userreferred);
+                        if ($stmt->execute()) {
+                            activitylog(''.$username.'', 'Registered', ''.time().'');
+                            header("location: login.php");
+                        } else {
+                            error_log("insert error data: ".json_encode($stmt->errorInfo()));
+                            $error = $stmt->errorCode().": Opps something went wrong, please try again";
+                        }                  
+
+                    } catch(PDOException $e) {
+                        $error = $e->getMessage();
+                    }                   
+                    
                 }
             }
         } else {
@@ -193,7 +205,7 @@ if (isset($_POST['register'])) {
 
 //Post comment
 if (isset($_POST["postcommentprofile"])) {
-    if ($in["username"]) {
+    if (isset($in["username"])) {
         $id_from = $in['id'];
         $id_to = $_POST['userid'];
         $message = strip_tags($_POST['message'], '<br><b><strong>');
@@ -218,7 +230,7 @@ if (isset($_POST["postcommentprofile"])) {
 
 //Post reply
 if (isset($_POST['postreplyprofile'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         $id_from = $in['id'];
         $id_to = $_POST['userid'];
         $message = strip_tags($_POST['message'], '<br><b><strong>');
@@ -255,7 +267,7 @@ if (isset($in['id'])) {
  
 //Private messaging
 if (isset($_POST['sendmessage'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         $id_from = "1";
         $id_to = $_POST['userid'];
         $subject = strip_tags($_POST['subject'], '<br><b><strong>');
@@ -339,7 +351,7 @@ if (isset($_POST["uploadavatar"])) {
 
 //Enabling gravatar
 if (isset($_POST['enablegravatar'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         if ($_POST['usegravatar'] == "1") {
             $currenturl = $i['url'];
             activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
@@ -360,7 +372,7 @@ if (isset($_POST['enablegravatar'])) {
  
 //Update about
 if (isset($_POST['updateabout'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
         $currenturl = $i['url'];
         $sql = $dbh->prepare("UPDATE users SET aboutme='".$_POST['aboutme']."', gender='".$_POST['gender']."' WHERE id=".$in['id']."");
@@ -372,7 +384,7 @@ if (isset($_POST['updateabout'])) {
  
 //Update settings
 if (isset($_POST['updatesettings'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         $currenturl = $i['url'];
         activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
         $sql = $dbh->prepare("UPDATE users SET email='".$_POST['email']."', firstname='".$_POST['firstname']."', country='".$_POST['country']."', timezone='".$_POST['timezone']."', dob='".$_POST['dob']."', hide_offline='".$_POST['hide_offline']."', viewprofile='".$_POST['viewprofile']."' WHERE id=".$in['id']."");
@@ -384,7 +396,7 @@ if (isset($_POST['updatesettings'])) {
  
 //Update password
 if (isset($_POST['updatepassword'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         $currentpassword = "".$_POST['currentpassword']."";
         $newpassword = "".$_POST['newpassword']."";
         $confirmpassword = "".$_POST['confirmpassword']."";
@@ -415,7 +427,7 @@ if (isset($_POST['updatepassword'])) {
 
 //Process Payout
 if (isset($_POST['payout'])) {
-    if ($in["username"]) {
+    if (!empty($in["username"])) {
         $errors = [];
         $bank = filter_var($_POST['bank'], FILTER_SANITIZE_NUMBER_INT);
         $amount = filter_var($_POST['amount'], FILTER_SANITIZE_NUMBER_FLOAT);

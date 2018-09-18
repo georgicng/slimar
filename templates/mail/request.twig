@@ -1,0 +1,13 @@
+{% extends "../layout/mail_template.twig" %}
+
+{% block subject  %}
+
+{% block body_html %}
+    {% block html_content %}
+    {% endblock %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body_text %}
+
+{% endblock %}

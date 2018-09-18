@@ -7,6 +7,10 @@ require "FooterMenu.php";
 use RedBeanPHP\Facade as R;
 global $i;
 global $in;
+global $in_perm;
+global $currenturl;
+global $error;
+global $success;
 
 //error_log("i: ".json_encode($i));
 //error_log("in: ".json_encode($in));

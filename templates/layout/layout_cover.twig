@@ -12,23 +12,18 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet"/>
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
         <!-- CSS Files -->
-        <link href="files/css/bootstrap.min.css" rel="stylesheet"/>
-        <link href="files/css/now-ui-kit.css?v=1.2.0" rel="stylesheet"/>
+        <link href="files/css/now-ui-kit.css" rel="stylesheet"/>
+        <link href="files/css/cover.css" rel="stylesheet">
     </head>
     <body class="{{pagename}}" id="page">
         {{ include('partials/top_bar.twig') }}
-        <div class="page-header clear-filter">
-            <div class="content">
-                <div class="container">
-                    {% if (error) %}
-                        {{ include('partials/alert_error.twig')}}
-                    {% endif %}
-                    {% if (success) %}
-                        {{ include('partials/alert_success.twig')}}
-                    {% endif %}
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
+                <div class="cover-container">
                     {% block content %}{% endblock %}
                 </div>
             </div>
-            {{ include('partials/footer.twig') }}
-        </body>
-    </html>
+        </div>
+        {{ include('partials/footer.twig') }}
+    </body>
+</html>

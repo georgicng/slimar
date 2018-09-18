@@ -6,12 +6,14 @@ nb-configuration.xml
 Session.vim
 *.tmproj
 *.tmproject
+*.zip
 tmtags
 Thumbs.db
 Desktop.ini
 
 # ignore Composer downloads
 /vendor/*
+/games/*
 
 # keep some hiddens
 !.htaccess

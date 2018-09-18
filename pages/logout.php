@@ -3,6 +3,7 @@
 //require_once SITE_ROOT.'/lib/db.php';
 //$variables = include SITE_ROOT.'/lib/variables.php';
 global $variables;
+global $in;
 
 use RedBeanPHP\Facade as R;
 use Siler\Twig;
