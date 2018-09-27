@@ -12,7 +12,12 @@ use Siler\Http\Request;
 use Siler\Http\Response;
 
 if (!$in['username']) {
-    header("location: error.php");
+    header("location: error.php?code=not_logged_in");
+    exit;
+}
+
+if ($in['locked']) {
+    header("location: error.php?code=game_in_session");
     exit;
 }
 

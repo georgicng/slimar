@@ -11,7 +11,7 @@ ini_set('display_errors', 'off');
 $version = 1.0;
 //Grabs database information
 if ($installed == 1) {
-    require "details.php";
+    require __DIR__."/details.php";
    
     //Attempt to connect to database using above details.php
     try {

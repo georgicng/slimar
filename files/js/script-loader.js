@@ -297,21 +297,10 @@ var ScriptLoader = function() {
         }(),
         LoadScripts: function(a) {
             try {
-				ScriptLoader.Logger.LogIntro("SLIMAR USER");
-                ScriptLoader.Logger.LogInfo("Scripts First Timestamp: " + ScriptLoader.Global.GetTimeStamp());
-				ScriptLoader.Loader.loadScript('https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js', function() {
-                    ScriptLoader.Logger.LogInfo("JQuery Load Callback Timestamp: " + ScriptLoader.Global.GetTimeStamp());
-					
-					ScriptLoader.Loader.loadScript('files/js/scripts.js', function() {
-                        ScriptLoader.Logger.LogInfo("Library Callback Timestamp: " + ScriptLoader.Global.GetTimeStamp());
-						
-						//Extras
-						ScriptLoader.Loader.loadScript('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', function() {
-							ScriptLoader.Logger.LogInfo("Bootstrap Script Callback Timestamp: " + ScriptLoader.Global.GetTimeStamp());
-						});
-						
-                    })
-                })
+								
+				ScriptLoader.Loader.loadScript('files/js/scripts.js', function() {
+					ScriptLoader.Logger.LogInfo("Library Callback Timestamp: " + ScriptLoader.Global.GetTimeStamp());											
+				});
             } catch (a) {
                 ScriptLoader.Logger.LogError("The Script Loader Ran Into An Error:"), ScriptLoader.Logger.LogError(a)
             }

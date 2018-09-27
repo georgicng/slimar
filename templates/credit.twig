@@ -3,69 +3,52 @@
 {% block content %}
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 col-xl-4">
         <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <h2><i class="fas fa-money-bill"></i></h2>
-                    <h3>N500</h3>
-                </div>
-                <button type="button" onclick="savePayment('500')"> Buy </button> 
+            <div class="card-body">
+                <h4 class="card-title">N500</h4>
+                <button type="button" onclick="savePayment('500')" class="btn btn-primary"> Buy </button> 
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="card-title">N1000</h4>
+                <button type="button" onclick="savePayment('1000')" class="btn btn-primary"> Buy </button> 
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="card-title">N1500</h4>
+                <button type="button" onclick="savePayment('1500')" class="btn btn-primary"> Buy </button> 
             </div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <h2><i class="fas fa-money-bill"></i></h2>
-                    <h3>N1000</h3>
-                </div>
-                <button type="button" onclick="savePayment('1000')"> Buy </button> 
+            <div class="card-body">
+                <h4 class="card-title">N2000</h4>
+                <button type="button" onclick="savePayment('2000')" class="btn btn-primary"> Buy </button> 
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6 col-xl-4">
         <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <h2><i class="fas fa-money-bill"></i></h2>
-                    <h3>N1500</h3>
-                </div>
-                <button type="button" onclick="savePayment('1500')"> Buy </button> 
+            <div class="card-body">
+                <h4 class="card-title">N2500</h4>
+                <button type="button" onclick="savePayment('2500')" class="btn btn-primary"> Buy </button> 
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6 col-xl-4">
         <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <h2><i class="fas fa-money-bill"></i></h2>
-                    <h3>N2000</h3>
-                </div>
-                <button type="button" onclick="savePayment('2000')"> Buy </button> 
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <h2><i class="fas fa-money-bill"></i></h2>
-                    <h3>N2500</h3>
-                </div>
-                <button type="button" onclick="savePayment('2500')"> Buy </button> 
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-block">
-                <div class="card-title">
-                    <label for="amount">Enter amount</label>
-                    <input type="number" name="amount" placeholder="500" step="100" id="amount" class="form-control">
-                </div>
-                <button type="button" onclick="savePayment('amount', true)">Buy</button> 
+            <div class="card-body">
+                    <label for="amount" class="card-title">Enter amount</label>
+                    <input type="number" name="amount" placeholder="500" step="100" id="amount" class="form-control card-text">   
+                    <button type="button" onclick="savePayment('amount', true)" class="btn btn-primary">Buy</button> 
             </div>
         </div>
     </div>
@@ -92,12 +75,13 @@
             /* check result from the attempt */
             console.log(data);
             $.LoadingOverlay("hide");
-            payWithPaystack(data.data);
+            payWithPaystack(data);
 
         });
         posting.fail(function( data ) { 
-            /* and if it failed... */ 
-            $.LoadingOverlay("hide");
+            /* and if it failed... */
+            $.LoadingOverlay("hide");            
+            alert("Couldn't complete request");
         });
     }
 
@@ -123,6 +107,13 @@
             verifying.done(function( data ) { 
                 /* give value saved in data */ 
                 $.LoadingOverlay("hide");
+                $('#user-balance').text( data.balance );
+                alert("Recharge successfull, balance updated");
+            });
+            verifying.fail(function( data ) { 
+                /* and if it failed... */
+                $.LoadingOverlay("hide");            
+                alert("Couldn't confirm your payment at this time, you will be notified once payment has been confirmed");
             });
           },
           onClose: function(){

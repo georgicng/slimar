@@ -1,4 +1,5 @@
 <?php
+use Siler\Twig;
 // [* SlimarUSER *] set user cookie//
 if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
     $id = $_COOKIE['id'];
@@ -184,6 +185,28 @@ if (isset($_POST['register'])) {
                         $stmt->bindParam(':referral', $userreferred);
                         if ($stmt->execute()) {
                             activitylog(''.$username.'', 'Registered', ''.time().'');
+                            //send email
+                            $mail = new EmailTemplate(Twig\init('./templates', './templates/cache'));
+                            $mailer = $mail->getMessage(
+                                'registration', 
+                                [
+                                    "name" => $firstname,
+                                    "username" => $username,
+                                    "email" => $email,
+                                    "link" => "http://input"
+                                ]
+                            );
+                            $mailer->isSMTP();  // Set mailer to use SMTP
+                            $mailer->Host = 'localhost';  // Specify main and backup SMTP servers
+                            //$mail->SMTPAuth = true;                               // Enable SMTP authentication
+                            //$mail->Username = 'user@example.com';                 // SMTP username
+                            //$mail->Password = 'secret';                           // SMTP password
+                            //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                            //$mail->Port = 587;                                    // TCP port to connect to
+
+                            $mailer->setFrom($i['email'], 'Chapgames');
+                            $mailer->addAddress($email, $firstname);     // Add a recipient
+                            $mailer->send();
                             header("location: login.php");
                         } else {
                             error_log("insert error data: ".json_encode($stmt->errorInfo()));

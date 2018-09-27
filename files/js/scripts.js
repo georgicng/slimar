@@ -16,8 +16,7 @@ var ScriptLibrary = (function() {
 				AddEvents: function() {
 					//Window Scrolling
 					var doc = $(this);
-					if(doc.length) {
-						
+					if(doc.length) {				
 						
 						
 						
@@ -62,6 +61,26 @@ var ScriptLibrary = (function() {
 							$('.offcanvas-collapse').toggleClass('open')
 						});
 					}
+
+					window.addEventListener("message", function(event) {
+						if(event.origin !== "https://checkout.paystack.com") {
+							$.ajax({
+								url: 'process.php',
+								dataType: 'json',
+								type: 'POST',
+								contentType:'application/json',
+								data: event.data,
+								success: function( data, textStatus, jQxhr ){
+									console.log( "process response", data );
+									$('#user-balance').text( data.balance );
+								},
+								error: function( jqXhr, textStatus, errorThrown ){
+									console.log( errorThrown );
+								}
+							});
+						}						
+								  
+					});
 				}
 			}
 		})(),
