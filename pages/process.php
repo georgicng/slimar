@@ -73,7 +73,7 @@ if ($data['game'] == 2) {
         case 'start_session':
             if (!empty($_SESSION['game_in_session'])) {
                 $return['redirect'] = true;
-                $return['url'] = $i['url']."/error.php?code=game_in_session";
+                $return['url'] = $i['url']."/giterror.php?code=game_in_session";
                 Response\json($return);
                 exit;
             }
