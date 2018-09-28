@@ -2,10 +2,10 @@
 
 {% block content %} 
     <div class="inner cover">
-        <h1 class="cover-heading">Access Denied.</h1>
-        <p class="lead">You need to be logged in to play this game. Please <a href="#">Log in</a> or <a href="#"> Create an account </a> to continue.</p>
+        <h1 class="cover-heading">{{title}}</h1>
+        <p class="lead">{{ message | raw }}</p>
         <p class="lead">
-          <a href="#" class="btn btn-lg btn-secondary">Go back</a>
+          {{ action | raw }}
         </p>
     </div>
 {% endblock %}

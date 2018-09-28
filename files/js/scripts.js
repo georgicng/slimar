@@ -72,7 +72,11 @@ var ScriptLibrary = (function() {
 								data: event.data,
 								success: function( data, textStatus, jQxhr ){
 									console.log( "process response", data );
-									$('#user-balance').text( data.balance );
+									if (data.redirect == true) {
+										window.location = data.url;
+									} else {										
+										$('#user-balance').text( data.balance );
+									}
 								},
 								error: function( jqXhr, textStatus, errorThrown ){
 									console.log( errorThrown );
