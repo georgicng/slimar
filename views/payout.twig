@@ -1,0 +1,44 @@
+{% extends "./layout/layout.twig" %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <form class="form" method="post" id="login-nav">
+                    <div class="form-group">
+                        <label class="sr-only" for="amount">Amount</label>
+                        <input type="number" name="amount" max="{{maximum}}" min="{{minimum}}" value="{{ _post.amount ? _post.amount : minimum}}" id="amount" class="form-control" placeholder="Amount" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="bank">Bank</label>
+                        <select name="bank" id="bank" class="form-control">
+                            <option value="">Select Bank</option>
+                            {% for bank in banks %}
+                                <option value="{{ bank.id }}" {{ _post.bank == bank.id ? 'selected' }}>{{ bank.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="account_number">Account Number</label>
+                        <input type="number" name="account_number" id="account_number" value="{{_post.account_number ? _post.account_number}}" class="form-control" placeholder="account Number" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="account_name">Account Name</label>
+                        <input type="text" name="account_name" value="{{_post.account_name ? _post.account_name}}" class="form-control" placeholder="account name" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="type">Account Type</label>
+                        <select name="account_type" id="account_type" class="form-control">
+                            <option value="">Select account type</option>
+                            <option value="current" {{ _post.account_type == 'current' ? 'selected'}}>Current</option>
+                            <option value="savings" {{ _post.account_type == 'savings' ? 'selected'}}>Savings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="payout" class="btn btn btn-block" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

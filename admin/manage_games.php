@@ -23,6 +23,7 @@ if (empty($_GET['p'])) {
 <html>
 <head>
 <?php require "inc/head.php"; ?>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
 </head>
 
 <body>
@@ -148,6 +149,8 @@ if (empty($_GET['p'])) {
                                     $stmt->bindParam(':id', $latestid);
                                     $stmt->bindParam(':title', $_POST['title']);
                                     $stmt->bindParam(':description', $_POST['description']);
+                                    $stmt->bindParam(':gameplay', $_POST['gameplay']);
+                                    $stmt->bindParam(':settings', $_POST['settings']);
                                     $stmt->bindParam(':category_id', $_POST['category_id']);
                                     $stmt->bindParam(':status', $_POST['status']);
                                     $stmt->bindParam(':url', $random);
@@ -159,15 +162,11 @@ if (empty($_GET['p'])) {
                             }
                         ?>              
                             
-                            <div class="form-group">
+                            <div class="form-group col-sm-12">
                                 <label for="name">Game name</label>
                                 <input type="text" class="form-control" id="name" name="title" placeholder="Game name">
-                            </div>                     
-                            <div class="form-group">
-                                <label for="name">Description</label>
-                                <textarea class="form-control" id="name" name="description" placeholder="Give a description for the game"></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                 <label for="hide_offline">Category<br />
                                     <select class="form-control" id="hide_offline" name="category_id">                    
                                     <?php
@@ -186,7 +185,7 @@ if (empty($_GET['p'])) {
                                     </select>
                                 </label>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                 <label for="status">Status<br />
                                     <select class="form-control" id="status" name="status">                                    
                                         <option value="1">
@@ -198,6 +197,18 @@ if (empty($_GET['p'])) {
                                     </select>
                                 </label>
                             </div>
+                            <div class="form-group col-sm-12">
+                                <label for="name">Description</label>
+                                <textarea class="form-control" id="description" name="description" placeholder="Give a description for the game"><?php echo $game['description']; ?></textarea>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="name">How to Play</label>
+                                <textarea class="form-control" id="gameplay" name="gameplay" placeholder="Give a description for how to play the game"><?php echo $game['gameplay']; ?></textarea>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="name">Game Config</label>
+                                <textarea class="form-control" id="settings" name="settings" placeholder="Add game config here"><?php echo $game['settings']; ?></textarea>
+                            </div>  
                             <input type="submit" style="float:left;"class="btn btn-primary" value="Add Game" name="addgame">
                         </form>
                     </div>
@@ -223,7 +234,7 @@ if (empty($_GET['p'])) {
                 <div class="panel-heading">Edit: <?php echo $game['title']; ?></div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">  
                         <form method="post">                  
@@ -235,7 +246,12 @@ if (empty($_GET['p'])) {
                                     $currenturl = $i['url'];
                                     activitylog(''.$in['username'].'', 'edited game: '.$game['title'].'', ''.time().'', 'Admin');
                                                 
-                                    $sql = $dbh->prepare("UPDATE games SET title='".$_POST['title']."', description='".$_POST['description']."', category_id='".$_POST['category_id']."', status='".$_POST['status']."' WHERE id=".$game['id']."");
+                                    $sql = $dbh->prepare(
+                                        "UPDATE games SET title='". $_POST['title']. "'".", description='" . $_POST['description']. "'"
+                                        .", category_id='" . $_POST['category_id']. "', status='" . $_POST['status']. "'"
+                                        .", gameplay='" . $_POST['gameplay']. "', settings='" . $_POST['settings']. "'"
+                                        ." WHERE id=" . $game['id']
+                                    );
                                     $sql->execute();
                                                 
                                     $success = "".$game['title']." has been updated!";
@@ -248,12 +264,8 @@ if (empty($_GET['p'])) {
                             <div class="form-group">
                                 <label for="name">Game name</label>
                                 <input type="text" class="form-control" id="name" name="title" placeholder="Game name" value="<?php echo $game['title']; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="name">Description</label>
-                                <textarea class="form-control" id="description" name="description" placeholder="Give a description for the game"><?php echo $game['description']; ?></textarea>
-                            </div>
-                            <div class="form-group">
+                            </div>                        
+                            <div class="form-group col-md-6">
                                 <label for="hide_offline">Category<br />
                                     <select class="form-control" id="hide_offline" name="category_id">                    
                                     <?php
@@ -273,7 +285,7 @@ if (empty($_GET['p'])) {
                                     </select>
                                 </label>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-md-6">
                                 <label for="status">Status<br />
                                     <select class="form-control" id="status" name="status">
                                     
@@ -283,6 +295,18 @@ if (empty($_GET['p'])) {
                                     } ?>>Inactive</option>
                                     </select>
                                 </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Description</label>
+                                <textarea class="form-control" id="description" name="description" placeholder="Give a description for the game"><?php echo $game['description']; ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">How to Play</label>
+                                <textarea class="form-control" id="gameplay" name="gameplay" placeholder="Give a description for how to play the game"><?php echo $game['gameplay']; ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Game Config</label>
+                                <textarea class="form-control" id="settings" name="settings" placeholder="Add game config here"><?php echo $game['settings']; ?></textarea>
                             </div>              
                             <input type="submit" style="float:left;"class="btn btn-primary" value="Update Game" name="updategame_settings">
                         </form>
@@ -334,7 +358,7 @@ if (empty($_GET['p'])) {
                                
                                 if(isset($_POST["uploadimage"])) {
                                     //Upload avatar
-                                    $target_dir = "../files/uploads/";
+                                    $target_dir = "../uploads/";
                                     $target_file = $target_dir . basename($_FILES["imageToUpload"]["name"]);
                                     $new_name = uniqid()."-".str_replace(" ", "_", $_FILES["imageToUpload"]["name"]);
                                     $target_file2 = $target_dir . basename($new_name);
@@ -371,9 +395,9 @@ if (empty($_GET['p'])) {
                                 
                                             $currenturl = $i['url'];
                             
-                                            $sql = $dbh->prepare("UPDATE games SET image='".$currenturl."/files/uploads/".$new_name."' WHERE id=".$game['id']."");
+                                            $sql = $dbh->prepare("UPDATE games SET image='".$currenturl."/uploads/".$new_name."' WHERE id=".$game['id']."");
                                             $sql->execute();
-                                            $success = "".$currenturl."/files/uploads/".$new_name."";
+                                            $success = "".$currenturl."/uploads/".$new_name."";
                                             header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=fileuploaded");
                                         } else {
                                             $error = "Sorry, there was an error uploading your profile picture";
@@ -442,7 +466,7 @@ if (empty($_GET['p'])) {
                                 
                                 if(isset($_POST["gamefileswf"])) {
                                     //Upload avatar
-                                    $target_dir = "../files/uploads/";
+                                    $target_dir = "../uploads/";
                                     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
                                     $new_name = $location.time()."-".rand(1000, 9999)."-".$_FILES["fileToUpload"]["name"];
                                     $target_file2 = $target_dir . basename($new_name);
@@ -470,9 +494,9 @@ if (empty($_GET['p'])) {
                             
                                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file2)) {
                                             $currenturl = $i['url'];                            
-                                            $sql = $dbh->prepare("UPDATE games SET file='".$currenturl."/files/uploads/".$new_name."', type='Flash' WHERE id=".$game['id']."");
+                                            $sql = $dbh->prepare("UPDATE games SET file='".$currenturl."/uploads/".$new_name."', type='Flash' WHERE id=".$game['id']."");
                                             $sql->execute();
-                                            $success = "".$currenturl."/files/uploads/".$new_name."";
+                                            $success = "".$currenturl."/uploads/".$new_name."";
                                             header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=fileuploaded");
                                         } else {
                                             $error = "Sorry, there was an error uploading your file";
@@ -530,7 +554,10 @@ if (empty($_GET['p'])) {
                         </div>                                           
                     </div>
                 </div>
-            </div>    
+            </div> 
+            <div class="col-lg-6">
+                <h4>Form Config
+            </div>   
         </div><!--/.row-->
     <?php } ?>
 
@@ -545,6 +572,7 @@ if (empty($_GET['p'])) {
     <script src="js/easypiechart-data.js"></script>
     
     <script src="js/bootstrap-table.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
     
     <script>
         !function ($) {
@@ -560,6 +588,10 @@ if (empty($_GET['p'])) {
         $(window).on('resize', function () {
           if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
         })
+        $(document).ready(function() {
+            $('#description').summernote();
+            $('#gameplay').summernote();
+        });
     </script>    
 </body>
 

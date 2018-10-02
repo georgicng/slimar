@@ -1,0 +1,123 @@
+{% extends "./layout/layout.twig" %}
+
+{% block content %}
+<div class="content">
+    {% if (not cur_game['file']) %}
+        <div class="alert alert-warning">No game file has been added for this game. If you are an administrator you can edit this by the administration
+            panel.</div>
+    {% else %}
+        <div class="game-bar" id="gameheader">
+            <div class="pull-right">
+                <button onclick="goFullscreen('player'); return false" style="background:none;border:none;color:white;">
+                    <i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen
+                </button>
+            </div>
+        </div>
+        <div class="w-100 mb-3">            
+            {% if (cur_game['type'] == "Flash") %}
+                <object class="embed-responsive embed-responsive-16by9" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="myFlashContent">
+                    <param name="movie" value="{{ cur_game['file'] }}">
+                    <!--[if !IE]>-->
+                    <object type="application/x-shockwave-flash" data="{{ cur_game['file'] }}">
+                        <!--<![endif]-->
+                        <a href="http://www.adobe.com/go/getflashplayer">
+                            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player">
+                        </a>
+                        <!-- [if !IE]>-->
+                    </object>
+                    <!--<![endif]-->
+                </object>
+            {% elseif (cur_game['type'] == "HTML5") %}
+                <div class="embed-responsive embed-responsive-16by9">
+                    {{ cur_game['file'] | raw }}
+                </div>
+            {% elseif (cur_game['type'] == "HTML5-url") %}
+                <!-- 16:9 aspect ratio -->
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive" width="100%" src="{{ cur_game['file'] }}"></iframe>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if (cur_game['id']) %}
+    <div class="card card-nav-tabs card-plain">
+        <div class="card-header card-header-danger">
+            <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+            <div class="nav-tabs-navigation">
+                <div class="nav-tabs-wrapper">
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#description" data-toggle="tab">Description</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#gameplay" data-toggle="tab">How to Play</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-body ">
+            <div class="tab-content text-center">
+                <div class="tab-pane active" id="description">
+                    <div class="description-text">{{ cur_game['description'] | raw }}</div>
+                </div>
+                <div class="tab-pane" id="gameplay">
+                    <div class="description-text">{{ cur_game['gameplay'] | raw }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    function goFullscreen(id) {
+        var element = document.getElementById(id);
+        var elementheader = document.getElementById("gameheader");
+
+
+        var userAgent = window.navigator.userAgent;
+
+
+        if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+
+            element.classList.add("fullscreen-safari");
+            elementheader.classList.add("displaynone");
+
+        } else {
+
+            var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+                (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+                (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+                (document.msFullscreenElement && document.msFullscreenElement !== null);
+
+            var docElm = document.documentElement;
+            if (!isInFullScreen) {
+                element.classList.add("fullscreen");
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullScreen) {
+                    element.webkitRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+
+            } else {
+                element.classList.remove("fullscreen");
+                if (document.exitFullscreen) {
+                    element.classList.remove("fullscreen");
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+
+        }
+    }
+</script>
+{% endblock %}

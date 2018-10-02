@@ -342,6 +342,7 @@ function getBankList()
     $paystack = new Yabacon\Paystack($key);
     try {
         $banks = $paystack->bank->getList();
+        error_log("paystack: ".json_encode($banks));
         foreach ($banks->data as $bank) {
             $bank = (array) $bank;
             $supported_banks[] = [ 'id' => $bank['code'], 'name' => $bank['name'] ];
@@ -375,6 +376,7 @@ function getBankList()
             ["id" => "035", "name" => "Wema Bank"],
             ["id" => "057", "name" => "Zenith Bank"]
         ];
+        error_log("cache: ".json_encode($supported_banks));
     }
     return $supported_banks;
 }
@@ -382,7 +384,7 @@ function getBankList()
 function getRecipient($key, $accname, $bank, $accnumber)
 {
     $paystack = new Yabacon\Paystack($key);
-    return $paystack->transferrecipient->initialize(
+    return $paystack->transferrecipient->create(
         [
             'type' => 'nuban',
             'name' => $accname,
@@ -1017,11 +1019,11 @@ function forgotpassword($name, $to, $from, $SMTP, $title, $url1)
 
 
 function mailer($config, $to, $subject, $message){
-    $to = $_REQUEST['email'];
+    $to = $to;
     $from = $config['email'];
-    $subject = $_REQUEST['subject'];
+    $subject = $subject;
     $message = $message;
     
     //send email
-    mail($to, $subject, $message, "From:" . $email);
+    mail($to, $subject, $message, "From:" . $from);
 }

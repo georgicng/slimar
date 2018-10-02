@@ -1,0 +1,18 @@
+{% extends "./layout/layout.twig" %} 
+{% block content %} 
+<div class="row">
+    {% for ind,g in games %}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <img class="card-img-top" src="{{g['image']?: '//placehold.it/400x300'}}" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">{{g['title']}}</h4>
+                    <a href="play.php?g={{g['url']}}" class="btn btn-primary">Play</a>
+                </div>
+            </div>						
+        </div>
+    {% endfor %} {% if (games | length == 0) %}
+        <div class="alert alert-warning" role="alert">No games were found. Please try a different search</div>
+    {% endif %}
+</div>
+{% endblock %}

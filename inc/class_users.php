@@ -110,7 +110,6 @@ if (isset($_POST['register'])) {
         $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
         $firstname = filter_var($_POST['firstname'], FILTER_SANITIZE_STRING);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-        $dob = $_POST['dob'];
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
         $password2 = filter_var($_POST['password2'], FILTER_SANITIZE_STRING);
         $refer = filter_var($_POST['refer'], FILTER_SANITIZE_STRING);
@@ -141,143 +140,104 @@ if (isset($_POST['register'])) {
         $stmt->execute();
         $rowemail = $stmt->fetch();
         
-        if (!$i['captcha_reg'] == "1" || isset($_POST["captcha"]) && $_POST["captcha"] != "" && $_SESSION["code"]==$_POST["captcha"]) {
-            if ($rowusername['username']) {
-                $error = "The username that you have entered already exists! Try logging in <a href='login.php'>here</a>";
-            } elseif ($rowemail['email']) {
-                $error = "The email that you have entered already exists! Try logging in <a href='login.php'>here</a>";
-            } else {
-                if ($password != $password2) {
-                    $error = "The two passwords you entered do not match";
+        
+        if ($rowusername['username']) {
+            $error[] = "The username that you have entered already exists! Try logging in <a href='login.php'>here</a>";
+        } 
+        
+        if ($rowemail['email']) {
+            $error[] = "The email that you have entered already exists! Try logging in <a href='login.php'>here</a>";
+        }
+        
+        if ($password != $password2) {
+            $error[] = "The two passwords you entered do not match";
+        }
+
+        if ($i['captcha_reg'] == "1") {
+          if (empty($_POST["captcha"]) || $_SESSION["code"] != $_POST["captcha"]) {
+              $error[] = "The captcha you entered is incorrect";
+          }
+        }
+
+        if (empty($_POST["tos"]) || $_POST["tos"] != "1") {
+            $error[] = "You are required to accept to our terms of service";
+        }
+                
+        if (empty($error)) {
+            $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+            $profilepic = $i['defaultpic'];
+            error_log('password hash: '.$password_hashed);
+        
+            $stmt = $dbh->prepare("SELECT * FROM users ORDER BY id desc LIMIT 1");
+            $stmt->execute();
+            $getlastid = $stmt->fetch();
+            $lastid = $getlastid['id'] + 1;
+            error_log('register id: '.$lastid);
+        
+            $joindate = time();
+            $join_month = date("F", strtotime("first day of this month"));
+            try {
+                $sql = "INSERT INTO users (username, password, email, firstname, balance, profilepic, joindate, join_month, verified, verified_rand, referral) ".
+                    " VALUES (:username, :password, :email, :firstname, :balance, :profilepic, :joindate, :join_month, :verified, :verified_rand, :referral)";
+                $stmt = $dbh->prepare($sql);
+                $verified_rand  = uniqid();
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':password', $password_hashed);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':firstname', $firstname);
+                $stmt->bindParam(':balance', $i['bonus']);
+                $stmt->bindParam(':profilepic', $profilepic);
+                $stmt->bindParam(':joindate', $joindate);
+                $stmt->bindParam(':join_month', $join_month);
+                if ($i['verify'] == "0") {
+                    $verified = "1";
+                    $stmt->bindParam(':verified', $verified);
                 } else {
-                    $password_hashed = password_hash($password, PASSWORD_DEFAULT);
-                    $profilepic = $i['defaultpic'];
-                    error_log('password hash: '.$password_hashed);
-                
-                    $stmt = $dbh->prepare("SELECT * FROM users ORDER BY id desc LIMIT 1");
-                    $stmt->execute();
-                    $getlastid = $stmt->fetch();
-                    $lastid = $getlastid['id'] + 1;
-                    error_log('register id: '.$lastid);
-                
-                    $joindate = time();
-                    $join_month = date("F", strtotime("first day of this month"));
-                    try {
-                        $sql = "INSERT INTO users (username, password, email, firstname, balance, profilepic, joindate, join_month, verified, referral) ".
-                            " VALUES (:username, :password, :email, :firstname, :balance, :profilepic, :joindate, :join_month, :verified, :referral)";
-                        $stmt = $dbh->prepare($sql);
-                        //$stmt->bindParam(':id', $lastid);
-                        $stmt->bindParam(':username', $username);
-                        $stmt->bindParam(':password', $password_hashed);
-                        $stmt->bindParam(':email', $email);
-                        $stmt->bindParam(':firstname', $firstname);
-                        $stmt->bindParam(':balance', 500);
-                        $stmt->bindParam(':profilepic', $profilepic);
-                        $stmt->bindParam(':joindate', $joindate);
-                        $stmt->bindParam(':join_month', $join_month);
-                        if ($i['verify'] == "0") {
-                            $verified = "1";
-                            $stmt->bindParam(':verified', $verified);
-                        } else {
-                            $verified = "0";
-                            $stmt->bindParam(':verified', $verified);
-                        }
-                        $stmt->bindParam(':referral', $userreferred);
-                        if ($stmt->execute()) {
-                            activitylog(''.$username.'', 'Registered', ''.time().'');
-                            //send email
-                            $mail = new EmailTemplate(Twig\init('./templates', './templates/cache'));
-                            $mailer = $mail->getMessage(
-                                'registration', 
-                                [
-                                    "name" => $firstname,
-                                    "username" => $username,
-                                    "email" => $email,
-                                    "link" => "http://input"
-                                ]
-                            );
-                            $mailer->isSMTP();  // Set mailer to use SMTP
-                            $mailer->Host = 'localhost';  // Specify main and backup SMTP servers
-                            //$mail->SMTPAuth = true;                               // Enable SMTP authentication
-                            //$mail->Username = 'user@example.com';                 // SMTP username
-                            //$mail->Password = 'secret';                           // SMTP password
-                            //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                            //$mail->Port = 587;                                    // TCP port to connect to
-
-                            $mailer->setFrom($i['email'], 'Chapgames');
-                            $mailer->addAddress($email, $firstname);     // Add a recipient
-                            $mailer->send();
-                            header("location: login.php");
-                        } else {
-                            error_log("insert error data: ".json_encode($stmt->errorInfo()));
-                            $error = $stmt->errorCode().": Opps something went wrong, please try again";
-                        }                  
-
-                    } catch(PDOException $e) {
-                        $error = $e->getMessage();
-                    }                   
-                    
+                    $verified = "0";
+                    $stmt->bindParam(':verified', $verified);
                 }
-            }
-        } else {
-            $error = "The captcha you entered is incorrect";
+                $stmt->bindParam(':verified_rand', $verified_rand);                 
+                $stmt->bindParam(':referral', $userreferred);
+                if ($stmt->execute()) {
+                    activitylog(''.$username.'', 'Registered', ''.time().'');
+                    //send email
+                    include "EmailTemplate.php";
+                    $mail = new EmailTemplate(Twig\init(SITE_ROOT.'/views', SITE_ROOT.'/views/cache'));
+                    $mailer = $mail->getMessage(
+                        'registration', 
+                        [
+                            "name" => $firstname,
+                            "username" => $username,
+                            "email" => $email,
+                            "link" => $i['url']."/verify.php?id=".$verified_rand,
+                            "title" => "New Registration"
+                        ]
+                    );
+                    $mailer->isSMTP();  // Set mailer to use SMTP
+                    $mailer->Host = 'localhost';  // Specify main and backup SMTP servers
+                    //$mail->SMTPAuth = true;                               // Enable SMTP authentication
+                    //$mail->Username = 'user@example.com';                 // SMTP username
+                    //$mail->Password = 'secret';                           // SMTP password
+                    //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                    //$mail->Port = 587;                                    // TCP port to connect to
+
+                    $mailer->setFrom($i['email'], 'Chapgames');
+                    $mailer->addAddress($email, $firstname);     // Add a recipient
+                    $mailer->send();
+                    header("location: login.php");
+                } else {
+                    error_log("insert error data: ".json_encode($stmt->errorInfo()));
+                    $error = $stmt->errorCode().": Opps something went wrong, please try again";
+                }                  
+
+            } catch(PDOException $e) {
+                $error = $e->getMessage();
+            }                   
+            
         }
-    } else {
     }
 }
 
-//Post comment
-if (isset($_POST["postcommentprofile"])) {
-    if (isset($in["username"])) {
-        $id_from = $in['id'];
-        $id_to = $_POST['userid'];
-        $message = strip_tags($_POST['message'], '<br><b><strong>');
-        $date = $_POST['date'];
-        $currenttime = time();
-        
-        if ($in['id'] != $id_from) {
-            echo 'oh no theres an error!';
-            activitylog(''.$in['username'].'', 'SECURITY ERROR: USER TRYING TO SEND COMMENT AS DIFFERENT USER', ''.time().'');
-        } else {
-            activitylog(''.$in['username'].'', 'commented on a profile', ''.time().'');
-            $stmt = $dbh->prepare("INSERT INTO users_comments (id_from, id_to, message, date) VALUES (:id_from, :id_to, :message, :date)");
-            $stmt->bindParam(':id_from', $in['id']);
-            $stmt->bindParam(':id_to', $id_to);
-            $stmt->bindParam(':message', $message);
-            $stmt->bindParam(':date', $currenttime);
-        
-            $stmt->execute();
-        }
-    }
-}
-
-//Post reply
-if (isset($_POST['postreplyprofile'])) {
-    if (!empty($in["username"])) {
-        $id_from = $in['id'];
-        $id_to = $_POST['userid'];
-        $message = strip_tags($_POST['message'], '<br><b><strong>');
-        $date = $_POST['date'];
-        $currenttime = time();
-        $sub_id = $_POST['postid'];
-        $sub = "1";
-        
-        if ($in['id'] != $id_from) {
-            echo 'oh no theres an error!';
-            activitylog(''.$in['username'].'', 'SECURITY ERROR: USER TRYING TO SEND COMMENT AS DIFFERENT USER', ''.time().'');
-        } else {
-            activitylog(''.$in['username'].'', 'commented on a profile', ''.time().'');
-            $stmt = $dbh->prepare("INSERT INTO users_comments (id_from, id_to, message, date, sub, sub_id) VALUES (:id_from, :id_to, :message, :date, :sub, :sub_id)");
-            $stmt->bindParam(':id_from', $in['id']);
-            $stmt->bindParam(':id_to', $id_to);
-            $stmt->bindParam(':message', $message);
-            $stmt->bindParam(':date', $currenttime);
-            $stmt->bindParam(':sub', $sub);
-            $stmt->bindParam(':sub_id', $sub_id);
-            $stmt->execute();
-        }
-    }
-}
 
 //Sets last active time for online users
 if (isset($in['id'])) {
@@ -451,7 +411,7 @@ if (isset($_POST['updatepassword'])) {
 //Process Payout
 if (isset($_POST['payout'])) {
     if (!empty($in["username"])) {
-        $errors = [];
+        $error = [];
         $bank = filter_var($_POST['bank'], FILTER_SANITIZE_NUMBER_INT);
         $amount = filter_var($_POST['amount'], FILTER_SANITIZE_NUMBER_FLOAT);
         $account_number = filter_var($_POST['account_number'], FILTER_SANITIZE_NUMBER_INT);
@@ -459,79 +419,98 @@ if (isset($_POST['payout'])) {
         $account_type = filter_var($_POST['account_type'], FILTER_SANITIZE_STRING);
 
         if (empty($amount)) {
-            $errors[] = "amount cannot be empty";
+            $error[] = "amount cannot be empty";
         }
 
-        if ($amount > $i['balance']) {
-            $errors[] = "you cannot withdraw more than what you have in your account";
+        if ($amount > $in['balance']) {
+            $error[] = "you cannot withdraw more than what you have in your account";
         }
 
         if (empty($bank)) {
-            $errors[] = "Please select a Bank";
+            $error[] = "Please select a Bank";
         }
 
         if (empty($account_name)) {
-            $errors[] = "Account name cannot be empty";
+            $error[] = "Account name cannot be empty";
         }
 
         if (empty($account_number)) {
-            $errors[] = "account number cannot be empty";
+            $error[] = "account number cannot be empty";
         }
 
         if (empty($account_type)) {
-            $errors[] = "Please select an Account type";
+            $error[] = "Please select an Account type";
         }
             
             
-        if (empty($errors)) {
+        if (empty($error)) {
             activitylog(''.$in['username'].'', 'created a payment request', ''.time().'');
-            $stmt =  $dbh->prepare("INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, recipient, data, error, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :recipient, :data, :error, :status)");
+            $stmt =  $dbh->prepare(
+                "INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :status)"
+            );
+            $status = 'Pending';
+            $now = date("Y-m-d H:i:s");
             $stmt->bindParam(':amount', $amount);
             $stmt->bindParam(':bank', $bank);
             $stmt->bindParam(':account_name', $account_name);
             $stmt->bindParam(':account_number', $account_number);
             $stmt->bindParam(':account_type', $account_type);
-            $stmt->bindParam(':status', 'pending');
+            $stmt->bindParam(':status', $status);
             $stmt->bindParam(':user_id', $in["id"]);
-            $stmt->bindParam(':date-added', date("Y-m-d H:i:s"));
-            $stmt->execute();
-            
-            //set holding balance
-            $holding = $amount;
-            $balance = $i['balance'] - $amount;
-            $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$i['id']);
-            $stmt->bindParam(':holding', $holding);
-            $stmt->bindParam(':balance', $balance);
-            $stmt->execute();
-            
-            //send email
-            $subject = "Transfer request";
-            $message = "Your transfer request has been submitted successfully and waiting for approval.".
-                "You will be updated on the status of your request shortly";
-            mailer($i['email'], $subject, $message);
-            
-            //get recipient detail for transfer
-            try
-            {
-                $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
-                $recipient = getRecipient($key, $account_name, $bank, $account_number);
-                $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$i['id']);
-                $stmt->bindParam(':recipient', $recipient->data->recipient_code);
-                $stmt->bindParam(':error', '');
-                $stmt->bindParam(':data', serialize($recipient->data));
+            $stmt->bindParam(':date_added', $now);
+            if ($stmt->execute()) {
+                $id = $dbh->lastInsertId();
+                error_log("last id ".$id);
+                
+                //set holding balance
+                $holding = $amount;
+                $balance = $in['balance'] - $amount;
+                $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding, request = :request WHERE id = ".$in['id']);
+                $stmt->bindParam(':holding', $holding);
+                $stmt->bindParam(':balance', $balance);
+                $stmt->bindParam(':request', $id);
                 $stmt->execute();
                 
-            } catch(\Yabacon\Paystack\Exception\ApiException $e){
-                $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$i['id']);
-                $stmt->bindParam(':recipient', false);
-                $stmt->bindParam(':error', $e->getMessage());
-                $stmt->bindParam(':data', serialize($e->getResponseObject()));
-                $stmt->execute();
+                //send email
+                $subject = "Transfer request";
+                $message = "Your transfer request has been submitted successfully and waiting for approval. /r/n".
+                    "You will be updated on the status of your request shortly";
+                mailer($i, $in['email'], $subject, $message);
+
+                //get recipient detail for transfer
+                try {
+                    $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+                    $recipient = getRecipient($key, $account_name, $bank, $account_number);
+                    error_log('recipient: '.$recipient);
+                    $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
+                    $stmt->bindParam(':recipient', $recipient->data->recipient_code);
+                    $stmt->bindParam(':error', '');
+                    $data = serialize($recipient->data);
+                    $stmt->bindParam(':data', $data);
+                    $stmt->execute();
+                    
+                } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                    $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
+                    $recipient = false;
+                    $stmt->bindParam(':recipient', $recipient);
+                    $message = $e->getMessage();
+                    $stmt->bindParam(':error', $message);
+                    $data = serialize($e->getResponseObject());
+                    $stmt->bindParam(':data', $data);
+                    $stmt->execute();
+                }
+                
+
+                //deduct requested amount from balance and keep on hold
+                $success = "Request has been submitted successfully";
+                $_POST = [];
+            } else {
+                error_log(json_encode($stmt->errorInfo()));
+                $error = "Couldn't complete request";
             }
             
-
-            //deduct requested amount from balance and keep on hold
-            $success = "Request has been submitted successfully";
+            
+            
         } 
        
     } else {

@@ -1,0 +1,29 @@
+{% extends "./layout/layout.twig" %}
+{% block content %}
+    <div class="row">
+        {% if (played | length == 0) %}
+            <div class="alert alert-warning" role="alert">No records found. Seems like you're yet to play a game</div>
+        {% else %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">S/N</th>
+                        <th scope="col">Game</th>
+                        <th scope="col">Bet</th>
+                        <th scope="col">Win</th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ind, record in played %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ record['game'] }}</td>
+                            <td>{{ record['bet'] }}</td>
+                            <td>{{ record['win'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

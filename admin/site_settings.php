@@ -96,13 +96,9 @@ if(empty($_GET['p'])) {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Game Mode</label>
-                                <select class="form-control" name="settings[mode]">
-                                    <option <?php if($i['mode'] == "0") { echo 'selected'; 
-                                   } ?> value="0">Demo</option>
-                                    <option <?php if($i['mode'] == "1") { echo 'selected'; 
-                                   } ?> value="1">Live</option>
-                                </select>
+                                <label>Starting Bonus</label>
+                                <input type="text" name="settings[bonus]" class="form-control" value="<?php echo $i['bonus']; ?>"></input>
+
                             </div>
                             <div class="form-group">
                                 <label>Registeration open?</label>

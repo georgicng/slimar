@@ -1,0 +1,52 @@
+{% extends "./layout/layout_full.twig" %}
+
+{% block content %}
+    <div class="col-md-4 ml-auto mr-auto">
+        {% if verified %}
+            {% if (verified == 'true') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">        
+                <strong>SUCCESS:</strong> Your email has been verified.
+            </div>
+            {% else %}
+            <div class="alert alert-danger alert-dismissible" role="alert">        
+                We could not verify your email.
+            </div>
+            {% endif %}
+        {% endif %}
+        <div class="card card-login card-plain">
+            <form class="form" method="post" id="login-nav">
+                <div class="card-header text-center text-dark">
+                    <h2>{{ pagename }}</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="sr-only" for="email">Email address</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required="required">
+                    </div>
+                    <div class="form-group">
+                        {% if (i['captcha'] == "1") %}
+                            <img src="inc/captcha.php" style="float:left;"/>
+                            <input placeholder='Captcha' style="width:170px;padding:9px;color:#272727;" maxlength="4" name="captcha" type="text">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer text-dark">
+                    <div class="form-group">
+                        <input type="submit" name="login" class="btn btn-primary btn-block" value="Login">
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="checkbox" tabindex="3" class="" name="remember" id="remember">
+                        <label for="remember">
+                            Remember Me</label>
+                    </div>
+                    <a href="signup.php">Register</a><br>
+                    <a href="forgotpass.php">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

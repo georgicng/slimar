@@ -94,7 +94,7 @@ if (empty($_GET['p'])) {
                     $subject = "Transfer request";
                     $message = "Your transfer request has been submitted successfully and waiting for approval.".
                         "You will be updated on the status of your request shortly";
-                    mailer($user['email'], $subject, $message);
+                    mailer($i, $user['email'], $subject, $message);
 
                     activitylog(''.$in['username'].'', 'added a new payment request', ''.time().'');
                     $stmt =  $dbh->prepare("INSERT INTO payout_requests (user_id, bank, account_name, account_number, account_type, amount, date_added, status) VALUES (:user_id, :bank, :account_name, :account_number, :account_type, :amount, :date_added, :status)");
@@ -134,7 +134,7 @@ if (empty($_GET['p'])) {
                         <form method="post">
                             <div class="form-group">
                                 <input type="text" name="request_username" placeholder="User Name" id="request_username" class="form-control"></input>
-                                <input type="hidden" name="request_userid" value="<?php echo $request['userid']; ?>" id="request_userid">
+                                <input type="hidden" name="request_userid" id="request_userid">
                             </div>
                             <div class="form-group">
                                 <input type="number" name="request_amount" placeholder="Amount" class="form-control"></input>
@@ -187,13 +187,13 @@ if (empty($_GET['p'])) {
                             </tr>
                             </thead>
         <?php
-        $sql = "SELECT p.*, u.username FROM payout_requests as p join users as u on p.userid = u.id ORDER BY date_added desc";
+        $sql = "SELECT p.*, u.username FROM payout_requests as p join users as u on p.user_id = u.id ORDER BY date_added desc";
         $stm = $dbh->prepare($sql);
         $stm->execute();
         $requests = $stm->fetchAll();
                             
         $count = 0;
-        foreach (requests as $request) {
+        foreach ($requests as $request) {
             ?>
                             <tr>
                                 <td><?php echo $request['id']; ?></td>
@@ -217,13 +217,13 @@ if (empty($_GET['p'])) {
 
     <?php if ($page == "view") {
         //Gathers users permissions
-        $stmt1 = $dbh->prepare("SELECT * from payout_requests WHERE `id` = :id");
+        $stmt1 = $dbh->prepare("SELECT *, (select username from users where id = :id) as username from payout_requests WHERE `id` = :id");
         $stmt1->bindValue(':id', $_GET['id']);
         $stmt1->execute();
         $request = $stmt1->fetch();
             
         if (isset($_POST['approverequest'])) {
-            if (!$_POST['comment']) {
+            if ($_POST['comment']) {
                 $comment = filter_var($_POST['comment'], FILTER_SANITIZE_STRING);
             } else {
                 $comment = '';
@@ -243,11 +243,12 @@ if (empty($_GET['p'])) {
             $stmt->bindParam(':status', 'Queued');
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':date-added', $date);
-            $id = $stmt->execute();
+            if ($stmt->execute()) {
+                header("location: ".add_query_vars('make_transfer.php', ['id' => $_GET['id']]));
+            }
             
-            header("location: ".add_query_vars('make_transfer.php', ['id' => $id]));
         } elseif (isset($_POST['rejectrequest'])) {
-            if (!$_POST['comment']) {
+            if ($_POST['comment']) {
                 $comment = filter_var($_POST['comment'], FILTER_SANITIZE_STRING);
             } else {
                 $comment = '';
@@ -256,29 +257,29 @@ if (empty($_GET['p'])) {
             activitylog(''.$in['username'].'', 'rejected payment request'.$request['id'].'', ''.time().'', 'Admin');
             
             //update request status
-            $update_query = $dbh->prepare("UPDATE payout_requests SET status='rejected', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
-            $update_query->execute();
+            $update_query = $dbh->prepare("UPDATE payout_requests SET status='Rejected', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
+            if ($update_query->execute()) {
+                $sql = "SELECT * FROM users WHERE id = ".$user_id;
+                $stm = $dbh->prepare($sql);
+                $stm->execute();
+                $user = $stm->fetch();
+                
+                //restore user balance
+                $holding = 0;
+                $balance = $user['balance'] + $user['holding'];
+                $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$user_id);
+                $stmt->bindParam(':holding', $holding);
+                $stmt->bindParam(':balance', $balance);
+                $stmt->execute();
+                //send email
+                $subject = "Transfer request Rejected";
+                $message = "We are sorry to inform you that your transfer request has been rejected due to the following reason:".$comment;
+                mailer($i, $user['email'], $subject, $message);
+                
+                $success = "Payment request status updated";
+                header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
+            }
            
-            $sql = "SELECT * FROM users WHERE id = ".$user_id;
-            $stm = $dbh->prepare($sql);
-            $stm->execute();
-            $user = $stm->fetch();
-            
-            //restore user balance
-            $holding = 0;
-            $balance = $user['balance'] + $user['holding'];
-            $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$user_id);
-            $stmt->bindParam(':holding', $holding);
-            $stmt->bindParam(':balance', $balance);
-            $stmt->execute();
-            
-            //send email
-            $subject = "Transfer request Rejected";
-            $message = "We are sorry to inform you that your transfer request has been rejected due to the following reason:".$comment;
-            mailer($user['email'], $subject, $message);
-            
-            $success = "Payment request status updated";
-            header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
         } ?>
         <div class="row">
             <div class="col-lg-12">
@@ -289,8 +290,8 @@ if (empty($_GET['p'])) {
                         <form method="post">
                             <div class="form-group">
                                 <label>Username</label>
-                                <input type="text" name="username" value="<?php echo $request['userid']; ?>" class="form-control" readonly></input>
-                                <input type="hidden" name="userid" value="<?php echo $request['userid']; ?>">
+                                <input type="text" name="username" value="<?php echo $request['username']; ?>" class="form-control" readonly></input>
+                                <input type="hidden" name="userid" value="<?php echo $request['user_id']; ?>">
                             </div>
                             <hr>
                             <div class="form-group">
@@ -338,10 +339,11 @@ if (empty($_GET['p'])) {
             //TODO: prevent reversal if user is online and playing a game
             activitylog(''.$in['username'].'', 'deleted payment request: '.$request['id'].'', ''.time().'', 'Admin');
             $update_query = $dbh->prepare("DELETE payout_requests WHERE id='".$_GET['id']."'");
-            $update_query->execute();
+            if ($update_query->execute()) {
+                $success = "Payment request deleted succesfully";
+                header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
+            }
 
-            $success = "Payment request deleted succesfully";
-            header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
         } ?>
         <div class="row">
             <div class="col-lg-12">
