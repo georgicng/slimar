@@ -224,7 +224,10 @@ if (isset($_POST['register'])) {
                     $mailer->setFrom($i['email'], 'Chapgames');
                     $mailer->addAddress($email, $firstname);     // Add a recipient
                     $mailer->send();
-                    header("location: login.php");
+                    //sets session 
+                    setcookie("id", $dbh->lastInsertId(), time()+3600);
+                    setcookie("password", $password_hashed, time()+3600);
+                    header("location: ".$i['loginurl']."");
                 } else {
                     error_log("insert error data: ".json_encode($stmt->errorInfo()));
                     $error = $stmt->errorCode().": Opps something went wrong, please try again";
