@@ -20,7 +20,8 @@ $data = array_merge(
     $variables,
     [
         'pagename' => "login",
-        'verified' => !empty(Request\get('verified'))? Request\get('verified') : ''
+        'verified' => !empty(Request\get('verified'))? Request\get('verified') : '',
+        'created' => !empty(Request\get('created'))? Request\get('created') : '',
     ]
 );
 

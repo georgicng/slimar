@@ -12,19 +12,13 @@ global $currenturl;
 global $error;
 global $success;
 
-//error_log("i: ".json_encode($i));
-//error_log("in: ".json_encode($in));
-
-
 $menu = R::findOne('menus', ' position = ?', ['main']);
-//error_log('header menu: '.json_encode($menu));
 $header_menu = new BootstrapMenu(
     array(
         'data'=>html_entity_decode(html_entity_decode($menu['content']))
     )
 );
 $menu = R::findOne('menus', ' position = ?', ['footer']);
-//error_log('footer menu: '.json_encode($menu));
 $footer_menu =  new FooterMenu(
     array(
         'data'=>html_entity_decode($menu['content'])

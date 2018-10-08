@@ -25,6 +25,7 @@ Desktop.ini
 
 #others
 /templates/cache
+/views/cache
 /old
 /documentation
 /now-ui-kit

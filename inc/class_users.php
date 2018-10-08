@@ -105,8 +105,6 @@ if (isset($_POST['login'])) {
 //process registration
 if (isset($_POST['register'])) {
     if (!isset($in["username"])) {
-        error_log('processing registration');
-        error_log("post: ".json_encode($_POST));
         $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
         $firstname = filter_var($_POST['firstname'], FILTER_SANITIZE_STRING);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -166,14 +164,7 @@ if (isset($_POST['register'])) {
         if (empty($error)) {
             $password_hashed = password_hash($password, PASSWORD_DEFAULT);
             $profilepic = $i['defaultpic'];
-            error_log('password hash: '.$password_hashed);
-        
-            $stmt = $dbh->prepare("SELECT * FROM users ORDER BY id desc LIMIT 1");
-            $stmt->execute();
-            $getlastid = $stmt->fetch();
-            $lastid = $getlastid['id'] + 1;
-            error_log('register id: '.$lastid);
-        
+      
             $joindate = time();
             $join_month = date("F", strtotime("first day of this month"));
             try {
@@ -200,6 +191,8 @@ if (isset($_POST['register'])) {
                 $stmt->bindParam(':referral', $userreferred);
                 if ($stmt->execute()) {
                     activitylog(''.$username.'', 'Registered', ''.time().'');
+                    $user_id = $dbh->lastInsertId();
+                    
                     //send email
                     include "EmailTemplate.php";
                     $mail = new EmailTemplate(Twig\init(SITE_ROOT.'/views', SITE_ROOT.'/views/cache'));
@@ -213,21 +206,22 @@ if (isset($_POST['register'])) {
                             "title" => "New Registration"
                         ]
                     );
-                    $mailer->isSMTP();  // Set mailer to use SMTP
-                    $mailer->Host = 'localhost';  // Specify main and backup SMTP servers
-                    //$mail->SMTPAuth = true;                               // Enable SMTP authentication
-                    //$mail->Username = 'user@example.com';                 // SMTP username
-                    //$mail->Password = 'secret';                           // SMTP password
-                    //$mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-                    //$mail->Port = 587;                                    // TCP port to connect to
+                    if ($i['smtp']) {
+                        $mailer->isSMTP();  // Set mailer to use SMTP
+                        $mailer->Host = $i['smtp_server'];  // Specify main and backup SMTP servers
+                        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                        $mail->Username = $i['smtp_username'];                 // SMTP username
+                        $mail->Password = $i['smtp_server'];                           // SMTP password
+                        $mail->SMTPSecure = $i['smtp_security']? $i['smtp_security']: 'tls';                            // Enable TLS encryption, `ssl` also accepted
+                        $mail->Port = $i['smtp_port']? $i['smtp_port'] : 587;                                    // TCP port to connect to
+
+                    }
 
                     $mailer->setFrom($i['email'], 'Chapgames');
                     $mailer->addAddress($email, $firstname);     // Add a recipient
                     $mailer->send();
-                    //sets session 
-                    setcookie("id", $dbh->lastInsertId(), time()+3600);
-                    setcookie("password", $password_hashed, time()+3600);
-                    header("location: ".$i['loginurl']."");
+                    
+                    header("location: ".$i['loginurl']."?created=1");
                 } else {
                     error_log("insert error data: ".json_encode($stmt->errorInfo()));
                     $error = $stmt->errorCode().": Opps something went wrong, please try again";

@@ -30,7 +30,6 @@ if ($installed == 1) {
     $i = [];
     foreach ($dbh->query($sql) as $row) {
         $i[$row['s_key']] = $row['s_value'];
-        //error_log('settings: '.json_encode($i));
     }
     include "class_functions.php";
     //This grabs user signed in information
@@ -43,7 +42,7 @@ if ($installed == 1) {
             $geo = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
             $country = $geo["geoplugin_countryName"];
             $state = $geo["geoplugin_region"];
-            date_default_timezone_set($country."/".$state);
+            //date_default_timezone_set($country."/".$state);
         } else { //Gets user set timezone
             date_default_timezone_set($in['timezone']);
         }
@@ -79,8 +78,9 @@ if ($installed == 1) {
 //Checks if website is offline
 $sitemaintainance = "".$i["offline"]."";
 if (isset($in_perm) && $in_perm['has_admin'] != "1") {
-    if ($pagename != "maintenance") {
-        if ($sitemaintainance == '1') {
+    
+    if ($sitemaintainance == '1') {
+        if (basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']) != "maintenance.php") {
             header("Location: maintenance.php");
         }
     }

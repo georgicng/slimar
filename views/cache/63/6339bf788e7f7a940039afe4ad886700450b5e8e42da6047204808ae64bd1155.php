@@ -53,7 +53,7 @@ class __TwigTemplate_534933b2b373653296a6a686eede2e462a389a5129cd84edf1678c7caed
                         </div>
                         <div class=\"col form-group\">
                                 <label for=\"firstname\" class=\"sr-only\">First name</label>
-                                <input type=\"text\" name=\"firstname\" id=\"firstname\" class=\"form-control\" placeholder=\"First name\" value=\"";
+                                <input type=\"text\" name=\"firstname\" id=\"firstname\" class=\"form-control\" placeholder=\"Name\" value=\"";
             // line 16
             echo twig_escape_filter($this->env, ((twig_get_attribute($this->env, $this->source, ($context["_post"] ?? null), "firstname", array())) ? (twig_get_attribute($this->env, $this->source, ($context["_post"] ?? null), "firstname", array())) : ("")), "html", null, true);
             echo "\" required>
@@ -164,7 +164,7 @@ class __TwigTemplate_534933b2b373653296a6a686eede2e462a389a5129cd84edf1678c7caed
                         </div>
                         <div class=\"col form-group\">
                                 <label for=\"firstname\" class=\"sr-only\">First name</label>
-                                <input type=\"text\" name=\"firstname\" id=\"firstname\" class=\"form-control\" placeholder=\"First name\" value=\"{{ _post.firstname ? _post.firstname }}\" required>
+                                <input type=\"text\" name=\"firstname\" id=\"firstname\" class=\"form-control\" placeholder=\"Name\" value=\"{{ _post.firstname ? _post.firstname }}\" required>
                         </div>
                     </div>
                     <div class=\"row\">

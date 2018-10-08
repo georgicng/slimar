@@ -55,11 +55,20 @@ class __TwigTemplate_2d2d613ae2e917497a010cb59d6472cee1e28f9a777c288467959fbec58
             echo "        ";
         }
         // line 16
+        echo "        ";
+        if (($context["created"] ?? null)) {
+            // line 17
+            echo "        <div class=\"alert alert-danger alert-dismissible\" role=\"alert\">        
+            <strong>SUCCESS:</strong> Your account has been created.
+        </div>
+        ";
+        }
+        // line 21
         echo "        <div class=\"card card-login card-plain\">
             <form class=\"form\" method=\"post\" id=\"login-nav\">
                 <div class=\"card-header text-center text-dark\">
                     <h2>";
-        // line 19
+        // line 24
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
         echo "</h2>
                 </div>
@@ -74,14 +83,14 @@ class __TwigTemplate_2d2d613ae2e917497a010cb59d6472cee1e28f9a777c288467959fbec58
                     </div>
                     <div class=\"form-group\">
                         ";
-        // line 31
+        // line 36
         if (((($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 = ($context["i"] ?? null)) && is_array($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5) || $__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 instanceof ArrayAccess ? ($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5["captcha"] ?? null) : null) == "1")) {
-            // line 32
+            // line 37
             echo "                            <img src=\"inc/captcha.php\" style=\"float:left;\"/>
                             <input placeholder='Captcha' style=\"width:170px;padding:9px;color:#272727;\" maxlength=\"4\" name=\"captcha\" type=\"text\">
                         ";
         }
-        // line 35
+        // line 40
         echo "                    </div>
                 </div>
                 <div class=\"card-footer text-dark\">
@@ -114,7 +123,7 @@ class __TwigTemplate_2d2d613ae2e917497a010cb59d6472cee1e28f9a777c288467959fbec58
 
     public function getDebugInfo()
     {
-        return array (  85 => 35,  80 => 32,  78 => 31,  63 => 19,  58 => 16,  55 => 15,  49 => 11,  43 => 7,  40 => 6,  38 => 5,  35 => 4,  32 => 3,  15 => 1,);
+        return array (  94 => 40,  89 => 37,  87 => 36,  72 => 24,  67 => 21,  61 => 17,  58 => 16,  55 => 15,  49 => 11,  43 => 7,  40 => 6,  38 => 5,  35 => 4,  32 => 3,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -133,6 +142,11 @@ class __TwigTemplate_2d2d613ae2e917497a010cb59d6472cee1e28f9a777c288467959fbec58
                 We could not verify your email.
             </div>
             {% endif %}
+        {% endif %}
+        {% if (created) %}
+        <div class=\"alert alert-danger alert-dismissible\" role=\"alert\">        
+            <strong>SUCCESS:</strong> Your account has been created.
+        </div>
         {% endif %}
         <div class=\"card card-login card-plain\">
             <form class=\"form\" method=\"post\" id=\"login-nav\">

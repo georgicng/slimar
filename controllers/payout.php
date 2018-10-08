@@ -1,6 +1,7 @@
 <?php
 global $variables;
 global $in;
+global $i;
 global $error;
 
 if (!$in['id']) {
@@ -35,11 +36,12 @@ if ($id = Request\get('request') && $id == $in['request']) {
 
 }
 
+$key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key']; 
 $data = array_merge(
     $variables,
     [
         'pagename' => "Request Payout",
-        'banks' => getBankList(),
+        'banks' => getBankList($key),
         'maximum' => $in['balance'],
         'minimum' => 1000
     ]

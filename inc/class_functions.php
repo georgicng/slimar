@@ -331,23 +331,35 @@ function getCountryCodes()
     return $return;
 }
 
-//List of Nigerian Banks
-function getBankList()
+//verify payment from paystack
+function verifyPayment($key, $reference)
 {
-    //Todo: make it a pure function
-    global $i;
-    global $in;
-    $supported_banks = [];
-    $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
-    $paystack = new Yabacon\Paystack($key);
-    try {
-        $banks = $paystack->bank->getList();
-        error_log("paystack: ".json_encode($banks));
-        foreach ($banks->data as $bank) {
-            $bank = (array) $bank;
+    $opts = array(
+        'http' => array(
+        'header' => "Authorization: Bearer ".$key
+        ) 
+    ); 
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/transaction/verify/".$reference, false, $context);
+    return json_decode($response, true);
+}
+
+//List of Nigerian Banks
+function getBankList($key)
+{
+    $opts = array(
+        'http' => array(
+            'header' => "Authorization: Bearer ".$key 
+        ) 
+    ); 
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/bank", false, $context);
+    $response = json_decode($response, true);
+    if ($response['status']) {
+        foreach ($response['data'] as $bank) {
             $supported_banks[] = [ 'id' => $bank['code'], 'name' => $bank['name'] ];
         }
-    } catch (\Yabacon\Paystack\Exception\ApiException $e) {
+    } else {
         $supported_banks = [
             ["id" => "044", "name" => "Access Bank"],
             ["id" => "035A", "name" => "ALAT by WEMA"],
@@ -375,57 +387,116 @@ function getBankList()
             ["id" => "215", "name" => "Unity Bank"],
             ["id" => "035", "name" => "Wema Bank"],
             ["id" => "057", "name" => "Zenith Bank"]
-        ];
-        error_log("cache: ".json_encode($supported_banks));
     }
     return $supported_banks;
 }
 
+//create recipient on paystack
 function getRecipient($key, $accname, $bank, $accnumber)
 {
-    $paystack = new Yabacon\Paystack($key);
-    return $paystack->transferrecipient->create(
+    $postdata = json_encode(
         [
             'type' => 'nuban',
             'name' => $accname,
             'bank_code' => $bank,
             'account_number' => $accnumber,
         ]
-    );
+	);
+    $opts = array(
+        'http' => array(
+            'method' => 'POST',
+            'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
+			'content' => $postdata
+        ) 
+    ); 
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/transferrecipient", false, $context);
+    $response = json_decode($response, true);
+    if ($response['status']) {
+        return $response['data'];
+    } else {
+        return false;
+    }
 }
 
+//initiate transfer
 function makeTransfer($key, $amount, $recipient, $reason = "Winnings")
 {
-    $paystack = new Yabacon\Paystack($key);
-    return $paystack->transfer->initialize(
+    $postdata = json_encode(
         [
             'source' => 'balance',
             'amount' => $amount,
             'reason' => $reason,
             'recipient' => $recipient,
         ]
+	);
+    $opts = array(
+        'http' => array(
+            'method' => 'POST',
+            'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
+			'content' => $postdata
+        ) 
     );
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/transfer", false, $context);
+    $response = json_decode($response, true);
+    if ($response['status']) {
+        return $response['data'];
+    } else {
+        return false;
+    }
 }
 
+//request for otp
 function sendOTP($key, $code, $token)
 {
-    $paystack = new Yabacon\Paystack($key);
-    return $paystack->transfer->finalizeTransfer(
+    $postdata = json_encode(
         [
             'transfer_code' => $code,
             'otp' => $token,
         ]
-    );
+	);
+    $opts = array(
+        'http' => array(
+            'method' => 'POST',
+            'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
+			'content' => $postdata
+        ) 
+    ); 
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/transfer/finalize_transfer", false, $context);
+    $response = json_decode($response, true);
+    if ($response['status']) {
+        return $response['data'];
+    } else {
+        return false;
+    }
 }
 
+//request for otp to be resent
 function resendOTP($key, $code)
 {
-    $paystack = new Yabacon\Paystack($key);
-    return $paystack->transfer->resendOtp(
+    $postdata = json_encode(
         [
             'transfer_code' => $code,
+            'otp' => $token,
         ]
+	);
+    $opts = array(
+        'http' => array(
+            'method' => 'POST',
+            'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
+			'content' => $postdata
+        ) 
     );
+    $context = stream_context_create($opts); 
+    $response = file_get_contents("https://api.paystack.co/transfer/resend_otp", false, $context);
+    $response = json_decode($response, true);
+    if ($response['status']) {
+        return $response['message'];
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -474,9 +545,9 @@ function add_query_vars($query_string, $vars_to_add)
 }
 
 //Get bank from id
-function getBank($id)
+function getBank($id, $token)
 {
-    $banks = getBankList();
+    $banks = getBankList($token);
     foreach ($banks as $key => $bank) {
         if ($id == $key) {
             return $bank;

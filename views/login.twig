@@ -13,6 +13,11 @@
             </div>
             {% endif %}
         {% endif %}
+        {% if (created) %}
+        <div class="alert alert-danger alert-dismissible" role="alert">        
+            <strong>SUCCESS:</strong> Your account has been created.
+        </div>
+        {% endif %}
         <div class="card card-login card-plain">
             <form class="form" method="post" id="login-nav">
                 <div class="card-header text-center text-dark">

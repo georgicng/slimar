@@ -18,9 +18,6 @@ class EMailTemplate
         $subject  = $template->renderBlock('subject',   $parameters);
         $bodyHtml = $template->renderBlock('body_html', $parameters);
         $bodyText = $template->renderBlock('body_text', $parameters);
-        error_log($subject);
-        error_log($bodyHtml);
-        error_log($bodyText);
         
         $mail = new PHPMailer;
         //Send HTML or Plain Text email

@@ -2,6 +2,11 @@
 global $variables;
 global $i;
 global $in;
+
+use RedBeanPHP\Facade as R;
+use Siler\Http\Request;
+use Siler\Http\Response;
+
 //TODO: on network error save in localstorage/cookie and send that to server on next play to process
 if (!$in['username']) {
     $return['redirect'] = true;
@@ -10,9 +15,6 @@ if (!$in['username']) {
     exit;
 }
 
-use RedBeanPHP\Facade as R;
-use Siler\Http\Request;
-use Siler\Http\Response;
 
 $data = Request\json();
 $user = R::load('users', $in['id']);

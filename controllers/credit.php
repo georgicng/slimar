@@ -36,19 +36,7 @@ if ($amount = Request\post('amount')) {
 
 if ($reference = Request\get('reference')) {
     $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
-    error_log('paystack key: '.json_encode($key));
-    error_log('paystack reference: '.json_encode($reference)); 
-    error_log('paystack exception object: '.json_encode($e));
-    $opts = array(
-        'http' => array(
-        'header' => array( 
-            "Authorization: Bearer ".$key 
-            ) 
-        ) 
-    ); 
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transaction/verify/".$reference, false, $context);
-    $response = json_decode($response, true);
+    $response = verifyPayment($key, $reference);
     error_log('paystack response: '.json_encode($response));
     if ($response['status']) {
         $payment = R::findOne('payments', ' reference = ?', [$reference]);

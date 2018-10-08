@@ -61,7 +61,9 @@ if (empty($_GET['p'])) {
                     <div class="panel-heading">Add new payment request</div>
                     <div class="panel-body">
         <?php
-        $banks = getBankList();
+        
+        $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key']; 
+        $banks = getBankList($key);
         //Post comment
         if (isset($_POST["addrequest"])) {
             if ($in["username"]) {

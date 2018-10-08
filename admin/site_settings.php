@@ -162,8 +162,38 @@ if(empty($_GET['p'])) {
                                 <input type="text" name="settings[paga_test_private_key]" class="form-control" value="<?php echo $i['paga_test_private_key']; ?>"></input>
                             </div>
                             <div class="form-group">
-                                <label>Email server <small>Current webhost email server [leave blank if unknown]</small></label>
-                                <input type="text" name="settings[emailserver]" class="form-control" value="<?php echo $i['emailserver']; ?>"></input>
+                                <label>Use SMTP</label>
+                                <select class="form-control" name="settings[smtp]">
+                                    <option <?php if($i['smtp'] == "1") { echo 'selected'; 
+                                   } ?> value="1">Yes</option>
+                                    <option <?php if($i['smtp'] == "0") { echo 'selected'; 
+                                   } ?> value="0">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP server</label>
+                                <input type="text" name="settings[smtp_server]" class="form-control" value="<?php echo $i['smtp_server']; ?>"></input>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Port</label>
+                                <input type="text" name="settings[smtp_port]" class="form-control" value="<?php echo $i['smtp_port']; ?>"></input>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Security</label>
+                                <select class="form-control" name="settings[smtp_security]">
+                                    <option <?php if($i['smtp_security'] == "tls") { echo 'selected'; 
+                                   } ?> value="tls">TLS</option>
+                                    <option <?php if($i['smtp_security'] == "ssl") { echo 'selected'; 
+                                   } ?> value="ssl">SSL</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Username</label>
+                                <input type="text" name="settings[smtp_username]" class="form-control" value="<?php echo $i['smtp_username']; ?>"></input>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Password </label>
+                                <input type="text" name="settings[smtp_password]" class="form-control" value="<?php echo $i['smtp_password']; ?>"></input>
                             </div>
                             <div class="form-group">
                                 <label>Default profile picture</label>
