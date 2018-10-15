@@ -387,6 +387,7 @@ function getBankList($key)
             ["id" => "215", "name" => "Unity Bank"],
             ["id" => "035", "name" => "Wema Bank"],
             ["id" => "057", "name" => "Zenith Bank"]
+        ];
     }
     return $supported_banks;
 }
@@ -411,12 +412,8 @@ function getRecipient($key, $accname, $bank, $accnumber)
     ); 
     $context = stream_context_create($opts); 
     $response = file_get_contents("https://api.paystack.co/transferrecipient", false, $context);
-    $response = json_decode($response, true);
-    if ($response['status']) {
-        return $response['data'];
-    } else {
-        return false;
-    }
+    return json_decode($response, true);
+    
 }
 
 //initiate transfer
@@ -439,12 +436,7 @@ function makeTransfer($key, $amount, $recipient, $reason = "Winnings")
     );
     $context = stream_context_create($opts); 
     $response = file_get_contents("https://api.paystack.co/transfer", false, $context);
-    $response = json_decode($response, true);
-    if ($response['status']) {
-        return $response['data'];
-    } else {
-        return false;
-    }
+    return json_decode($response, true);
 }
 
 //request for otp
@@ -465,12 +457,7 @@ function sendOTP($key, $code, $token)
     ); 
     $context = stream_context_create($opts); 
     $response = file_get_contents("https://api.paystack.co/transfer/finalize_transfer", false, $context);
-    $response = json_decode($response, true);
-    if ($response['status']) {
-        return $response['data'];
-    } else {
-        return false;
-    }
+    return json_decode($response, true);
 }
 
 //request for otp to be resent
@@ -491,12 +478,8 @@ function resendOTP($key, $code)
     );
     $context = stream_context_create($opts); 
     $response = file_get_contents("https://api.paystack.co/transfer/resend_otp", false, $context);
-    $response = json_decode($response, true);
-    if ($response['status']) {
-        return $response['message'];
-    } else {
-        return false;
-    }
+    return json_decode($response, true);
+    
 }
 
 /**

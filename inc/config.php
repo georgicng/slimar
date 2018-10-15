@@ -67,7 +67,8 @@ if ($installed == 1) {
     
     if ($count == "0") {
         $stmt = $dbh->prepare("INSERT INTO visitors (ip) VALUES (:ip)");
-        $stmt->bindParam(':ip', getip());
+        $ip = getip();
+        $stmt->bindParam(':ip', $ip);
         $stmt->execute();
     }
 } else {

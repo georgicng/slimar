@@ -10,6 +10,7 @@ use RedBeanPHP\Facade as R;
 use Siler\Twig;
 use Siler\Http\Request;
 use Siler\Http\Response;
+$url = Request\get('g');
 
 if (!$in['username']) {
     header("location: error.php?code=not_logged_in");
@@ -17,11 +18,11 @@ if (!$in['username']) {
 }
 
 if ($in['locked'] || !empty($_SESSION['game_in_session'])) {
-    header("location: error.php?code=game_in_session");
+    header("location: error.php?code=game_in_session&g=".$url);
     exit;
 }
 
-$url = Request\get('g');
+
 $cur_game = R::findOne('games', ' url = ?', [$url]);
 
 

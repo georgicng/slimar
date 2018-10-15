@@ -53,6 +53,7 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
 <script src=\"assets/js/plugins/nouislider.min.js\" type=\"text/javascript\"></script>
 <!-- Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
 <script src=\"assets/js/plugins/bootstrap-datepicker.js\" type=\"text/javascript\"></script>
+<script src=\"assets/js/hullabaloo.min.js\" type=\"text/javascript\"></script>
 <!--script type=\"text/javascript\" src=\"assets/js/bootstrap.offcanvas.min.js\"></script-->
 <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
 <script type=\"text/javascript\" src=\"assets/js/script-loader.js\"></script>
@@ -103,6 +104,7 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
 <script src=\"assets/js/plugins/nouislider.min.js\" type=\"text/javascript\"></script>
 <!-- Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
 <script src=\"assets/js/plugins/bootstrap-datepicker.js\" type=\"text/javascript\"></script>
+<script src=\"assets/js/hullabaloo.min.js\" type=\"text/javascript\"></script>
 <!--script type=\"text/javascript\" src=\"assets/js/bootstrap.offcanvas.min.js\"></script-->
 <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
 <script type=\"text/javascript\" src=\"assets/js/script-loader.js\"></script>

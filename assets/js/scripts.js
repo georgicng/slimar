@@ -16,9 +16,7 @@ var ScriptLibrary = (function() {
 				AddEvents: function() {
 					//Window Scrolling
 					var doc = $(this);
-					if(doc.length) {				
-						
-						
+					if(doc.length) {
 						
 						$(window).scroll(function() { 
 							var searchNav = $('#searchbarnav');
@@ -63,6 +61,18 @@ var ScriptLibrary = (function() {
 					}
 
 					window.addEventListener("message", function(event) {
+						var hulla = new hullabaloo();
+						console.log('event', event);
+						var data = JSON.parse(event.data);
+						switch(data.type){
+							case 'save_score':
+							var win = parseFloat(data.score) - parseFloat($('#user-balance').text());
+								hulla.send("You won: "+ win, "info");
+								break;
+							case 'bet_placed':
+								hulla.send("You bet: "+ data.bet, "info");
+								break;
+						}
 						if(event.origin !== "https://checkout.paystack.com") {
 							$.ajax({
 								url: 'process.php',
@@ -76,6 +86,7 @@ var ScriptLibrary = (function() {
 										window.location = data.url;
 									} else {										
 										$('#user-balance').text( data.balance );
+										hulla.send("Your new balance: "+data.balance, "info");
 									}
 								},
 								error: function( jqXhr, textStatus, errorThrown ){

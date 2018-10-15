@@ -29,3 +29,4 @@ Route\route(['get', 'post'], '/process.php', 'controllers/process.php');
 Route\route(['get'], '/verify.php', 'controllers/verify.php');
 Route\route(['get'], '/payment.php', 'controllers/payment.php');
 Route\route(['get'], '/stat.php', 'controllers/stat.php');
+Route\route(['get'], '/resolution.php', 'controllers/resolution.php');

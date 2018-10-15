@@ -474,30 +474,29 @@ if (isset($_POST['payout'])) {
                     "You will be updated on the status of your request shortly";
                 mailer($i, $in['email'], $subject, $message);
 
-                //get recipient detail for transfer
-                try {
-                    $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
-                    $recipient = getRecipient($key, $account_name, $bank, $account_number);
-                    error_log('recipient: '.$recipient);
-                    $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
-                    $stmt->bindParam(':recipient', $recipient->data->recipient_code);
-                    $stmt->bindParam(':error', '');
-                    $data = serialize($recipient->data);
-                    $stmt->bindParam(':data', $data);
-                    $stmt->execute();
-                    
-                } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                //get recipient detail for transfer                
+                $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+                $response = getRecipient($key, $account_name, $bank, $account_number);
+                if ($response['status']) {
+                        $recipient = $response['data'];
+                        error_log('recipient: '.$recipient);
+                        $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
+                        $stmt->bindParam(':recipient', $recipient['recipient_code']);
+                        $stmt->bindParam(':error', '');
+                        $data = serialize($recipient);
+                        $stmt->bindParam(':data', $data);
+                        $stmt->execute();
+                } else {
+                    error_log('response: '.$response);
                     $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
                     $recipient = false;
                     $stmt->bindParam(':recipient', $recipient);
-                    $message = $e->getMessage();
+                    $message = 'something went wrong';
                     $stmt->bindParam(':error', $message);
-                    $data = serialize($e->getResponseObject());
+                    $data = serialize($response);
                     $stmt->bindParam(':data', $data);
                     $stmt->execute();
-                }
-                
-
+                }       
                 //deduct requested amount from balance and keep on hold
                 $success = "Request has been submitted successfully";
                 $_POST = [];

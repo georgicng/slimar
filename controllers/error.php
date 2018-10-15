@@ -7,10 +7,11 @@ use Siler\Http\Request;
 if ($code = Request\get('code')) {
     switch($code) {
         case 'game_in_session';
+            $url = Request\get('g');
             $title = "Game in session";
             $message = "Oops, seems like you already have a game in session. You would need to end that game before you can continue";
-            $action = '<a href="resolution.php?r="'.$_SERVER['HTTP_REFERER'].' class="btn btn-lg btn-secondary">End Current Game</a>'.
-            '<a href="resolution.php?rv=1&r="'.$_SERVER['HTTP_REFERER'].' class="btn btn-lg btn-secondary">I don\'t have any game running</a>';
+            $action = '<a href="resolution.php?g='.$url.'" class="btn btn-lg btn-secondary">End Current Game</a>'.
+            '<a href="resolution.php?rv=1&g='.$url.'" class="btn btn-lg btn-secondary">I don\'t have any game running</a>';
             break;
         case 'not_logged_in';
             $title = "You are not logged in";
