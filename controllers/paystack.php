@@ -44,6 +44,7 @@ switch ($event->event) {
         R::store($payout);        
         $user = R::load('users', $payout['user_id']);
         $user['holding'] = 0;
+        $user['request'] = null;
         R::store($user); 
         //send email
         $subject = "Transfer Completed";

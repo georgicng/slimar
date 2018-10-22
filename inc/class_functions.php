@@ -332,16 +332,57 @@ function getCountryCodes()
 }
 
 //verify payment from paystack
+function checkBalance($key)
+{
+    $opts = array(
+        'http' => array(
+        'header' => "Authorization: Bearer ".$key
+        )
+    );
+    $context = stream_context_create($opts);
+    try {
+        $response = file_get_contents("https://api.paystack.co/balance", false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }
+}
+
+//verify payment from paystack
 function verifyPayment($key, $reference)
 {
     $opts = array(
         'http' => array(
         'header' => "Authorization: Bearer ".$key
-        ) 
-    ); 
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transaction/verify/".$reference, false, $context);
-    return json_decode($response, true);
+        )
+    );
+    $context = stream_context_create($opts);
+    try {
+        $response = file_get_contents("https://api.paystack.co/transaction/verify/".$reference, false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }
 }
 
 //List of Nigerian Banks
@@ -349,10 +390,10 @@ function getBankList($key)
 {
     $opts = array(
         'http' => array(
-            'header' => "Authorization: Bearer ".$key 
-        ) 
-    ); 
-    $context = stream_context_create($opts); 
+            'header' => "Authorization: Bearer ".$key
+        )
+    );
+    $context = stream_context_create($opts);
     $response = file_get_contents("https://api.paystack.co/bank", false, $context);
     $response = json_decode($response, true);
     if ($response['status']) {
@@ -402,22 +443,35 @@ function getRecipient($key, $accname, $bank, $accnumber)
             'bank_code' => $bank,
             'account_number' => $accnumber,
         ]
-	);
+    );
     $opts = array(
         'http' => array(
             'method' => 'POST',
             'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
-			'content' => $postdata
-        ) 
-    ); 
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transferrecipient", false, $context);
-    return json_decode($response, true);
-    
+            'content' => $postdata
+        )
+    );
+    $context = stream_context_create($opts);
+    try {
+        $response = file_get_contents("https://api.paystack.co/transferrecipient", false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }
 }
 
 //initiate transfer
-function makeTransfer($key, $amount, $recipient, $reason = "Winnings")
+function makeTransfer($key, $amount, $recipient, $reason="Winnings")
 {
     $postdata = json_encode(
         [
@@ -426,17 +480,68 @@ function makeTransfer($key, $amount, $recipient, $reason = "Winnings")
             'reason' => $reason,
             'recipient' => $recipient,
         ]
-	);
+    );
     $opts = array(
         'http' => array(
             'method' => 'POST',
             'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
-			'content' => $postdata
-        ) 
+            'content' => $postdata
+        )
     );
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transfer", false, $context);
-    return json_decode($response, true);
+    $context = stream_context_create($opts);
+    error_log('context '.json_encode($opts));
+    error_log('context '.json_encode([$amount, $reason, $recipient, $key]));
+    try {
+        $response = file_get_contents("https://api.paystack.co/transfer", false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }    
+}
+
+function cmakeTransfer($key, $amount, $recipient, $reason="Winnings")
+{
+    $postdata = json_encode(
+        [
+            'source' => 'balance',
+            'amount' => $amount,
+            'reason' => $reason,
+            'recipient' => $recipient,
+        ]
+    );
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "https://api.paystack.co/transfer");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+
+    $headers = array();
+    $headers[] = "Authorization: Bearer " . $key;
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('Curl Error: '.json_encode(curl_error($ch)));
+        return [ 
+            'status' => false,
+            'message' => curl_error($ch),
+            'error' => true
+        ];
+    }
+    curl_close($ch);
+    return json_decode($result, true);
 }
 
 //request for otp
@@ -447,17 +552,65 @@ function sendOTP($key, $code, $token)
             'transfer_code' => $code,
             'otp' => $token,
         ]
-	);
+    );
     $opts = array(
         'http' => array(
             'method' => 'POST',
             'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
-			'content' => $postdata
-        ) 
-    ); 
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transfer/finalize_transfer", false, $context);
-    return json_decode($response, true);
+            'content' => $postdata
+        )
+    );
+    error_log('options '.json_encode($opts));
+    $context = stream_context_create($opts);
+    try {
+        $response = file_get_contents("https://api.paystack.co/transfer/finalize_transfer", false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }
+}
+
+function cSendOTP($key, $code, $token)
+{
+    $postdata = json_encode(
+        [
+            'transfer_code' => $code,
+            'otp' => $token,
+        ]
+    );
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, "https://api.paystack.co/transfer/finalize_transfer");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+
+    $headers = array();
+    $headers[] = "Authorization: Bearer " . $key;
+    $headers[] = 'Content-Type: application/json';
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        error_log('Curl Error: '.json_encode(curl_error($ch)));
+        return [ 
+            'status' => false,
+            'message' => curl_error($ch),
+            'error' => true
+        ];
+    }
+    curl_close($ch);
+    return json_decode($result, true);
 }
 
 //request for otp to be resent
@@ -466,20 +619,33 @@ function resendOTP($key, $code)
     $postdata = json_encode(
         [
             'transfer_code' => $code,
-            'otp' => $token,
+            'reason' => 'transfer',
         ]
-	);
+    );
     $opts = array(
         'http' => array(
             'method' => 'POST',
             'header' =>"Content-Type: application/json\r\n"."Authorization: Bearer ".$key."\r\n",
-			'content' => $postdata
-        ) 
+            'content' => $postdata
+        )
     );
-    $context = stream_context_create($opts); 
-    $response = file_get_contents("https://api.paystack.co/transfer/resend_otp", false, $context);
-    return json_decode($response, true);
-    
+    $context = stream_context_create($opts);
+    try {
+        $response = file_get_contents("https://api.paystack.co/transfer/resend_otp", false, $context);
+        if ($response === false) {
+            return [ 
+                'status' => false,
+                'message' => 'Something went wrong, couldn\'t complete request',
+            ];
+        }
+        return json_decode($response, true);
+    } catch (Exception $e) {
+        return [ 
+            'status' => false,
+            'message' => $e->getMessage(),
+            'error' => $e
+        ];
+    }
 }
 
 /**
@@ -1072,7 +1238,8 @@ function forgotpassword($name, $to, $from, $SMTP, $title, $url1)
 }
 
 
-function mailer($config, $to, $subject, $message){
+function mailer($config, $to, $subject, $message)
+{
     $to = $to;
     $from = $config['email'];
     $subject = $subject;

@@ -39,13 +39,13 @@ if (empty($_GET['p'])) {
             </ol>
         </div><!--/.row-->
         <br>
-    <?php if ($_GET['success']) {
+    <?php if (isset($_GET['success'])) {
     ?>
         <div class="alert bg-success" role="alert">
             <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['success']; ?>
         </div>
     <?php
-} elseif ($_GET['error']) {
+} elseif (isset($_GET['error'])) {
         ?>
             <div class="alert bg-error" role="alert">
                 <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['error']; ?>
@@ -111,21 +111,18 @@ if (empty($_GET['p'])) {
                     $stmt->bindParam(':comment', $comment);
 
                     //get recipient detail for transfer
-                    try
-                    {
-                        $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
-                        $recipient = getRecipient($key, $account_name, $bank, $account_number);
+                    $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
+                    if ($recipient = getRecipient($key, $account_name, $bank, $account_number)) {
                         $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$user_id);
-                        $stmt->bindParam(':recipient', $recipient->data->recipient_code);
+                        $stmt->bindParam(':recipient', $recipient['recipient_code']);
                         $stmt->bindParam(':error', '');
-                        $stmt->bindParam(':data', serialize($recipient->data));
+                        $stmt->bindParam(':data', serialize($recipient));
                         $stmt->execute();
-                        
-                    } catch(\Yabacon\Paystack\Exception\ApiException $e){
+                    } else {
                         $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$user_id);
                         $stmt->bindParam(':recipient', false);
-                        $stmt->bindParam(':error', $e->getMessage());
-                        $stmt->bindParam(':data', serialize($e->getResponseObject()));
+                        $stmt->bindParam(':error', '');
+                        $stmt->bindParam(':data', serialize($recipient));
                         $stmt->execute();
                     }
                 }
@@ -184,7 +181,7 @@ if (empty($_GET['p'])) {
                                 <th>ID</th>
                                 <th>User</th>
                                 <th>Amount</th>
-                                <th>Status/th>
+                                <th>Status</th>
                                 <th>View</th>
                             </tr>
                             </thead>
@@ -242,12 +239,16 @@ if (empty($_GET['p'])) {
             $stmt->bindParam(':amount', $request['amount']);
             $stmt->bindParam(':request', $request['id']);
             $stmt->bindParam(':recipient', $request['recipient']);
-            $stmt->bindParam(':status', 'Queued');
+            $status = 'Queued';
+            $stmt->bindParam(':status', $status);            
+            $user_id = $_POST['userid'];
             $stmt->bindParam(':user_id', $user_id);
-            $stmt->bindParam(':date-added', $date);
+            $date = date("Y-m-d H:i:s");
+            $stmt->bindParam(':date_added', $date);
             if ($stmt->execute()) {
-                header("location: ".add_query_vars('make_transfer.php', ['id' => $_GET['id']]));
+                header("location: make_transfer.php?id=".$dbh->lastInsertId());
             }
+            error_log(json_encode($stmt->errorInfo()));
             
         } elseif (isset($_POST['rejectrequest'])) {
             if ($_POST['comment']) {
@@ -256,6 +257,7 @@ if (empty($_GET['p'])) {
                 $comment = '';
             }
             $currenturl = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}";
+            $user_id = $_POST['userid'];
             activitylog(''.$in['username'].'', 'rejected payment request'.$request['id'].'', ''.time().'', 'Admin');
             
             //update request status
@@ -269,9 +271,11 @@ if (empty($_GET['p'])) {
                 //restore user balance
                 $holding = 0;
                 $balance = $user['balance'] + $user['holding'];
-                $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding WHERE id = ".$user_id);
+                $request = null;
+                $stmt =  $dbh->prepare("UPDATE users SET balance = :balance, holding = :holding , request = :request WHERE id = ".$user_id);
                 $stmt->bindParam(':holding', $holding);
                 $stmt->bindParam(':balance', $balance);
+                $stmt->bindParam(':request', $request);
                 $stmt->execute();
                 //send email
                 $subject = "Transfer request Rejected";
@@ -337,7 +341,7 @@ if (empty($_GET['p'])) {
         $stmt1->execute();
         $request = $stmt1->fetch();
             
-        if ($_POST['deleterequest']) {
+        if ($_POST['deleterequest'] && $request['status'] != "Pending") {
             //TODO: prevent reversal if user is online and playing a game
             activitylog(''.$in['username'].'', 'deleted payment request: '.$request['id'].'', ''.time().'', 'Admin');
             $update_query = $dbh->prepare("DELETE payout_requests WHERE id='".$_GET['id']."'");
@@ -346,6 +350,9 @@ if (empty($_GET['p'])) {
                 header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
             }
 
+        } else {
+            $error = 'Pending Requests cannot be deleted';
+            header("location: ".add_query_vars('manage_requests.php', ['error' => $error]));
         } ?>
         <div class="row">
             <div class="col-lg-12">

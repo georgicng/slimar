@@ -26,6 +26,7 @@ Route\route(['get', 'post'], '/payout.php', 'controllers/payout.php');
 Route\route(['get', 'post'], '/win.php', 'controllers/win.php');
 Route\route(['get', 'post'], '/error.php', 'controllers/error.php');
 Route\route(['get', 'post'], '/process.php', 'controllers/process.php');
+Route\route(['get', 'post'], '/contact.php', 'controllers/contact.php');
 Route\route(['get'], '/verify.php', 'controllers/verify.php');
 Route\route(['get'], '/payment.php', 'controllers/payment.php');
 Route\route(['get'], '/stat.php', 'controllers/stat.php');

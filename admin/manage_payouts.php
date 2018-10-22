@@ -39,16 +39,16 @@ if (empty($_GET['p'])) {
             </ol>
         </div><!--/.row-->
         <br>
-    <?php if ($_GET['success']) {
+    <?php if (isset($_GET['success'])) {
     ?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $success ?></a>
+                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['success'] ?></a>
         </div>
     <?php
-} elseif ($_GET['error']) {
+} elseif (isset($_GET['error'])) {
         ?>
-        <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $error ?></a>
+        <div class="alert bg-error" role="alert">
+                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['error'] ?></a>
         </div>
     <?php
     }  ?>
@@ -72,11 +72,11 @@ if (empty($_GET['p'])) {
                             </tr>
                             </thead>
         <?php
-        $sql = "SELECT p.*, u.username FROM payouts as p join users as u on p.userid = u.id ORDER BY date desc";
+        $sql = "SELECT p.*, (select username from users u where u.id = p.user_id) as username FROM payouts as p ORDER BY p.date_added desc";
         $stm = $dbh->prepare($sql);
         $stm->execute();
         $payments = $stm->fetchAll();
-                            
+        // error_log("payments ".json_encode($payments));                 
         $count = 0;
         foreach ($payments as $payment) {
             ?>
@@ -87,8 +87,14 @@ if (empty($_GET['p'])) {
                                 <td><?php echo $payment['status']; ?></td>                                 
                                 <td><?php echo $payment['reference']; ?></td>                                
                                 <td>
-                                    <a href='manage_payouts.php?p=view&id=<?php echo $payment['id']; ?>' class='btn btn-primary btn-xs'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> View</a> 
-                                    <a href='manage_payouts.php?p=reverse&id=<?php echo $payment['id']; ?>' class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Reverse</a> </td>
+                                    <a href='manage_payouts.php?p=view&id=<?php echo $payment['id']; ?>' class='btn btn-primary btn-xs'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> View</a>
+                                    <?php if ($payment['status'] == "Complete") { ?> 
+                                        <a href='manage_payouts.php?p=reverse&id=<?php echo $payment['id']; ?>' class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Reverse</a> </td>
+                                    <?php } elseif ($payment['status'] == "otp") { ?> 
+                                        <a href="<?php echo 'make_transfer.php?id='.$payment['id'].'&retry=1'; ?>" class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Resend Token</a> </td>
+                                    <?php } else { ?>
+                                        <a href='make_transfer.php?id=<?php echo $payment['id']; ?>' class='btn btn-danger btn-xs'><i class='fa fa-times' aria-hidden='true'></i> Process</a> </td> 
+                                    <?php } ?>
                             </tr>
         <?php
         } ?>
@@ -111,15 +117,15 @@ if (empty($_GET['p'])) {
                 <div class="panel panel-default">
                     <div class="panel-heading">View Payout: <?php echo $payment['id']; ?></div>
                     <div class="panel-body">
-                        <?php if ($_GET['error'] && empty($payment['reference'])) {
+                        <?php if (isset($_GET['error']) && empty($payment['reference'])) {
             ?>
-                            <a href='<?php echo add_query_vars('make_transfer.php', ['id' => $payment['id']]) ?>' class='btn btn-primary btn-xs'>
+                            <a href="<?php echo 'make_transfer.php?id='.$payment['id'] ?>" class='btn btn-primary btn-xs'>
                                 <i class='fa fa-pencil-square-o' aria-hidden='true'></i> Retry Transaction
                             </a>
                         <?php
-        } elseif ($_GET['error'] && !empty($payment['reference'])) {
+        } elseif (isset($_GET['error']) && !empty($payment['reference'])) {
             ?>
-                            <a href='<?php echo add_query_vars('make_transfer.php', ['id' => $payment['id'], 'retry' => true]) ?>' class='btn btn-primary btn-xs'>
+                            <a href="<?php echo 'make_transfer.php?id='.$payment['id'].'&retry='.true ?>"" class='btn btn-primary btn-xs'>
                                 <i class='fa fa-pencil-square-o' aria-hidden='true'></i> Resend token
                             </a>
                        <?php

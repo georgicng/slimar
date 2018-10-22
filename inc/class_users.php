@@ -1,5 +1,6 @@
 <?php
 use Siler\Twig;
+
 // [* SlimarUSER *] set user cookie//
 if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
     $id = $_COOKIE['id'];
@@ -35,7 +36,7 @@ if (isset($_COOKIE['id'])) {  //Main class to set valuables across website
                 }
             
                 //Gets user profile picture
-                if (if_gravatar("".$in['email']."") == "true" 
+                if (if_gravatar("".$in['email']."") == "true"
                     && $in['gravatar'] == "1"
                 ) {
                     $profilepic = get_gravatar($in['email']);
@@ -80,13 +81,13 @@ if (isset($_POST['login'])) {
                     //correct password
                     //Activity log
                     activitylog(''.$row ['username'].'', 'Logged in', ''.time().'');
-                    if (isset($_POST['remember'])) { 
+                    if (isset($_POST['remember'])) {
                         //sets cookie
                         setcookie("id", $row["id"], time()+(60*60*60*24*5));
                         setcookie("password", $row["password"], time()+(60*60*60*24*5));
                         header("location: ".$i['loginurl']."");
                     } else {
-                        //sets session 
+                        //sets session
                         setcookie("id", $row["id"], time()+3600);
                         setcookie("password", $row["password"], time()+3600);
                         header("location: ".$i['loginurl']."");
@@ -141,7 +142,7 @@ if (isset($_POST['register'])) {
         
         if ($rowusername['username']) {
             $error[] = "The username that you have entered already exists! Try logging in <a href='login.php'>here</a>";
-        } 
+        }
         
         if ($rowemail['email']) {
             $error[] = "The email that you have entered already exists! Try logging in <a href='login.php'>here</a>";
@@ -152,9 +153,9 @@ if (isset($_POST['register'])) {
         }
 
         if ($i['captcha_reg'] == "1") {
-          if (empty($_POST["captcha"]) || $_SESSION["code"] != $_POST["captcha"]) {
-              $error[] = "The captcha you entered is incorrect";
-          }
+            if (empty($_POST["captcha"]) || $_SESSION["code"] != $_POST["captcha"]) {
+                $error[] = "The captcha you entered is incorrect";
+            }
         }
 
         if (empty($_POST["tos"]) || $_POST["tos"] != "1") {
@@ -187,7 +188,7 @@ if (isset($_POST['register'])) {
                     $verified = "0";
                     $stmt->bindParam(':verified', $verified);
                 }
-                $stmt->bindParam(':verified_rand', $verified_rand);                 
+                $stmt->bindParam(':verified_rand', $verified_rand);
                 $stmt->bindParam(':referral', $userreferred);
                 if ($stmt->execute()) {
                     activitylog(''.$username.'', 'Registered', ''.time().'');
@@ -197,7 +198,7 @@ if (isset($_POST['register'])) {
                     include "EmailTemplate.php";
                     $mail = new EmailTemplate(Twig\init(SITE_ROOT.'/views', SITE_ROOT.'/views/cache'));
                     $mailer = $mail->getMessage(
-                        'registration', 
+                        'registration',
                         [
                             "name" => $firstname,
                             "username" => $username,
@@ -214,7 +215,6 @@ if (isset($_POST['register'])) {
                         $mail->Password = $i['smtp_server'];                           // SMTP password
                         $mail->SMTPSecure = $i['smtp_security']? $i['smtp_security']: 'tls';                            // Enable TLS encryption, `ssl` also accepted
                         $mail->Port = $i['smtp_port']? $i['smtp_port'] : 587;                                    // TCP port to connect to
-
                     }
 
                     $mailer->setFrom($i['email'], 'Chapgames');
@@ -225,12 +225,10 @@ if (isset($_POST['register'])) {
                 } else {
                     error_log("insert error data: ".json_encode($stmt->errorInfo()));
                     $error = $stmt->errorCode().": Opps something went wrong, please try again";
-                }                  
-
-            } catch(PDOException $e) {
+                }
+            } catch (PDOException $e) {
                 $error = $e->getMessage();
-            }                   
-            
+            }
         }
     }
 }
@@ -246,32 +244,62 @@ if (isset($in['id'])) {
 }
  
 //Private messaging
-if (isset($_POST['sendmessage'])) {
-    if (!empty($in["username"])) {
-        $id_from = "1";
-        $id_to = $_POST['userid'];
-        $subject = strip_tags($_POST['subject'], '<br><b><strong>');
-        $message = strip_tags($_POST['message'], '<br><b><strong>');
-        $date = $_POST['date'];
-        $currenttime = time();
-        $sub_id = $_POST['postid'];
-        $sub = "1";
-        
-        if ($in['id'] != $id_from) {
-            echo 'oh no theres an error!';
-            activitylog(''.$in['username'].'', 'SECURITY ERROR: USER TRYING TO SEND MESSAGE AS DIFFERENT USER', ''.time().'');
-        } else {
-            activitylog(''.$in['username'].'', 'sent a private message', ''.time().'');
-            $stmt = $dbh->prepare("INSERT INTO users_inbox (id_to, id_from, message, subject, date) VALUES (:id_to, :id_from, :message, :subject, :date)");
-            $stmt->bindParam(':id_to', $id_to);
-            $stmt->bindParam(':id_from', $in['id']);
-            $stmt->bindParam(':message', $message);
-            $stmt->bindParam(':subject', $subject);
-            $stmt->bindParam(':date', $currenttime);
-            $stmt->execute();
-            $success = "Message successfully sent";
-        }
+if (isset($_POST['contact'])) {
+    // Get the form fields and remove whitespace.
+    $firstname = strip_tags(trim($_POST["firstname"]));
+    $lastname = strip_tags(trim($_POST["lastname"]));
+    $phone = strip_tags(trim($_POST["phone"]));
+    $subject = strip_tags(trim($_POST["subject"]));
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $message = trim($_POST["message"]);
+
+    if (empty($firstname)) {
+        $error[] = "Please enter your firstname";
     }
+
+    if (empty($email)) {
+        $error[] = "Please enter your email";
+    }
+
+    if (empty($subject)) {
+        $error[] = "Please enter a subject";
+    }
+
+    if (empty($message)) {
+        $error[] = "Please enter a message";
+    }
+    // Check that data was sent to the mailer.
+    if (empty($error)) {
+        
+        // Set the recipient email address.
+        // FIXME: Update this to your desired email address.
+        $recipient = $i['email'];
+
+        // Set the email subject.
+        $subject = "New contact: $subject";
+
+        // Build the email content.
+        $email_content = "First Name: $firstname\n";
+        if (!empty($lastname)) {
+            $email_content .= "Last Name: $lastname\n";
+        }
+        $email_content .= "Email: $email\n\n";
+        if (!empty($phone)) {
+            $email_content .= "Phone: $phone\n";
+        }
+        $email_content .= "Message:\n$message\n";
+
+        // Build the email headers.
+        $email_headers = "From: $firstname <$email>";
+
+        // Send the email.
+        if (mail($recipient, $subject, $email_content, $email_headers)) {
+            $success = "Thank You! Your message has been sent.";
+            $_POST = [];
+        } else {
+            $error = "Oops! Something went wrong and we couldn't send your message. Do try again";
+        }
+    } 
 }
  
 //Upload avatar
@@ -302,8 +330,8 @@ if (isset($_POST["uploadavatar"])) {
         $uploadOk = 0;
     }
     // Allow certain file formats
-    if ($imageFileType != "jpg" 
-        && $imageFileType != "png" 
+    if ($imageFileType != "jpg"
+        && $imageFileType != "png"
         && $imageFileType != "jpeg"
         && $imageFileType != "gif"
     ) {
@@ -407,7 +435,7 @@ if (isset($_POST['updatepassword'])) {
 
 //Process Payout
 if (isset($_POST['payout'])) {
-    if (!empty($in["username"])) {
+    if (!empty($in["username"]) && empty($in["request"])) {
         $error = [];
         $bank = filter_var($_POST['bank'], FILTER_SANITIZE_NUMBER_INT);
         $amount = filter_var($_POST['amount'], FILTER_SANITIZE_NUMBER_FLOAT);
@@ -474,20 +502,21 @@ if (isset($_POST['payout'])) {
                     "You will be updated on the status of your request shortly";
                 mailer($i, $in['email'], $subject, $message);
 
-                //get recipient detail for transfer                
+                //get recipient detail for transfer
                 $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
                 $response = getRecipient($key, $account_name, $bank, $account_number);
                 if ($response['status']) {
-                        $recipient = $response['data'];
-                        error_log('recipient: '.$recipient);
-                        $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
-                        $stmt->bindParam(':recipient', $recipient['recipient_code']);
-                        $stmt->bindParam(':error', '');
-                        $data = serialize($recipient);
-                        $stmt->bindParam(':data', $data);
-                        $stmt->execute();
+                    $recipient = $response['data'];
+                    error_log('recipient: '.json_encode($recipient));
+                    $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
+                    $stmt->bindParam(':recipient', $recipient['recipient_code']);
+                    $error = '';
+                    $stmt->bindParam(':error', $error);
+                    $data = serialize($recipient);
+                    $stmt->bindParam(':data', $data);
+                    $stmt->execute();
                 } else {
-                    error_log('response: '.$response);
+                    error_log('response: '.json_encode($response));
                     $stmt =  $dbh->prepare("UPDATE payout_requests SET recipient = :recipient, data = :data, error = :error WHERE id = ".$id);
                     $recipient = false;
                     $stmt->bindParam(':recipient', $recipient);
@@ -496,7 +525,7 @@ if (isset($_POST['payout'])) {
                     $data = serialize($response);
                     $stmt->bindParam(':data', $data);
                     $stmt->execute();
-                }       
+                }
                 //deduct requested amount from balance and keep on hold
                 $success = "Request has been submitted successfully";
                 $_POST = [];
@@ -504,12 +533,9 @@ if (isset($_POST['payout'])) {
                 error_log(json_encode($stmt->errorInfo()));
                 $error = "Couldn't complete request";
             }
-            
-            
-            
-        } 
-       
+        }
     } else {
-
+        header("location: payout.php");
+        exit;
     }
 }
