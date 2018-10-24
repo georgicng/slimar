@@ -22,25 +22,22 @@
                         <a class="nav-link" href="admin/">Admin panel</a>
                     </li>
                 {% endif %}
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
                         <span class="currency symbol">N</span><span id="user-balance" class="balance money">{{in['balance']}}</span>
                         <span class="caret"></span>
                     </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a href="credit.php" class="dropdown-item">Load Credit</a>
-                        <a href="payout.php" class="dropdown-item">Request Payout</a>
-                        <a href="stat.php" class="dropdown-item">Play History</a>
-                    </div>
-                </li>
+                </li>                
+                <li class="nav-item"><a href="credit.php" class="nav-link">Load Credit</a></li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="{{profilepic}}" class="profilepic" width="25px" height="25px">
                         <b>{{in['username']}}</b>
                         <span class="caret"></span></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="profile.php?u={{in['username']}}">My profile</a>
-                        <a class="dropdown-item" href="account_settings.php">Account settings</a>
+                        <a class="dropdown-item" href="profile.php">My profile</a>                        
+                        <a href="payout.php" class="dropdown-item">Request Payout</a>
+                        <a href="stat.php" class="dropdown-item">Play History</a>
                         <a class="dropdown-item" href="logout.php">Logout</a>
                     </div>
                 </li>

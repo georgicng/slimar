@@ -19,7 +19,7 @@ $user = R::load('users', $in['id']);
 $id = Request\get('request');
 if (!empty($id) && $id == $in['request']) {
     $payout = R::load('payout_requests', $in['request']);
-    if ($payout->status == "Processing" || $payout->status == "Paid") {
+    if (in_array($payout->status, ["Approved", "Processing", "Paid"])) {
         $error = "Your payout has been initiated and cannot be cancelled";
     } else {
         $payout->status = "Cancelled";

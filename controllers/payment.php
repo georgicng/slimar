@@ -28,7 +28,7 @@ switch($payout['status']) {
     case 'Approved';
         $title = "Request Approved";
         $message = 'Your payment is currently been processed';
-        $action = '<a href="#" class="btn btn-lg btn-secondary">Confirm Receipt</a><a href="#" class="btn btn-lg btn-secondary">Report an Issue</a>';
+        $action = '<a href="#" class="btn btn-lg btn-secondary">Confirm Receipt</a><a href="contact.php" class="btn btn-lg btn-secondary">Report an Issue</a>';
         break;
     default:
         $title = "Payment Request Status";

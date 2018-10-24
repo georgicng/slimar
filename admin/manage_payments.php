@@ -39,13 +39,19 @@ if (empty($_GET['p'])) {
             </ol>
         </div><!--/.row-->
         <br>
-    <?php if ($_GET['success'] == "user") {
+        <?php if (isset($_GET['success'])) {
     ?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> Payment successfully updated</a>
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['success']; ?>
         </div>
     <?php
-} ?>
+} elseif (isset($_GET['error'])) {
+        ?>
+            <div class="alert bg-error" role="alert">
+                <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?php echo $_GET['error']; ?>
+            </div>
+        <?php
+    } ?>
         
     <?php if ($page == "home") {
         ?>
@@ -79,7 +85,7 @@ if (empty($_GET['p'])) {
                         <form method="post">
                             <div class="form-group">
                                 <input type="text" name="payment_username" placeholder="User Name" id="payment_username" class="form-control"></input>
-                                <input type="hidden" name="payment_userid" value="<?php echo $payment['userid']; ?>" id="payment_userid">
+                                <input type="hidden" name="payment_userid" value=" id="payment_userid">
                             </div>
                             <div class="form-group">
                                 <input type="number" name="payment_amount" placeholder="Amount" class="form-control"></input>

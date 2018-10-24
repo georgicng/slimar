@@ -55,48 +55,42 @@ class __TwigTemplate_28397253cc38ffc21846b004f92536e4354356a60344fff71785564eb22
                 ";
             }
             // line 25
-            echo "                <li class=\"nav-item dropdown\">
-                    <a href=\"#\" class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\">
+            echo "                <li class=\"nav-item\">
+                    <a href=\"#\" class=\"nav-link\">
                         <span class=\"currency symbol\">N</span><span id=\"user-balance\" class=\"balance money\">";
             // line 27
             echo twig_escape_filter($this->env, (($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 = ($context["in"] ?? null)) && is_array($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57) || $__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 instanceof ArrayAccess ? ($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57["balance"] ?? null) : null), "html", null, true);
             echo "</span>
                         <span class=\"caret\"></span>
                     </a>
-                    <div class=\"dropdown-menu\" role=\"menu\">
-                        <a href=\"credit.php\" class=\"dropdown-item\">Load Credit</a>
-                        <a href=\"payout.php\" class=\"dropdown-item\">Request Payout</a>
-                        <a href=\"stat.php\" class=\"dropdown-item\">Play History</a>
-                    </div>
-                </li>
+                </li>                
+                <li class=\"nav-item\"><a href=\"credit.php\" class=\"nav-link\">Load Credit</a></li>
                 <li class=\"nav-item dropdown\">
                     <a href=\"#\" class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\">
                         <img src=\"";
-            // line 38
+            // line 34
             echo twig_escape_filter($this->env, ($context["profilepic"] ?? null), "html", null, true);
             echo "\" class=\"profilepic\" width=\"25px\" height=\"25px\">
                         <b>";
-            // line 39
+            // line 35
             echo twig_escape_filter($this->env, (($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 = ($context["in"] ?? null)) && is_array($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9) || $__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 instanceof ArrayAccess ? ($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9["username"] ?? null) : null), "html", null, true);
             echo "</b>
                         <span class=\"caret\"></span></a>
                     <div class=\"dropdown-menu\">
-                        <a class=\"dropdown-item\" href=\"profile.php?u=";
-            // line 42
-            echo twig_escape_filter($this->env, (($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217 = ($context["in"] ?? null)) && is_array($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217) || $__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217 instanceof ArrayAccess ? ($__internal_add9db1f328aaed12ef1a33890510da978cc9cf3e50f6769d368473a9c90c217["username"] ?? null) : null), "html", null, true);
-            echo "\">My profile</a>
-                        <a class=\"dropdown-item\" href=\"account_settings.php\">Account settings</a>
+                        <a class=\"dropdown-item\" href=\"profile.php\">My profile</a>                        
+                        <a href=\"payout.php\" class=\"dropdown-item\">Request Payout</a>
+                        <a href=\"stat.php\" class=\"dropdown-item\">Play History</a>
                         <a class=\"dropdown-item\" href=\"logout.php\">Logout</a>
                     </div>
                 </li>
             ";
         }
-        // line 48
+        // line 45
         echo "        </ul>
 
         <div class=\"navbar-collapse justify-content-end d-lg-none\" id=\"navigation\" data-nav-image=\"../assets/img/blurred-image-1.jpg\">
             ";
-        // line 51
+        // line 48
         echo twig_get_attribute($this->env, $this->source, ($context["header_menu"] ?? null), "html", array(), "method");
         echo "
         </div>
@@ -116,7 +110,7 @@ class __TwigTemplate_28397253cc38ffc21846b004f92536e4354356a60344fff71785564eb22
 
     public function getDebugInfo()
     {
-        return array (  100 => 51,  95 => 48,  86 => 42,  80 => 39,  76 => 38,  62 => 27,  58 => 25,  52 => 21,  49 => 20,  40 => 13,  38 => 12,  33 => 9,  23 => 1,);
+        return array (  94 => 48,  89 => 45,  76 => 35,  72 => 34,  62 => 27,  58 => 25,  52 => 21,  49 => 20,  40 => 13,  38 => 12,  33 => 9,  23 => 1,);
     }
 
     public function getSourceContext()
@@ -145,25 +139,22 @@ class __TwigTemplate_28397253cc38ffc21846b004f92536e4354356a60344fff71785564eb22
                         <a class=\"nav-link\" href=\"admin/\">Admin panel</a>
                     </li>
                 {% endif %}
-                <li class=\"nav-item dropdown\">
-                    <a href=\"#\" class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\">
+                <li class=\"nav-item\">
+                    <a href=\"#\" class=\"nav-link\">
                         <span class=\"currency symbol\">N</span><span id=\"user-balance\" class=\"balance money\">{{in['balance']}}</span>
                         <span class=\"caret\"></span>
                     </a>
-                    <div class=\"dropdown-menu\" role=\"menu\">
-                        <a href=\"credit.php\" class=\"dropdown-item\">Load Credit</a>
-                        <a href=\"payout.php\" class=\"dropdown-item\">Request Payout</a>
-                        <a href=\"stat.php\" class=\"dropdown-item\">Play History</a>
-                    </div>
-                </li>
+                </li>                
+                <li class=\"nav-item\"><a href=\"credit.php\" class=\"nav-link\">Load Credit</a></li>
                 <li class=\"nav-item dropdown\">
                     <a href=\"#\" class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\">
                         <img src=\"{{profilepic}}\" class=\"profilepic\" width=\"25px\" height=\"25px\">
                         <b>{{in['username']}}</b>
                         <span class=\"caret\"></span></a>
                     <div class=\"dropdown-menu\">
-                        <a class=\"dropdown-item\" href=\"profile.php?u={{in['username']}}\">My profile</a>
-                        <a class=\"dropdown-item\" href=\"account_settings.php\">Account settings</a>
+                        <a class=\"dropdown-item\" href=\"profile.php\">My profile</a>                        
+                        <a href=\"payout.php\" class=\"dropdown-item\">Request Payout</a>
+                        <a href=\"stat.php\" class=\"dropdown-item\">Play History</a>
                         <a class=\"dropdown-item\" href=\"logout.php\">Logout</a>
                     </div>
                 </li>

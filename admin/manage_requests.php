@@ -232,24 +232,25 @@ if (empty($_GET['p'])) {
             
             //update request
             $update_query = $dbh->prepare("UPDATE payout_requests SET status='Approved', comment='".$comment."', date_modified ='".date("Y-m-d H:i:s")."' WHERE id='".$_GET['id']."'");
-            $update_query->execute();
-            
-            //create payout request for processing
-            $stmt =  $dbh->prepare("INSERT INTO payouts (user_id, request_id, recipient, amount, date_added, status) VALUES (:user_id, :request, :recipient, :amount, :date_added, :status)");
-            $stmt->bindParam(':amount', $request['amount']);
-            $stmt->bindParam(':request', $request['id']);
-            $stmt->bindParam(':recipient', $request['recipient']);
-            $status = 'Queued';
-            $stmt->bindParam(':status', $status);            
-            $user_id = $_POST['userid'];
-            $stmt->bindParam(':user_id', $user_id);
-            $date = date("Y-m-d H:i:s");
-            $stmt->bindParam(':date_added', $date);
-            if ($stmt->execute()) {
-                header("location: make_transfer.php?id=".$dbh->lastInsertId());
+            if ($update_query->execute()) {
+                 //create payout request for processing
+                $stmt =  $dbh->prepare("INSERT INTO payouts (user_id, request_id, recipient, amount, date_added, status) VALUES (:user_id, :request, :recipient, :amount, :date_added, :status)");
+                $stmt->bindParam(':amount', $request['amount']);
+                $stmt->bindParam(':request', $request['id']);
+                $stmt->bindParam(':recipient', $request['recipient']);
+                $status = 'Queued';
+                $stmt->bindParam(':status', $status);            
+                $user_id = $_POST['userid'];
+                $stmt->bindParam(':user_id', $user_id);
+                $date = date("Y-m-d H:i:s");
+                $stmt->bindParam(':date_added', $date);
+                if ($stmt->execute()) {
+                    header("location: make_transfer.php?id=".$dbh->lastInsertId());
+                } else {
+                    error_log(json_encode($stmt->errorInfo()));
+                }
+                
             }
-            error_log(json_encode($stmt->errorInfo()));
-            
         } elseif (isset($_POST['rejectrequest'])) {
             if ($_POST['comment']) {
                 $comment = filter_var($_POST['comment'], FILTER_SANITIZE_STRING);
@@ -276,14 +277,20 @@ if (empty($_GET['p'])) {
                 $stmt->bindParam(':holding', $holding);
                 $stmt->bindParam(':balance', $balance);
                 $stmt->bindParam(':request', $request);
-                $stmt->execute();
-                //send email
-                $subject = "Transfer request Rejected";
-                $message = "We are sorry to inform you that your transfer request has been rejected due to the following reason:".$comment;
-                mailer($i, $user['email'], $subject, $message);
+                if ($stmt->execute()) {
+                    //send email
+                    $subject = "Transfer request Rejected";
+                    $message = "We are sorry to inform you that your transfer request has been rejected due to the following reason:".$comment;
+                    mailer($i, $user['email'], $subject, $message);
+                    
+                    $success = "Payment request status updated";
+                    header("location: manage_requests.php?success=".urlencode($success));
+                } else {
+                    error_log(json_encode($stmt->errorInfo()));
+                }
                 
-                $success = "Payment request status updated";
-                header("location: ".add_query_vars('manage_requests.php', ['success' => $success]));
+            } else {
+                error_log(json_encode($update_query->errorInfo()));
             }
            
         } ?>

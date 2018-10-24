@@ -299,7 +299,7 @@ if (isset($_POST['contact'])) {
         } else {
             $error = "Oops! Something went wrong and we couldn't send your message. Do try again";
         }
-    } 
+    }
 }
  
 //Upload avatar
@@ -356,49 +356,29 @@ if (isset($_POST["uploadavatar"])) {
         }
     }
 }
-
-//Enabling gravatar
-if (isset($_POST['enablegravatar'])) {
-    if (!empty($in["username"])) {
-        if ($_POST['usegravatar'] == "1") {
-            $currenturl = $i['url'];
-            activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
-            $sql = $dbh->prepare("UPDATE users SET gravatar='1' WHERE id=".$in['id']."");
-            $sql->execute();
-            $success = "Gravatar activated";
-            header("location: ".$currenturl."/account_settings.php");
-        } else {
-            $currenturl = $i['url'];
-            activitylog(''.$in['username'].'', 'updated their avatar', ''.time().'');
-            $sql = $dbh->prepare("UPDATE users SET gravatar='0' WHERE id=".$in['id']."");
-            $sql->execute();
-            $success = "Gravatar disabled";
-            header("location: ".$currenturl."/account_settings.php");
-        }
-    }
-}
- 
-//Update about
-if (isset($_POST['updateabout'])) {
-    if (!empty($in["username"])) {
-        activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
-        $currenturl = $i['url'];
-        $sql = $dbh->prepare("UPDATE users SET aboutme='".$_POST['aboutme']."', gender='".$_POST['gender']."' WHERE id=".$in['id']."");
-        $sql->execute();
-        $success = "Profile updated";
-        header("location: ".$currenturl."/account_settings.php");
-    }
-}
  
 //Update settings
-if (isset($_POST['updatesettings'])) {
+if (isset($_POST['updateprofile'])) {
     if (!empty($in["username"])) {
         $currenturl = $i['url'];
         activitylog(''.$in['username'].'', 'updated their profile', ''.time().'');
-        $sql = $dbh->prepare("UPDATE users SET email='".$_POST['email']."', firstname='".$_POST['firstname']."', country='".$_POST['country']."', timezone='".$_POST['timezone']."', dob='".$_POST['dob']."', hide_offline='".$_POST['hide_offline']."', viewprofile='".$_POST['viewprofile']."' WHERE id=".$in['id']."");
-        $sql->execute();
-        $success = "Account updated";
-        header("location: ".$currenturl."/account_settings.php");
+        $sql = $dbh->prepare(
+            "UPDATE users SET email='"
+            .$_POST['email']."', firstname='"
+            .$_POST['firstname']."', phone='"
+            .$_POST['phone']."', aboutme='"
+            .$_POST['bio']."' WHERE id="
+            .$in['id'].""
+        );
+        if ($sql->execute()) {
+            $success = "Account updated";
+            $stmt = $dbh->prepare("SELECT * FROM users WHERE `id` = :id");
+            $stmt->bindValue(':id', $in['id']);
+            if ($stmt->execute()) {
+                $in = $stmt->fetch();
+            }
+                
+        }
     }
 }
  
@@ -408,7 +388,6 @@ if (isset($_POST['updatepassword'])) {
         $currentpassword = "".$_POST['currentpassword']."";
         $newpassword = "".$_POST['newpassword']."";
         $confirmpassword = "".$_POST['confirmpassword']."";
-        $currenturl = $i['url'];
             
         if ($newpassword == $confirmpassword) {
             $stmt = $dbh->prepare("SELECT * FROM users WHERE `id` = '".$in['id']."'");

@@ -1,80 +1,153 @@
 {% extends "./layout/layout.twig" %} 
 {% block content %} 
-    {% if (cur_user['id']) %} 
-        {% if (in_perm['view_any_profile'] == "1"
-            or cur_user['viewprofile'] == "1" or cur_user['id'] == in['id']) %}
-        <div class="row user-menu-container square">
-            <div class="col-md-12">
-                <div class="row coralbg white">
-                    <div class="col-md-5 no-pad">
-                        <div class="user-image">
-                            <img src="{{profilepic2}}" class="img-responsive thumbnail" style="margin-top:20px;height:220px">
-                        </div>
-                    </div>
-                    <div class="col-md-6 no-pad text-center">
-                        <div class="user-pad" style="margin-top:20px">
-                            <h2>
-                                <span style="{{cur_user_perm['css']}}">{{cur_user['username'] | capitalize}}</span>
-                            <h2>
-                            <h4 class="white">{{cur_user['gender']}} - {{cur_user_perm['name'] |capitalize}} - {{cur_user['country']}}
-                                <br>
-                                <br>
-                                <b>Games played:</b> {{cur_user['games_played']}}
-                                <br>
-                                <b>Comments on games:</b> {{post_count}}
-                                <br>
-                                <b>Games rated:</b> {{rating_count}}
-                            </h4>
-                            <br> {% if (in['id'] and in['username'] != cur_user['username']) %} {% endif %}
-                        </div>
-                    </div>
+<div class="page-header clear-filter" filter-color="orange">
+    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/img/bg5.jpg');">
+    </div>
+    <div class="container">
+      <div class="photo-container">
+        <img src="{{user.profilepic}}" alt="">
+      </div>
+      <h3 class="title">{{user.firstname}}</h3>
+      <p class="category">{{user.email}}</p>
+      <div class="content">
+        <div class="social-description">
+          <h2>{{user.balance}}</h2>
+          <p>Balance</p>
+        </div>
+        <div class="social-description">
+          <h2>{{user.games_played}}</h2>
+          <p>Played</p>
+        </div>
+        <div class="social-description">
+          <h2>{{won}}</h2>
+          <p>Won</p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- Nav tabs -->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bio</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Change Password</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Games History</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Payment History</a>
+    </li>
+  </ul>
+  
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <form class="form" method="post">
+            <div class="row">
+                <div class="col form-group">
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ user.username }}" readonly>
+                </div>
+                <div class="col form-group">
+                        <label for="firstname" class="sr-only">First name</label>
+                        <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Name" value="{{ user.firstname }}">
                 </div>
             </div>
-            <div class="contentcontainer">
-                <div class="">
-                    <div class="">
-                        <div class="container-header blue-header">Profile comments</div>
-                        {{ include('partials/comments.twig') }}
-                    </div>
+            <div class="row">
+                <div class="col form-group">
+                        <label  for="email" class="sr-only">Email address</label>
+                        <input type="email" name="email" id="email"  class="form-control" placeholder="Email address" value="{{ user.email }}">
+                </div>
+                <div class="col form-group">
+                        <label for="phone" class="sr-only">Phone</label>
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" value="{{ user.phone }}">                                            
                 </div>
             </div>
-        </div>
-        <div class="col-md-12" style="padding:10px;">
-            <div class="contentcontainer contentbg">
-                <div class="container-header blue-header">Favourite games {{favourite_count}}</div>
-                <div class="content-container">
-                    {% for game2 in u2 %}
-                    <div class="col-xs-3 col-sm-2 col-md-3">
-                        <a href="game.php?g={{game['url']}}" class="">
-                            <img src="{{game['image']}}" style="border:4px solid #292c32;border-radius:3px;height:52px;width:52px;" alt="...">
-                        </a>
-                    </div>
-                    {% endfor %}
+            <div class="row">
+                <div class="col form-group">
+                        <label for="bio" class="sr-only">About Me</label>
+                        <textarea type="text" name="bio" id="bio" class="form-control" placeholder="Enter a short description about yourself" value="">{{ user.aboutme }}</textarea>                                          
                 </div>
             </div>
-        </div>
-        <div class="contentcontainer contentbg">
-            <div class="container-header blue-header">Most played games</div>
-            <div class="content-container">
-                {% for game in u2 %}
-                <div class="col-xs-3 col-sm-2 col-md-3">
-                    <a href="game.php?g={{game['url']}}" class="">
-                        <img src="{{game['image']}}" style="border:4px solid #292c32;border-radius:3px;height:52px;width:52px;" alt="...">
-                    </a>
-                </div>
-                {% endfor %}
+            <div class="form-group">
+                <input type="submit" name="updateprofile" class="btn btn-primary btn-block" value="Update">                                        
             </div>
+        </form> 
+    </div>
+    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <form method="post">
+            <div class="form-group">
+                <label>Current password</label>
+                <input type="password" class="form-control" placeholder="Current password" name="currentpassword"></input>
+            </div>
+            <div class="form-group">
+                <label>New password</label>
+                <input type="password" class="form-control" placeholder="New password" name="newpassword"></input>
+            </div>
+            <div class="form-group">
+                <label>Confirm new password</label>
+                <input type="password" class="form-control" placeholder="Confirm password" name="confirmpassword"></input>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Update password" name="updatepassword">
+        </form>
+    </div>
+    <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+        <div class="row">
+            {% if (played | length == 0) %}
+                <div class="alert alert-warning" role="alert">No records found. Seems like you're yet to play a game</div>
+            {% else %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">S/N</th>
+                            <th scope="col">Game</th>
+                            <th scope="col">Bet</th>
+                            <th scope="col">Win</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ind, record in played %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ record['game'] }}</td>
+                                <td>{{ record['bet'] }}</td>
+                                <td>{{ record['win'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
-        {% endif %} 
-    {% else %}
-        <div class="col-md-12" style="padding:10px;">
-            <div class="contentcontainer">
-                <div class="title-pink">ERROR: User has hidden their profile </div>
-                The current profile you are trying to access is hidden!
-                <br>
-                <br>
-                <b>If you do not believe this error is correct, please report this to a site administrator, or try again!</b>
-            </div>            
+    </div>
+    <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+        <div class="row">
+            {% if (payments | length == 0) %}
+                <div class="alert alert-warning" role="alert">No records found. Seems like you're yet load your account</div>
+            {% else %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">S/N</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ind, record in payments %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ record['amount'] }}</td>
+                                <td>{{ record['date'] }}</td>
+                                <td>Pay in</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
-    {% endif %} 
+    </div>
+  </div>
 {% endblock %}
