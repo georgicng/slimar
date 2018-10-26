@@ -109,10 +109,23 @@ if (isset($_POST['register'])) {
         $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
         $firstname = filter_var($_POST['firstname'], FILTER_SANITIZE_STRING);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $phone = filter_var($_POST['phone'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
         $password2 = filter_var($_POST['password2'], FILTER_SANITIZE_STRING);
         $refer = filter_var($_POST['refer'], FILTER_SANITIZE_STRING);
         
+        if (!$email) {
+            $error[] = "The email is invalid";
+        }
+
+        if (!$username) {
+            $error[] = "Username cannot be empty";
+        }
+
+        if (!$firstname) {
+            $error[] = "The firstname cannot be empty";
+        }
+
         $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
         $stmt->bindValue(':username', $username);
         $stmt->execute();
@@ -169,13 +182,14 @@ if (isset($_POST['register'])) {
             $joindate = time();
             $join_month = date("F", strtotime("first day of this month"));
             try {
-                $sql = "INSERT INTO users (username, password, email, firstname, balance, profilepic, joindate, join_month, verified, verified_rand, referral) ".
-                    " VALUES (:username, :password, :email, :firstname, :balance, :profilepic, :joindate, :join_month, :verified, :verified_rand, :referral)";
+                $sql = "INSERT INTO users (username, password, email, firstname, phone, balance, profilepic, joindate, join_month, verified, verified_rand, referral) ".
+                    " VALUES (:username, :password, :email, :firstname, :phone, :balance, :profilepic, :joindate, :join_month, :verified, :verified_rand, :referral)";
                 $stmt = $dbh->prepare($sql);
                 $verified_rand  = uniqid();
                 $stmt->bindParam(':username', $username);
                 $stmt->bindParam(':password', $password_hashed);
                 $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':phone', $phone);
                 $stmt->bindParam(':firstname', $firstname);
                 $stmt->bindParam(':balance', $i['bonus']);
                 $stmt->bindParam(':profilepic', $profilepic);

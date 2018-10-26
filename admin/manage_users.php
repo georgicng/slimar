@@ -1,6 +1,7 @@
 <?php
 ob_start();
 $admin = true;
+define('SITE_ROOT', '..');
 require "../inc/config.php";
 
 //This will be required for the active page in navigation
@@ -17,6 +18,177 @@ if(empty($_GET['p'])) {
     $page = "home";
 }else{
     $page = $p;
+}
+
+//Post comment
+if (isset($_POST["addUser"])) {
+    if ($in["username"]) {
+        $username = $_POST['username'];
+        $firstname = $_POST['firstname'];
+        $email = $_POST['email'];
+        $phone = $_POST['phone'];
+        $password = $_POST['password'];
+        $password2 = $_POST['password2'];
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { 
+            $error[] = "The email is not valid"; 
+        } 
+
+        if (!$username) {
+            $error[] = "Username cannot be empty";
+        }
+
+        if (!$firstname) {
+            $error[] = "The firstname cannot be empty";
+        }
+
+        $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
+        $stmt->bindValue(':username', $username);
+        $stmt->execute();
+        $rowusername = $stmt->fetch();
+                    
+        $stmt = $dbh->prepare("SELECT * FROM users WHERE `email` = :email");
+        $stmt->bindValue(':email', $email);
+        $stmt->execute();
+        $rowemail = $stmt->fetch();
+        
+        
+        if ($rowusername['username']) {
+            $error[] = "The username that you have entered already exists!";
+        }
+        
+        if ($rowemail['email']) {
+            $error[] = "The email that you have entered already exists!";
+        }
+        
+        if ($password != $password2) {
+            $error[] = "The two passwords you entered do not match";
+        }
+
+        if (empty($error)) {
+            $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+            $profilepic = $i['defaultpic'];
+      
+            $joindate = time();
+            $join_month = date("F", strtotime("first day of this month"));
+            try {
+                $sql = "INSERT INTO users (username, password, email, firstname, phone, balance, profilepic, joindate, join_month, verified, verified_rand, referral) ".
+                    " VALUES (:username, :password, :email, :firstname, :phone, :balance, :profilepic, :joindate, :join_month, :verified, :verified_rand, :referral)";
+                $stmt = $dbh->prepare($sql);
+                $verified_rand  = uniqid();
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':password', $password_hashed);
+                $stmt->bindParam(':email', $email);
+                $stmt->bindParam(':phone', $phone);
+                $stmt->bindParam(':firstname', $firstname);
+                $stmt->bindParam(':balance', $i['bonus']);
+                $stmt->bindParam(':profilepic', $profilepic);
+                $stmt->bindParam(':joindate', $joindate);
+                $stmt->bindParam(':join_month', $join_month);
+                if ($i['verify'] == "0") {
+                    $verified = "1";
+                    $stmt->bindParam(':verified', $verified);
+                } else {
+                    $verified = "0";
+                    $stmt->bindParam(':verified', $verified);
+                }
+                $stmt->bindParam(':verified_rand', $verified_rand);
+                $stmt->bindParam(':referral', $userreferred);
+                if ($stmt->execute()) {
+                    activitylog(''.$username.'', 'Registered', ''.time().'');
+                    $user_id = $dbh->lastInsertId();
+                    
+                    //send email
+                    $subject = "New Registration";
+                    $message = <<<EOT
+                    Hello,
+                    You have been succefully registered to Chapgames;
+
+                    Find your login details below:
+
+                    Username: {$username},
+                    Password: {$password},
+                    Login Url: {$i['url']}
+
+                    Regards.
+EOT;
+                    mailer($i, $email, $subject, $message);
+                    $_POST = [];
+                    $success = "Registration successful";
+                } else {
+                    error_log("insert error data: ".json_encode($stmt->errorInfo()));
+                    $error = $stmt->errorCode().": Opps something went wrong, please try again";
+                }
+            } catch (PDOException $e) {
+                $error = $e->getMessage();
+            }
+        }
+        
+    }
+}
+
+if ($page == "edit") {
+    //Gathers users
+    $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
+    $stmt->bindValue(':username', $_GET['user']);
+    $stmt->execute();
+    $user1 = $stmt->fetch();
+        
+    //Gathers users permissions
+    $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id");
+    $stmt1->bindValue(':id', $in['usergroup']);
+    $stmt1->execute();
+    $in_perm = $stmt1->fetch();
+}
+
+if ($page == "delete") {
+    //Gathers users
+    $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
+    $stmt->bindValue(':username', $_GET['user']);
+    $stmt->execute();
+    $user1 = $stmt->fetch();
+        
+    //Gathers users permissions
+    $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id");
+    $stmt1->bindValue(':id', $in['usergroup']);
+    $stmt1->execute();
+    $in_perm = $stmt1->fetch();
+        
+    if ($_POST['deleteuser']) {
+        activitylog(''.$in['username'].'', 'deleted '.$user1['username'].'', ''.time().'', 'Admin');
+        $sql = "DELETE FROM `users` WHERE id = '".$user1["id"]."'";
+        $dbh->exec($sql);
+        header("location: manage_users.php");
+    }
+}
+
+if ($page == "ban") {
+    //Gathers users
+    $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username");
+    $stmt->bindValue(':username', $_GET['user']);
+    $stmt->execute();
+    $user1 = $stmt->fetch();
+        
+    //Gathers users permissions
+    $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id");
+    $stmt1->bindValue(':id', $in['usergroup']);
+    $stmt1->execute();
+    $in_perm = $stmt1->fetch();
+        
+    if ($_POST['banuser1']) {
+        if ($user1['banned'] == "0") {
+            activitylog(''.$in['username'].'', 'banned '.$user1['username'].'', ''.time().'', 'Admin');
+            $sql = $dbh->prepare("UPDATE users SET banned='1' WHERE id=".$user1['id']."");
+            $sql->execute();
+            header("location: manage_users.php");
+        }
+        if ($user1['banned'] == "1") {
+            activitylog(''.$in['username'].'', 'unbanned '.$user1['username'].'', ''.time().'', 'Admin');
+            $sql = $dbh->prepare("UPDATE users SET banned='0' WHERE id=".$user1['id']."");
+            $sql->execute();
+            header("location: manage_users.php");
+        }
+    }
 }
 ?>
 
@@ -37,24 +209,68 @@ if(empty($_GET['p'])) {
             </ol>
         </div><!--/.row-->
         <br>
-    <?php if($_GET['success'] == "user") {?>
+    <?php if (isset($_GET['success'])) {?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> User's profile successfully updated</a>
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?= $_GET['success'] ?>
         </div>
     <?php } ?>
-    <?php if($_GET['success'] == "password") {?>
-        <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> User's password successfully updated</a>
+    <?php if (isset($_GET['error'])) {?>
+        <div class="alert bg-error" role="alert">
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?= $_GET['error'] ?>
         </div>
     <?php } ?>
-    <?php if($_GET['success'] == "profilepic") {?>
+    <?php if (isset($success)) { ?>
         <div class="alert bg-success" role="alert">
-                    <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> User's profile picture successfully updated</a>
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?= $success ?>
         </div>
     <?php } ?>
+    <?php if (isset($error)) { ?>
+        <?php if (is_array($error)) { ?>
+            <?php foreach ($error as $item) { ?>
+        <div class="alert bg-error" role="alert">
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?= $item ?>
+        </div>
+            <?php } 
+        } else { 
+        ?> 
+            <div class="alert bg-error" role="alert">
+            <svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"></use></svg> <?= $error ?>
+        </div>
+        <?php }
+     } ?>
         
         
     <?php if ($page == "home") { ?>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Add New User</div>
+                    <div class="panel-body">
+                        <form method="post">
+                            <div class="form-group">
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="<?= $_POST['username'] ? $_POST['username'] : '' ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Name" value="<?= $_POST['firstname'] ? $_POST['firstname'] : '' ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" id="email"  class="form-control" placeholder="Email address" value="<?= $_POST['email'] ? $_POST['email'] : '' ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" value="<?= $_POST['phone'] ? $_POST['phone'] : '' ?>">                                            
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>                                            
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password2" name="password2" class="form-control" placeholder="Confirm Password" required>                                            
+                            </div>
+                            <input type="submit" style="float:left;"class="btn btn-primary" value="Add User" name="addUser">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!--/.row-->
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
@@ -77,27 +293,8 @@ if(empty($_GET['p'])) {
             </div>
         </div><!--/.row-->
     <?php } ?>
-    <?php if ($page == "delete") { 
-        //Gathers users
-        $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username"); 
-        $stmt->bindValue(':username', $_GET['user']);
-        $stmt->execute(); 
-        $user1 = $stmt->fetch();
-            
-        //Gathers users permissions
-        $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id"); 
-        $stmt1->bindValue(':id', $in['usergroup']);
-        $stmt1->execute(); 
-        $in_perm = $stmt1->fetch();
-            
-        if($_POST['deleteuser']) {
-            activitylog(''.$in['username'].'', 'deleted '.$user1['username'].'', ''.time().'', 'Admin');
-            $sql = "DELETE FROM `users` WHERE id = '".$user1["id"]."'";
-            $dbh->exec($sql);
-            header("location: manage_users.php");   
-        }
-            
-        ?>
+
+    <?php if ($page == "delete") {  ?>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
@@ -119,33 +316,6 @@ if(empty($_GET['p'])) {
     <?php } ?>
         
     <?php if ($page == "ban") { 
-        //Gathers users
-        $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username"); 
-        $stmt->bindValue(':username', $_GET['user']);
-        $stmt->execute(); 
-        $user1 = $stmt->fetch();
-            
-        //Gathers users permissions
-        $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id"); 
-        $stmt1->bindValue(':id', $in['usergroup']);
-        $stmt1->execute(); 
-        $in_perm = $stmt1->fetch();
-            
-        if($_POST['banuser1']) {
-            if($user1['banned'] == "0") {
-                activitylog(''.$in['username'].'', 'banned '.$user1['username'].'', ''.time().'', 'Admin');
-                $sql = $dbh->prepare("UPDATE users SET banned='1' WHERE id=".$user1['id']."");
-                $sql->execute();
-                header("location: manage_users.php");
-            }
-            if($user1['banned'] == "1") {
-                activitylog(''.$in['username'].'', 'unbanned '.$user1['username'].'', ''.time().'', 'Admin');
-                $sql = $dbh->prepare("UPDATE users SET banned='0' WHERE id=".$user1['id']."");
-                $sql->execute();
-                header("location: manage_users.php");
-            }
-        }
-            
         ?>
         <div class="row">
             <div class="col-lg-12">
@@ -172,26 +342,9 @@ if(empty($_GET['p'])) {
             </div>
         </div><!--/.row-->
     <?php } ?>
+
         
-        
-        
-        
-        
-    <?php if ($page == "edit") {
-        //Gathers users
-        $stmt = $dbh->prepare("SELECT * FROM users WHERE `username` = :username"); 
-        $stmt->bindValue(':username', $_GET['user']);
-        $stmt->execute(); 
-        $user1 = $stmt->fetch();
-            
-        //Gathers users permissions
-        $stmt1 = $dbh->prepare("SELECT * FROM usergroups WHERE `rank` = :id"); 
-        $stmt1->bindValue(':id', $in['usergroup']);
-        $stmt1->execute(); 
-        $in_perm = $stmt1->fetch();
-            
-            
-        ?>
+    <?php if ($page == "edit") {  ?>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
@@ -217,7 +370,7 @@ if(empty($_GET['p'])) {
                 $sql = $dbh->prepare("UPDATE users SET email='".$_POST['email']."', firstname='".$_POST['firstname']."', country='".$_POST['country']."', gender='".$_POST['gender']."',timezone='".$_POST['timezone']."', dob='".$_POST['dob']."', hide_offline='".$_POST['hide_offline']."', viewprofile='".$_POST['viewprofile']."', usergroup='".$_POST['usergroup']."' WHERE id=".$user1['id']."");
                 $sql->execute();
                 $success = "".$user1['username']."'s profile has been updated!";
-                header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=user");
+                header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
                         
             }
         }
@@ -259,7 +412,7 @@ if(empty($_GET['p'])) {
         foreach ($nodes2 as $n1) {
                     
             ?>
-                        <option value="Male" <?php if($user1['usergroup'] == "".$n1['id']."") { echo 'selected'; 
+                        <option value="Male" <?php if ($user1['usergroup'] == "".$n1['id']."") { echo 'selected'; 
                        } ?>><?php echo $n1['name']; ?></option>
         <?php } ?>
                     </select>
@@ -346,11 +499,12 @@ if(empty($_GET['p'])) {
                 $sql = $dbh->prepare("UPDATE users SET password='".$password_hashed."' WHERE id=".$user1['id']."");
                 $sql->execute();
                 $success = "Your password has been updated";
-                header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=password");
+                header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
                                     
                                 
-            }else{
+            } else {
                 $error = "The two passwords you have entered are not the same";
+                header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&error=".urlencode($error));
             }
                         
         }
@@ -385,7 +539,7 @@ if(empty($_GET['p'])) {
             $sql = $dbh->prepare("UPDATE users SET aboutme='".$_POST['aboutme']."' WHERE id=".$user1['id']."");
             $sql->execute();
             $success = "Profile updated";
-            header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=user");
+            header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
         }
         ?>
         <form method="post">
@@ -453,9 +607,10 @@ if(empty($_GET['p'])) {
                     $sql = $dbh->prepare("UPDATE users SET profilepic='".$currenturl."/files/uploads/".$new_name."', gravatar='0' WHERE id=".$user1['id']."");
                     $sql->execute();
                     $success = "".$currenturl."/".$new_name."";
-                    header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=profilepic");
+                    header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
                 } else {
                     $error = "Sorry, there was an error uploading your profile picture";
+                    header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&error=".urlencode($error));
                 }
             }
         }
@@ -469,7 +624,7 @@ if(empty($_GET['p'])) {
                       $sql = $dbh->prepare("UPDATE users SET gravatar='1' WHERE id=".$user1['id']."");
                       $sql->execute();
                       $success = "Gravatar activated";
-                      header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=profilepic");
+                      header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
             
                 }else{
                       activitylog(''.$in['username'].'', 'updated profile picture for '.$user1['username'].'', ''.time().'', 'Admin');
@@ -477,7 +632,7 @@ if(empty($_GET['p'])) {
                       $sql = $dbh->prepare("UPDATE users SET gravatar='0' WHERE id=".$user1['id']."");
                       $sql->execute();
                       $success = "Gravatar disabled";
-                      header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=profilepic");
+                      header("location: ".$currenturl."".$_SERVER[REQUEST_URI]."&success=".urlencode($success));
                 }
         
             }
