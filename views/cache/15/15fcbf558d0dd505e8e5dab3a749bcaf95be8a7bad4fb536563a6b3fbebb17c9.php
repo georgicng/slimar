@@ -1,6 +1,6 @@
 <?php
 
-/* ./layout/layout.twig */
+/* layout/layout.twig */
 class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b47e030 extends Twig_Template
 {
     private $source;
@@ -77,7 +77,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         echo twig_include($this->env, $context, "partials/left_sidebar.twig");
         echo "
                         </div>
-                        <div class=\"col-md-8 col-lg-8\">
+                        <div class=\"col-md-12 col-lg-8\">
                             ";
         // line 33
         if (($context["error"] ?? null)) {
@@ -98,15 +98,15 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         }
         // line 39
         echo "                            <div class=\"container\">
-                                <div class=\"row my-3\">                                
-                                    <div class=\"col-md-6\"><h2>";
+                                <div class=\"row my-3\"> 
+                                    <div class=\"col-md-6 order-md-12\">";
         // line 41
-        echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
-        echo "</h2></div>
-                                    <div class=\"col-md-6\">";
-        // line 42
         echo twig_include($this->env, $context, "partials/page_header.twig");
-        echo "</div>
+        echo "</div>                              
+                                    <div class=\"col-md-6 order-md-1\"><h2>";
+        // line 42
+        echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
+        echo "</h2></div>                                    
                                 </div>
                                 <div class=\"content-wrapper\">
                                     ";
@@ -116,7 +116,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         echo "                                </div>
                             </div>
                         </div>
-                        <div class=\"col-md-4 col-lg-2\" style=\"padding:10px;padding-top:0px;\">
+                        <div class=\"d-none\" style=\"padding:10px;padding-top:0px;\">
                             ";
         // line 50
         echo twig_include($this->env, $context, "partials/right_sidebar.twig");
@@ -140,7 +140,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
 
     public function getTemplateName()
     {
-        return "./layout/layout.twig";
+        return "layout/layout.twig";
     }
 
     public function isTraitable()
@@ -186,7 +186,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
                         <div class=\"d-none d-lg-block col-lg-2\" style=\"padding:10px;padding-top:0px;\">
                             {{ include('partials/left_sidebar.twig') }}
                         </div>
-                        <div class=\"col-md-8 col-lg-8\">
+                        <div class=\"col-md-12 col-lg-8\">
                             {% if (error) %}
                                 {{ include('partials/alert_error.twig')}}
                             {% endif %}
@@ -194,16 +194,16 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
                                 {{ include('partials/alert_success.twig')}}
                             {% endif %}
                             <div class=\"container\">
-                                <div class=\"row my-3\">                                
-                                    <div class=\"col-md-6\"><h2>{{ pagename }}</h2></div>
-                                    <div class=\"col-md-6\">{{ include('partials/page_header.twig') }}</div>
+                                <div class=\"row my-3\"> 
+                                    <div class=\"col-md-6 order-md-12\">{{ include('partials/page_header.twig') }}</div>                              
+                                    <div class=\"col-md-6 order-md-1\"><h2>{{ pagename }}</h2></div>                                    
                                 </div>
                                 <div class=\"content-wrapper\">
                                     {% block content %}{% endblock %}
                                 </div>
                             </div>
                         </div>
-                        <div class=\"col-md-4 col-lg-2\" style=\"padding:10px;padding-top:0px;\">
+                        <div class=\"d-none\" style=\"padding:10px;padding-top:0px;\">
                             {{ include('partials/right_sidebar.twig') }}
                         </div>
                     </div>
@@ -211,6 +211,6 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
             </div>
             {{ include('partials/footer.twig') }}
     </body>
-</html>", "./layout/layout.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout.twig");
+</html>", "layout/layout.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout.twig");
     }
 }

@@ -47,47 +47,49 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
     <body class=\"";
         // line 18
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
-        echo "\" id=\"page\">
+        echo " sidebar-collapse menu-on-left\" id=\"page\">
         ";
         // line 19
         echo twig_include($this->env, $context, "partials/top_bar.twig");
         echo "
-        <div class=\"page-header clear-filter\">
-            <div class=\"content\">
-                <div class=\"container\">
-                    ";
-        // line 23
+        <div class=\"wrapper\">
+            <div class=\"page-header clear-filter\">
+                <div class=\"content\">
+                    <div class=\"container\">
+                        ";
+        // line 24
         if (($context["error"] ?? null)) {
-            // line 24
-            echo "                        ";
+            // line 25
+            echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_error.twig");
             echo "
-                    ";
+                        ";
         }
-        // line 26
-        echo "                    ";
+        // line 27
+        echo "                        ";
         if (($context["success"] ?? null)) {
-            // line 27
-            echo "                        ";
+            // line 28
+            echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_success.twig");
             echo "
-                    ";
+                        ";
         }
-        // line 29
-        echo "                    ";
-        $this->displayBlock('content', $context, $blocks);
         // line 30
-        echo "                </div>
+        echo "                        ";
+        $this->displayBlock('content', $context, $blocks);
+        // line 31
+        echo "                    </div>
+                </div>
             </div>
-            ";
-        // line 32
+        ";
+        // line 34
         echo twig_include($this->env, $context, "partials/footer.twig");
         echo "
-        </body>
-    </html>";
+    </body>
+</html>";
     }
 
-    // line 29
+    // line 30
     public function block_content($context, array $blocks = array())
     {
     }
@@ -104,7 +106,7 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
 
     public function getDebugInfo()
     {
-        return array (  91 => 29,  84 => 32,  80 => 30,  77 => 29,  71 => 27,  68 => 26,  62 => 24,  60 => 23,  53 => 19,  49 => 18,  37 => 9,  33 => 8,  24 => 1,);
+        return array (  93 => 30,  86 => 34,  81 => 31,  78 => 30,  72 => 28,  69 => 27,  63 => 25,  61 => 24,  53 => 19,  49 => 18,  37 => 9,  33 => 8,  24 => 1,);
     }
 
     public function getSourceContext()
@@ -126,22 +128,24 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
         <link href=\"assets/css/bootstrap.min.css\" rel=\"stylesheet\"/>
         <link href=\"assets/css/now-ui-kit.css?v=1.2.0\" rel=\"stylesheet\"/>
     </head>
-    <body class=\"{{pagename}}\" id=\"page\">
+    <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">
         {{ include('partials/top_bar.twig') }}
-        <div class=\"page-header clear-filter\">
-            <div class=\"content\">
-                <div class=\"container\">
-                    {% if (error) %}
-                        {{ include('partials/alert_error.twig')}}
-                    {% endif %}
-                    {% if (success) %}
-                        {{ include('partials/alert_success.twig')}}
-                    {% endif %}
-                    {% block content %}{% endblock %}
+        <div class=\"wrapper\">
+            <div class=\"page-header clear-filter\">
+                <div class=\"content\">
+                    <div class=\"container\">
+                        {% if (error) %}
+                            {{ include('partials/alert_error.twig')}}
+                        {% endif %}
+                        {% if (success) %}
+                            {{ include('partials/alert_success.twig')}}
+                        {% endif %}
+                        {% block content %}{% endblock %}
+                    </div>
                 </div>
             </div>
-            {{ include('partials/footer.twig') }}
-        </body>
-    </html>", "./layout/layout_full.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout_full.twig");
+        {{ include('partials/footer.twig') }}
+    </body>
+</html>", "./layout/layout_full.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout_full.twig");
     }
 }

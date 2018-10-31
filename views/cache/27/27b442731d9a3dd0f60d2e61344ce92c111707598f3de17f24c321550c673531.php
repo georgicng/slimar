@@ -21,14 +21,14 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
     {
         // line 1
         echo "    <footer class=\"footer bg-primary text-light\">
-        <div class=\"container\">
-            <nav>
+        <div class=\"container d-flex flex-column flex-lg-row align-items-center justify-content-lg-between\">
+            <nav class=\"mb-3\">
                 ";
         // line 4
         echo twig_get_attribute($this->env, $this->source, ($context["footer_menu"] ?? null), "html", array(), "method");
         echo "
             </nav>
-            <div class=\"copyright\" id=\"copyright\">
+            <div class=\"copyright mb-3\" id=\"copyright\">
                 &copy;
                 <script>
                     document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
@@ -54,6 +54,7 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
 <!-- Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
 <script src=\"assets/js/plugins/bootstrap-datepicker.js\" type=\"text/javascript\"></script>
 <script src=\"assets/js/hullabaloo.min.js\" type=\"text/javascript\"></script>
+<script src=\"assets/js/screenfull.min.js\" type=\"text/javascript\"></script>
 <!--script type=\"text/javascript\" src=\"assets/js/bootstrap.offcanvas.min.js\"></script-->
 <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
 <script type=\"text/javascript\" src=\"assets/js/script-loader.js\"></script>
@@ -78,11 +79,11 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
     public function getSourceContext()
     {
         return new Twig_Source("    <footer class=\"footer bg-primary text-light\">
-        <div class=\"container\">
-            <nav>
+        <div class=\"container d-flex flex-column flex-lg-row align-items-center justify-content-lg-between\">
+            <nav class=\"mb-3\">
                 {{ footer_menu.html() | raw }}
             </nav>
-            <div class=\"copyright\" id=\"copyright\">
+            <div class=\"copyright mb-3\" id=\"copyright\">
                 &copy;
                 <script>
                     document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
@@ -105,6 +106,7 @@ class __TwigTemplate_01cc3e40e025e15d3d591e8190c12c9a12b226e11b945c15cc370c14025
 <!-- Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
 <script src=\"assets/js/plugins/bootstrap-datepicker.js\" type=\"text/javascript\"></script>
 <script src=\"assets/js/hullabaloo.min.js\" type=\"text/javascript\"></script>
+<script src=\"assets/js/screenfull.min.js\" type=\"text/javascript\"></script>
 <!--script type=\"text/javascript\" src=\"assets/js/bootstrap.offcanvas.min.js\"></script-->
 <!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
 <script type=\"text/javascript\" src=\"assets/js/script-loader.js\"></script>

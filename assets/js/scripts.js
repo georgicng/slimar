@@ -61,7 +61,7 @@ var ScriptLibrary = (function() {
 					}
 
 					window.addEventListener("message", function(event) {
-						var hulla = new hullabaloo();
+						var hulla = new hullabaloo({ ele: "#player" });
 						console.log('event', event);
 						var data = JSON.parse(event.data);
 						switch(data.type){

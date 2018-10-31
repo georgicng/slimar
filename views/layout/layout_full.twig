@@ -15,20 +15,22 @@
         <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="assets/css/now-ui-kit.css?v=1.2.0" rel="stylesheet"/>
     </head>
-    <body class="{{pagename}}" id="page">
+    <body class="{{pagename}} sidebar-collapse menu-on-left" id="page">
         {{ include('partials/top_bar.twig') }}
-        <div class="page-header clear-filter">
-            <div class="content">
-                <div class="container">
-                    {% if (error) %}
-                        {{ include('partials/alert_error.twig')}}
-                    {% endif %}
-                    {% if (success) %}
-                        {{ include('partials/alert_success.twig')}}
-                    {% endif %}
-                    {% block content %}{% endblock %}
+        <div class="wrapper">
+            <div class="page-header clear-filter">
+                <div class="content">
+                    <div class="container">
+                        {% if (error) %}
+                            {{ include('partials/alert_error.twig')}}
+                        {% endif %}
+                        {% if (success) %}
+                            {{ include('partials/alert_success.twig')}}
+                        {% endif %}
+                        {% block content %}{% endblock %}
+                    </div>
                 </div>
             </div>
-            {{ include('partials/footer.twig') }}
-        </body>
-    </html>
+        {{ include('partials/footer.twig') }}
+    </body>
+</html>

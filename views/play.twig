@@ -4,39 +4,42 @@
 <div class="content">
     {% if (not cur_game['file']) %}
         <div class="alert alert-warning">No game file has been added for this game. If you are an administrator you can edit this by the administration
-            panel.</div>
-    {% else %}
-        <div class="game-bar" id="gameheader">
-            <div class="pull-right">
-                <button onclick="goFullscreen('player'); return false" style="background:none;border:none;color:white;">
-                    <i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen
-                </button>
-            </div>
+            panel.
         </div>
-        <div class="w-100 mb-3">            
-            {% if (cur_game['type'] == "Flash") %}
-                <object class="embed-responsive embed-responsive-16by9" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="myFlashContent">
-                    <param name="movie" value="{{ cur_game['file'] }}">
-                    <!--[if !IE]>-->
-                    <object type="application/x-shockwave-flash" data="{{ cur_game['file'] }}">
+    {% else %}
+        <div id="player" style="position:relative">
+            <div class="game-bar" id="gameheader">
+                <div class="pull-right">
+                    <button onclick="goFullscreen('player'); return false" class="btn btn-danger">
+                        <i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen
+                    </button>
+                </div>
+            </div>
+            <div class="w-100 mb-3">            
+                {% if (cur_game['type'] == "Flash") %}
+                    <object class="embed-responsive embed-responsive-16by9" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="myFlashContent">
+                        <param name="movie" value="{{ cur_game['file'] }}">
+                        <!--[if !IE]>-->
+                        <object type="application/x-shockwave-flash" data="{{ cur_game['file'] }}">
+                            <!--<![endif]-->
+                            <a href="http://www.adobe.com/go/getflashplayer">
+                                <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player">
+                            </a>
+                            <!-- [if !IE]>-->
+                        </object>
                         <!--<![endif]-->
-                        <a href="http://www.adobe.com/go/getflashplayer">
-                            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player">
-                        </a>
-                        <!-- [if !IE]>-->
                     </object>
-                    <!--<![endif]-->
-                </object>
-            {% elseif (cur_game['type'] == "HTML5") %}
-                <div class="embed-responsive embed-responsive-16by9">
-                    {{ cur_game['file'] | raw }}
-                </div>
-            {% elseif (cur_game['type'] == "HTML5-url") %}
-                <!-- 16:9 aspect ratio -->
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive" width="100%" src="{{ cur_game['file'] }}"></iframe>
-                </div>
-            {% endif %}
+                {% elseif (cur_game['type'] == "HTML5") %}
+                    <div class="embed-responsive embed-responsive-16by9">
+                        {{ cur_game['file'] | raw }}
+                    </div>
+                {% elseif (cur_game['type'] == "HTML5-url") %}
+                    <!-- 16:9 aspect ratio -->
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive" width="100%" src="{{ cur_game['file'] }}"></iframe>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     {% endif %}
     {% if (cur_game['id']) %}

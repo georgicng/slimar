@@ -29,7 +29,7 @@
                         <div class="d-none d-lg-block col-lg-2" style="padding:10px;padding-top:0px;">
                             {{ include('partials/left_sidebar.twig') }}
                         </div>
-                        <div class="col-md-8 col-lg-8">
+                        <div class="col-md-12 col-lg-8">
                             {% if (error) %}
                                 {{ include('partials/alert_error.twig')}}
                             {% endif %}
@@ -37,16 +37,16 @@
                                 {{ include('partials/alert_success.twig')}}
                             {% endif %}
                             <div class="container">
-                                <div class="row my-3">                                
-                                    <div class="col-md-6"><h2>{{ pagename }}</h2></div>
-                                    <div class="col-md-6">{{ include('partials/page_header.twig') }}</div>
+                                <div class="row my-3"> 
+                                    <div class="col-md-6 order-md-12">{{ include('partials/page_header.twig') }}</div>                              
+                                    <div class="col-md-6 order-md-1"><h2>{{ pagename }}</h2></div>                                    
                                 </div>
                                 <div class="content-wrapper">
                                     {% block content %}{% endblock %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-lg-2" style="padding:10px;padding-top:0px;">
+                        <div class="d-none" style="padding:10px;padding-top:0px;">
                             {{ include('partials/right_sidebar.twig') }}
                         </div>
                     </div>
