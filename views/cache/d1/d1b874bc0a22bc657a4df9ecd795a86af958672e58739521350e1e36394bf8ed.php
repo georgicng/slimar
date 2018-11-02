@@ -47,7 +47,7 @@ class __TwigTemplate_26a553bcb5cc4d69fd53c8ec7a9ddc0cc490d1f4faed62186ccb1e227b0
     <body class=\"";
         // line 18
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
-        echo "\" id=\"page\">
+        echo " sidebar-collapse menu-on-left\" id=\"page\">
         ";
         // line 19
         echo twig_include($this->env, $context, "partials/top_bar.twig");
@@ -109,7 +109,7 @@ class __TwigTemplate_26a553bcb5cc4d69fd53c8ec7a9ddc0cc490d1f4faed62186ccb1e227b0
         <link href=\"assets/css/now-ui-kit.css\" rel=\"stylesheet\"/>
         <link href=\"assets/css/cover.css\" rel=\"stylesheet\">
     </head>
-    <body class=\"{{pagename}}\" id=\"page\">
+    <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">
         {{ include('partials/top_bar.twig') }}
         <div class=\"site-wrapper\">
             <div class=\"site-wrapper-inner\">

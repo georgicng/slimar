@@ -37,9 +37,13 @@ if ($amount = Request\post('amount')) {
 if ($reference = Request\get('reference')) {
     $key = $i['paga_mode']? $i['paga_live_private_key'] : $i['paga_test_private_key'];
     $response = verifyPayment($key, $reference);
+    $payment = R::findOne('payments', ' reference = ?', [$reference]);
     error_log('paystack response: '.json_encode($response));
-    if ($response['status']) {
-        $payment = R::findOne('payments', ' reference = ?', [$reference]);
+    error_log('payment record: '.json_encode($payment));
+    if ($response['status']
+        && $response['data']['status'] == 'success' 
+        && $response['data']['amount'] == $payment['amount'] * 100
+    ) {
         $payment['verified'] = true;
         $payment['verify_data'] = serialize($response);
         $payment['modified_date'] = date("Y-m-d H:i:s");
@@ -51,6 +55,8 @@ if ($reference = Request\get('reference')) {
         Response\json(
             [
                 'balance' => $user['balance'],
+                'redirect' => true,
+                'url' => $i['url']
             ]
         );
         exit;
@@ -60,7 +66,7 @@ if ($reference = Request\get('reference')) {
         $payment['verified'] = false;
         $payment['modified_date'] = date("Y-m-d H:i:s");
         R::store($payment);
-        Response\json(['error' => true, 'message' => $e->getMessage()], 500);
+        Response\json(['error' => true, 'message' => $response, 'redirect' => true, 'url' =>'credit.php'], 500);
         exit;
     }    
     

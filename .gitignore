@@ -16,6 +16,7 @@ Desktop.ini
 # ignore Composer downloads
 /vendor/*
 /games/*
+/uploads/*
 
 # keep some hiddens
 !.htaccess

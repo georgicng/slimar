@@ -535,7 +535,7 @@ if ($page == "delete") {
                             </style> 
                             <div class="cover1 box1">
                                 <form method="post" enctype="multipart/form-data">
-                                    <input type="file" class="btn btn-default" style="float:left;" name="imageToUpload" id="fileToUpload">
+                                    <input type="file" class="btn btn-default" style="float:left;" name="imageToUpload" id="fileToUpload" accept="image/gif, image/jpeg, image/png">
                                     <input type="submit" style="float:left;"class="btn btn-primary" value="Upload image" name="uploadimage"><br>
                                 </form>
                             </div>                            

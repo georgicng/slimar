@@ -41,7 +41,8 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
         ";
         } else {
             // line 7
-            echo "            <table class=\"table table-striped\">
+            echo "        <div class=\"col\">
+            <table id=\"stat\" class=\"table table-striped table-bordered\" style=\"width:100%\">
                 <thead>
                     <tr>
                         <th scope=\"col\">S/N</th>
@@ -52,7 +53,7 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
                 </thead>
                 <tbody>
                     ";
-            // line 17
+            // line 18
             $context['_parent'] = $context;
             $context['_seq'] = twig_ensure_traversable(($context["played"] ?? null));
             $context['loop'] = array(
@@ -69,22 +70,22 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
                 $context['loop']['last'] = 1 === $length;
             }
             foreach ($context['_seq'] as $context["ind"] => $context["record"]) {
-                // line 18
+                // line 19
                 echo "                        <tr>
                             <th scope=\"row\">";
-                // line 19
+                // line 20
                 echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, $context["loop"], "index", array()), "html", null, true);
                 echo "</th>
                             <td>";
-                // line 20
+                // line 21
                 echo twig_escape_filter($this->env, (($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 = $context["record"]) && is_array($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5) || $__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 instanceof ArrayAccess ? ($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5["game"] ?? null) : null), "html", null, true);
                 echo "</td>
                             <td>";
-                // line 21
+                // line 22
                 echo twig_escape_filter($this->env, (($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a = $context["record"]) && is_array($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a) || $__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a instanceof ArrayAccess ? ($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a["bet"] ?? null) : null), "html", null, true);
                 echo "</td>
                             <td>";
-                // line 22
+                // line 23
                 echo twig_escape_filter($this->env, (($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 = $context["record"]) && is_array($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57) || $__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 instanceof ArrayAccess ? ($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57["win"] ?? null) : null), "html", null, true);
                 echo "</td>
                         </tr>
@@ -101,12 +102,13 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['ind'], $context['record'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 25
+            // line 26
             echo "                </tbody>
             </table>
+        </div>
         ";
         }
-        // line 28
+        // line 30
         echo "    </div>
 ";
     }
@@ -123,7 +125,7 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
 
     public function getDebugInfo()
     {
-        return array (  110 => 28,  105 => 25,  88 => 22,  84 => 21,  80 => 20,  76 => 19,  73 => 18,  56 => 17,  44 => 7,  40 => 5,  38 => 4,  35 => 3,  32 => 2,  15 => 1,);
+        return array (  112 => 30,  106 => 26,  89 => 23,  85 => 22,  81 => 21,  77 => 20,  74 => 19,  57 => 18,  44 => 7,  40 => 5,  38 => 4,  35 => 3,  32 => 2,  15 => 1,);
     }
 
     public function getSourceContext()
@@ -134,7 +136,8 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
         {% if (played | length == 0) %}
             <div class=\"alert alert-warning\" role=\"alert\">No records found. Seems like you're yet to play a game</div>
         {% else %}
-            <table class=\"table table-striped\">
+        <div class=\"col\">
+            <table id=\"stat\" class=\"table table-striped table-bordered\" style=\"width:100%\">
                 <thead>
                     <tr>
                         <th scope=\"col\">S/N</th>
@@ -154,6 +157,7 @@ class __TwigTemplate_946bcb5482138b8482c441e27066a7b02e783ea407e64f58ea5f1491534
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
         {% endif %}
     </div>
 {% endblock %}", "stat.twig", "C:\\wamp64\\www\\slimar\\views\\stat.twig");

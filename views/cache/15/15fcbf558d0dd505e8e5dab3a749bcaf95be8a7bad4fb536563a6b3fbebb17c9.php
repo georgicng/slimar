@@ -43,82 +43,83 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         <!-- CSS Files -->
         <!--link href=\"assets/css/bootstrap.min.css\" rel=\"stylesheet\"/-->
         <link href=\"assets/css/now-ui-kit.css\" rel=\"stylesheet\"/>
+        <link href=\"assets/css/custom.css\" rel=\"stylesheet\"/>
     </head>
 
     <body class=\"";
-        // line 19
+        // line 20
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
         echo " sidebar-collapse menu-on-left\" id=\"page\">
         ";
-        // line 20
+        // line 21
         echo twig_include($this->env, $context, "partials/top_bar.twig");
         echo "
         ";
-        // line 21
+        // line 22
         echo twig_include($this->env, $context, "partials/breadcrumbs.twig");
         echo "
         <div class=\"wrapper\">
             <div class=\"section\">
                 <div class=\"container\">
                     ";
-        // line 25
+        // line 26
         if ((($context["pagename"] ?? null) == "Profile")) {
-            // line 26
+            // line 27
             echo "                        ";
             echo twig_include($this->env, $context, "partials/modal.twig");
             echo "
                     ";
         }
-        // line 28
+        // line 29
         echo "                    <div class=\"row\">
                         <div class=\"d-none d-lg-block col-lg-2\" style=\"padding:10px;padding-top:0px;\">
                             ";
-        // line 30
+        // line 31
         echo twig_include($this->env, $context, "partials/left_sidebar.twig");
         echo "
                         </div>
-                        <div class=\"col-md-12 col-lg-8\">
+                        <div class=\"col-md-12 col-lg-10\">
                             ";
-        // line 33
+        // line 34
         if (($context["error"] ?? null)) {
-            // line 34
+            // line 35
             echo "                                ";
             echo twig_include($this->env, $context, "partials/alert_error.twig");
             echo "
                             ";
         }
-        // line 36
+        // line 37
         echo "                            ";
         if (($context["success"] ?? null)) {
-            // line 37
+            // line 38
             echo "                                ";
             echo twig_include($this->env, $context, "partials/alert_success.twig");
             echo "
                             ";
         }
-        // line 39
+        // line 40
         echo "                            <div class=\"container\">
                                 <div class=\"row my-3\"> 
                                     <div class=\"col-md-6 order-md-12\">";
-        // line 41
+        // line 42
         echo twig_include($this->env, $context, "partials/page_header.twig");
         echo "</div>                              
                                     <div class=\"col-md-6 order-md-1\"><h2>";
-        // line 42
+        // line 43
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
         echo "</h2></div>                                    
                                 </div>
                                 <div class=\"content-wrapper\">
                                     ";
-        // line 45
-        $this->displayBlock('content', $context, $blocks);
         // line 46
+        $this->displayBlock('content', $context, $blocks);
+        // line 47
         echo "                                </div>
                             </div>
                         </div>
                         <div class=\"d-none\" style=\"padding:10px;padding-top:0px;\">
                             ";
-        // line 50
+        // line 51
         echo twig_include($this->env, $context, "partials/right_sidebar.twig");
         echo "
                         </div>
@@ -126,14 +127,14 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
                 </div>
             </div>
             ";
-        // line 55
+        // line 56
         echo twig_include($this->env, $context, "partials/footer.twig");
         echo "
     </body>
 </html>";
     }
 
-    // line 45
+    // line 46
     public function block_content($context, array $blocks = array())
     {
     }
@@ -150,7 +151,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
 
     public function getDebugInfo()
     {
-        return array (  137 => 45,  130 => 55,  122 => 50,  116 => 46,  114 => 45,  108 => 42,  104 => 41,  100 => 39,  94 => 37,  91 => 36,  85 => 34,  83 => 33,  77 => 30,  73 => 28,  67 => 26,  65 => 25,  58 => 21,  54 => 20,  50 => 19,  37 => 9,  33 => 8,  24 => 1,);
+        return array (  138 => 46,  131 => 56,  123 => 51,  117 => 47,  115 => 46,  109 => 43,  105 => 42,  101 => 40,  95 => 38,  92 => 37,  86 => 35,  84 => 34,  78 => 31,  74 => 29,  68 => 27,  66 => 26,  59 => 22,  55 => 21,  51 => 20,  37 => 9,  33 => 8,  24 => 1,);
     }
 
     public function getSourceContext()
@@ -171,6 +172,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         <!-- CSS Files -->
         <!--link href=\"assets/css/bootstrap.min.css\" rel=\"stylesheet\"/-->
         <link href=\"assets/css/now-ui-kit.css\" rel=\"stylesheet\"/>
+        <link href=\"assets/css/custom.css\" rel=\"stylesheet\"/>
     </head>
 
     <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">
@@ -186,7 +188,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
                         <div class=\"d-none d-lg-block col-lg-2\" style=\"padding:10px;padding-top:0px;\">
                             {{ include('partials/left_sidebar.twig') }}
                         </div>
-                        <div class=\"col-md-12 col-lg-8\">
+                        <div class=\"col-md-12 col-lg-10\">
                             {% if (error) %}
                                 {{ include('partials/alert_error.twig')}}
                             {% endif %}

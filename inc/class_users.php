@@ -90,7 +90,7 @@ if (isset($_POST['login'])) {
                         //sets session
                         setcookie("id", $row["id"], time()+3600);
                         setcookie("password", $row["password"], time()+3600);
-                        header("location: ".$i['loginurl']."");
+                        header("location: ".$i['url']."");
                     }
                 } else {
                     $error = "The password you have entered is wrong.";

@@ -42,14 +42,15 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
         <link href=\"https://use.fontawesome.com/releases/v5.0.6/css/all.css\" rel=\"stylesheet\">
         <!-- CSS Files -->
         <link href=\"assets/css/bootstrap.min.css\" rel=\"stylesheet\"/>
+        <link rel=\"stylesheet\" href=\"//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css\">
         <link href=\"assets/css/now-ui-kit.css?v=1.2.0\" rel=\"stylesheet\"/>
     </head>
     <body class=\"";
-        // line 18
+        // line 19
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
         echo " sidebar-collapse menu-on-left\" id=\"page\">
         ";
-        // line 19
+        // line 20
         echo twig_include($this->env, $context, "partials/top_bar.twig");
         echo "
         <div class=\"wrapper\">
@@ -57,39 +58,39 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
                 <div class=\"content\">
                     <div class=\"container\">
                         ";
-        // line 24
+        // line 25
         if (($context["error"] ?? null)) {
-            // line 25
+            // line 26
             echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_error.twig");
             echo "
                         ";
         }
-        // line 27
+        // line 28
         echo "                        ";
         if (($context["success"] ?? null)) {
-            // line 28
+            // line 29
             echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_success.twig");
             echo "
                         ";
         }
-        // line 30
+        // line 31
         echo "                        ";
         $this->displayBlock('content', $context, $blocks);
-        // line 31
+        // line 32
         echo "                    </div>
                 </div>
             </div>
         ";
-        // line 34
+        // line 35
         echo twig_include($this->env, $context, "partials/footer.twig");
         echo "
     </body>
 </html>";
     }
 
-    // line 30
+    // line 31
     public function block_content($context, array $blocks = array())
     {
     }
@@ -106,7 +107,7 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
 
     public function getDebugInfo()
     {
-        return array (  93 => 30,  86 => 34,  81 => 31,  78 => 30,  72 => 28,  69 => 27,  63 => 25,  61 => 24,  53 => 19,  49 => 18,  37 => 9,  33 => 8,  24 => 1,);
+        return array (  94 => 31,  87 => 35,  82 => 32,  79 => 31,  73 => 29,  70 => 28,  64 => 26,  62 => 25,  54 => 20,  50 => 19,  37 => 9,  33 => 8,  24 => 1,);
     }
 
     public function getSourceContext()
@@ -126,6 +127,7 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
         <link href=\"https://use.fontawesome.com/releases/v5.0.6/css/all.css\" rel=\"stylesheet\">
         <!-- CSS Files -->
         <link href=\"assets/css/bootstrap.min.css\" rel=\"stylesheet\"/>
+        <link rel=\"stylesheet\" href=\"//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css\">
         <link href=\"assets/css/now-ui-kit.css?v=1.2.0\" rel=\"stylesheet\"/>
     </head>
     <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">

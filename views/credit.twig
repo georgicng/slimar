@@ -109,11 +109,17 @@
                 $.LoadingOverlay("hide");
                 $('#user-balance').text( data.balance );
                 alert("Recharge successfull, balance updated");
+                if (data.redirect) {                    
+                    window.location= data.url;
+                }
             });
             verifying.fail(function( data ) { 
                 /* and if it failed... */
                 $.LoadingOverlay("hide");            
                 alert("Couldn't confirm your payment at this time, you will be notified once payment has been confirmed");
+                if (data.redirect) {                    
+                    window.location= data.url;
+                }
             });
           },
           onClose: function(){

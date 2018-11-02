@@ -15,7 +15,11 @@ use Siler\Twig;
 use Siler\Http\Request;
 use Siler\Http\Response;
 
-$plays = R::getAll('select *, (select title from games where id = game_id) as game from games_plays where user_id = ?', [$in['id']]);
+$plays = R::getAll(
+    'select *, (select title from games where id = game_id)'.
+    ' as game from games_plays where user_id = ? AND bet IS NOT NULL', 
+    [$in['id']]
+);
 $data = array_merge(
     $variables,
     [

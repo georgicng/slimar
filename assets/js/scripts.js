@@ -31,6 +31,11 @@ var ScriptLibrary = (function() {
 						$(document).on('click', '#searchbarnav', function() { // when the button is clicked
 							$('body,html').animate({scrollTop:0},500); // return to the top with a nice animation
 						});
+
+						$(document).ready(function() {
+							$('#stat').DataTable();
+							$('#payment').DataTable();
+						});
 						
 						$('#myCarousel').on('slid.bs.carousel', function () {
 							$holder = $( "ol li.active" );
@@ -53,6 +58,41 @@ var ScriptLibrary = (function() {
 								if(!btnClicked.hasClass("active"))
 									btnClicked.addClass("active");
 							}
+						});
+
+						$(document).ready(function() {
+							var readURL = function(input) {
+								if (input.files && input.files[0]) {
+									var reader = new FileReader();
+						
+									reader.onload = function (e) {										
+										console.log(e);
+										$.ajax({
+											url: window.location, 
+											type: "POST",
+											data: {action: 'avatar', payload: e.target.result},
+											success: function(){ 
+												alert('success! profile update');
+												$('.profile-pic').attr('src', e.target.result);
+											},
+											error: function(){
+												alert('error! could not update profile');
+											}
+										});
+									}
+							
+									reader.readAsDataURL(input.files[0]);
+								}
+							}
+							
+						
+							$(".file-upload").on('change', function(){
+								readURL(this);
+							});
+							
+							$(".upload-button").on('click', function() {
+							   $(".file-upload").click();
+							});
 						});
 
 						$('[data-toggle="offcanvas"], #navToggle').on('click', function () {

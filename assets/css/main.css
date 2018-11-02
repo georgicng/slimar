@@ -1504,7 +1504,6 @@ div.user-menu div.user-menu-content:not(.active) {
 .slideOne input[type="checkbox"]:checked + label {
   left: 37px;
 }
-
 /* end .slideOne */
 /* .slideTwo */
 .slideTwo {
@@ -1570,9 +1569,8 @@ div.user-menu div.user-menu-content:not(.active) {
 }
 .slideTwo input[type="checkbox"]:checked + label:after {
   background: #27ae60;
-  /*activeColor*/
+  /* activeColor */
 }
-
 /* end .slideTwo */
 /* .slideThree */
 .slideThree {
@@ -1581,6 +1579,7 @@ div.user-menu div.user-menu-content:not(.active) {
   background: #333;
   margin: 20px auto;
   position: relative;
+
   border-radius: 50px;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5),
     0px 1px 0px rgba(255, 255, 255, 0.2);
@@ -1632,7 +1631,6 @@ div.user-menu div.user-menu-content:not(.active) {
 .slideThree input[type="checkbox"]:checked + label {
   left: 56px;
 }
-
 /* end .slideThree */
 /* .roundedOne */
 .roundedOne {
@@ -1686,7 +1684,6 @@ div.user-menu div.user-menu-content:not(.active) {
 .roundedOne input[type="checkbox"]:checked + label:after {
   opacity: 1;
 }
-
 /* end .roundedOne */
 /* .roundedTwo */
 .roundedTwo {
@@ -1741,8 +1738,7 @@ div.user-menu div.user-menu-content:not(.active) {
 .roundedTwo input[type="checkbox"]:checked + label:after {
   opacity: 1;
 }
-
-/*************************Game Play **********************/
+/* ************************Game Play ********************* */
 .fullscreen {
   height: 100vh;
   background: black;
@@ -1758,4 +1754,52 @@ div.user-menu div.user-menu-content:not(.active) {
 }
 .displaynone {
   display: none;
+}
+/* *********card****************** */
+.counter {
+  background-color: #f5f5f5;
+  padding: 20px 0;
+  border-radius: 5px;
+}
+.count-title {
+  font-size: 40px;
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 0;
+  text-align: center;
+}
+.count-text {
+  font-size: 13px;
+  font-weight: normal;
+  margin-top: 10px;
+  margin-bottom: 0;
+  text-align: center;
+}
+.fa-2x {
+  margin: 0 auto;
+  float: none;
+  display: table;
+  color: #4ad1e5;
+}
+/* *************upload profile******************* */
+.file-upload {
+  display: none;
+}
+.p-image {
+  position: absolute;
+  top: 167px;
+  right: 30px;
+  color: #666666;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.p-image:hover {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.upload-button {
+  font-size: 1.2em;
+}
+
+.upload-button:hover {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: #999;
 }

@@ -1,153 +1,170 @@
-{% extends "./layout/layout.twig" %} 
-{% block content %} 
-<div class="page-header clear-filter" filter-color="orange">
-    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/img/bg5.jpg');">
-    </div>
-    <div class="container">
-      <div class="photo-container">
-        <img src="{{user.profilepic}}" alt="">
-      </div>
-      <h3 class="title">{{user.firstname}}</h3>
-      <p class="category">{{user.email}}</p>
-      <div class="content">
-        <div class="social-description">
-          <h2>{{user.balance}}</h2>
-          <p>Balance</p>
-        </div>
-        <div class="social-description">
-          <h2>{{user.games_played}}</h2>
-          <p>Played</p>
-        </div>
-        <div class="social-description">
-          <h2>{{won}}</h2>
-          <p>Won</p>
-        </div>
-      </div>
-    </div>
-  </div>
-    <!-- Nav tabs -->
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bio</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Change Password</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Games History</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Payment History</a>
-    </li>
-  </ul>
-  
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <form class="form" method="post">
-            <div class="row">
-                <div class="col form-group">
-                        <label for="username" class="sr-only">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ user.username }}" readonly>
+{% extends "./layout/layout.twig" %}
+{% block content %}
+    <div class="page_header">
+        <div class="container">
+            <div class="text-center profile">
+                <div class="photo-container">
+                    <img class="profile-pic border border-secondary rounded-circle" src="{{user.profilepic}}" alt="">
+                    <div class="p-image">
+                        <i class="fa fa-camera upload-button"></i>
+                        <input class="file-upload" type="file" accept="image/gif, image/jpeg, image/png"/>
+                    </div>
                 </div>
-                <div class="col form-group">
+                <h3 class="title">{{user.firstname}}</h3>
+                <p class="category">{{user.email}}</p>
+            </div>
+            <div class="row text-center my-5">
+                <div class="col-lg-4">
+                    <div class="counter">
+                        <i class="fa fa-credit-card fa-2x"></i>
+                        <h2 class="timer count-title count-number">N{{user.balance|number_format(2, '.', ',')}}</h2>
+                        <p class="count-text">Balance</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="counter">
+                        <i class="fa fa-play fa-2x"></i>
+                        <h2 class="timer count-title count-number">{{user.games_played}}</h2>
+                        <p class="count-text ">Played</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="counter">
+                        <i class="fa fa-trophy fa-2x"></i>
+                        <h2 class="timer count-title count-number">N{{won|number_format(2, '.', ',')}}</h2>
+                        <p class="count-text ">Won</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs my-5" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bio</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Change Password</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="messages-tab" data-toggle="tab" href="#messages" role="tab" aria-controls="messages" aria-selected="false">Games History</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Payment History</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <form class="form" method="post">
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Username" value="{{ user.username }}" readonly="readonly">
+                    </div>
+                    <div class="col-lg-6 form-group">
                         <label for="firstname" class="sr-only">First name</label>
                         <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Name" value="{{ user.firstname }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col form-group">
-                        <label  for="email" class="sr-only">Email address</label>
-                        <input type="email" name="email" id="email"  class="form-control" placeholder="Email address" value="{{ user.email }}">
-                </div>
-                <div class="col form-group">
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label for="email" class="sr-only">Email address</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" value="{{ user.email }}">
+                    </div>
+                    <div class="col-lg-6 form-group">
                         <label for="phone" class="sr-only">Phone</label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" value="{{ user.phone }}">                                            
+                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your phone number" value="{{ user.phone }}">
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col form-group">
+                <div class="row">
+                    <div class="col form-group">
                         <label for="bio" class="sr-only">About Me</label>
-                        <textarea type="text" name="bio" id="bio" class="form-control" placeholder="Enter a short description about yourself" value="">{{ user.aboutme }}</textarea>                                          
+                        <textarea type="text" name="bio" id="bio" class="form-control" placeholder="Enter a short description about yourself" value="">{{ user.aboutme }}</textarea>
+                    </div>
                 </div>
+                <div class="form-group">
+                    <input type="submit" name="updateprofile" class="btn btn-primary btn-block" value="Update">
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <form method="post">
+                <div class="form-group">
+                    <label>Current password</label>
+                    <input type="password" class="form-control" placeholder="Current password" name="currentpassword"></input>
+                </div>
+                <div class="form-group">
+                    <label>New password</label>
+                    <input type="password" class="form-control" placeholder="New password" name="newpassword"></input>
+                </div>
+                <div class="form-group">
+                    <label>Confirm new password</label>
+                    <input type="password" class="form-control" placeholder="Confirm password" name="confirmpassword"></input>
+                </div>
+                <input type="submit" class="btn btn-primary" value="Update password" name="updatepassword">
+            </form>
+        </div>
+        <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+            <div class="row">
+                {% if (played | length == 0) %}
+                    <div class="alert alert-warning" role="alert">No records found. Seems like you're yet to play a game</div>
+                {% else %}
+                    <div class="col">
+                        <table id="stat" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S/N</th>
+                                    <th scope="col">Game</th>
+                                    <th scope="col">Bet</th>
+                                    <th scope="col">Win</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ind, record in played %}
+                                    <tr>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ record['game'] }}</td>
+                                        <td>{{ record['bet'] }}</td>
+                                        <td>{{ record['win'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             </div>
-            <div class="form-group">
-                <input type="submit" name="updateprofile" class="btn btn-primary btn-block" value="Update">                                        
+        </div>
+        <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+            <div class="row">
+                {% if (payments | length == 0) %}
+                    <div class="alert alert-warning" role="alert">No records found. Seems like you're yet load your account</div>
+                {% else %}
+                    <div class="col">
+                        <table id="payment" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S/N</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ind, record in payments %}
+                                    <tr>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ record['amount'] }}</td>
+                                        <td>{{ record['date'] }}</td>
+                                        <td>Pay in</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             </div>
-        </form> 
-    </div>
-    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <form method="post">
-            <div class="form-group">
-                <label>Current password</label>
-                <input type="password" class="form-control" placeholder="Current password" name="currentpassword"></input>
-            </div>
-            <div class="form-group">
-                <label>New password</label>
-                <input type="password" class="form-control" placeholder="New password" name="newpassword"></input>
-            </div>
-            <div class="form-group">
-                <label>Confirm new password</label>
-                <input type="password" class="form-control" placeholder="Confirm password" name="confirmpassword"></input>
-            </div>
-            <input type="submit" class="btn btn-primary" value="Update password" name="updatepassword">
-        </form>
-    </div>
-    <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
-        <div class="row">
-            {% if (played | length == 0) %}
-                <div class="alert alert-warning" role="alert">No records found. Seems like you're yet to play a game</div>
-            {% else %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">S/N</th>
-                            <th scope="col">Game</th>
-                            <th scope="col">Bet</th>
-                            <th scope="col">Win</th>                        
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ind, record in played %}
-                            <tr>
-                                <th scope="row">{{ loop.index }}</th>
-                                <td>{{ record['game'] }}</td>
-                                <td>{{ record['bet'] }}</td>
-                                <td>{{ record['win'] }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
         </div>
     </div>
-    <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <div class="row">
-            {% if (payments | length == 0) %}
-                <div class="alert alert-warning" role="alert">No records found. Seems like you're yet load your account</div>
-            {% else %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">S/N</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Type</th>                        
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for ind, record in payments %}
-                            <tr>
-                                <th scope="row">{{ loop.index }}</th>
-                                <td>{{ record['amount'] }}</td>
-                                <td>{{ record['date'] }}</td>
-                                <td>Pay in</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
-    </div>
-  </div>
 {% endblock %}
