@@ -37,10 +37,6 @@
                                 {{ include('partials/alert_success.twig')}}
                             {% endif %}
                             <div class="container">
-                                <div class="row my-3"> 
-                                    <div class="col-md-6 order-md-12">{{ include('partials/page_header.twig') }}</div>                              
-                                    <div class="col-md-6 order-md-1"><h2>{{ pagename }}</h2></div>                                    
-                                </div>
                                 <div class="content-wrapper">
                                     {% block content %}{% endblock %}
                                 </div>

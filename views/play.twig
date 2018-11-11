@@ -1,4 +1,4 @@
-{% extends "./layout/layout.twig" %}
+{% extends "./layout/layout_no_header.twig" %}
 
 {% block content %}
 <div class="content">
@@ -8,9 +8,13 @@
         </div>
     {% else %}
         <div id="player" style="position:relative">
-            <div class="game-bar" id="gameheader">
-                <div class="pull-right">
-                    <button onclick="goFullscreen('player'); return false" class="btn btn-danger">
+            <div class="game-bar d-flex justify-content-between" id="gameheader">
+                <div class="btn-sm btn-secondary font-weight-bold">
+                        <span class="currency symbol">N </span><span id="bar-user-balance" class="balance money">{{in['balance']|number_format(2, '.', ',')}}</span>
+                        <span class="caret"></span>
+                </div>
+                <div class="action">
+                    <button onclick="goFullscreen('player'); return false" class="btn-sm btn-danger">
                         <i class="fa fa-arrows-alt" aria-hidden="true"></i> Fullscreen
                     </button>
                 </div>
@@ -43,30 +47,21 @@
         </div>
     {% endif %}
     {% if (cur_game['id']) %}
-    <div class="card card-nav-tabs card-plain">
-        <div class="card-header card-header-danger">
-            <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-            <div class="nav-tabs-navigation">
-                <div class="nav-tabs-wrapper">
-                    <ul class="nav nav-tabs" data-tabs="tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#description" data-toggle="tab">Description</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#gameplay" data-toggle="tab">How to Play</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="my-5">        
+        <ul class="nav nav-tabs nav-tabs-neutral" data-tabs="tabs" role="tablist" data-background-color="blue">
+            <li class="nav-item">
+                <a class="nav-link active" href="#description" data-toggle="tab"  role="tab">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#gameplay" data-toggle="tab"  role="tab">How to Play</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active my-3" id="description" role="tabpanel">
+                <div class="description-text">{{ cur_game['description'] | raw }}</div>
             </div>
-        </div>
-        <div class="card-body ">
-            <div class="tab-content text-center">
-                <div class="tab-pane active" id="description">
-                    <div class="description-text">{{ cur_game['description'] | raw }}</div>
-                </div>
-                <div class="tab-pane" id="gameplay">
-                    <div class="description-text">{{ cur_game['gameplay'] | raw }}</div>
-                </div>
+            <div class="tab-pane my-3" id="gameplay" role="tabpanel">
+                <div class="description-text">{{ cur_game['gameplay'] | raw }}</div>
             </div>
         </div>
     </div>
@@ -96,6 +91,7 @@
             var docElm = document.documentElement;
             if (!isInFullScreen) {
                 element.classList.add("fullscreen");
+                screen.orientation.lock("landscape-primary");
                 if (element.requestFullscreen) {
                     element.requestFullscreen();
                 } else if (element.mozRequestFullScreen) {
@@ -108,6 +104,8 @@
 
             } else {
                 element.classList.remove("fullscreen");
+                //screen.orientation.lock("natural");
+                screen.orientation.unlock();
                 if (document.exitFullscreen) {
                     element.classList.remove("fullscreen");
                     document.exitFullscreen();

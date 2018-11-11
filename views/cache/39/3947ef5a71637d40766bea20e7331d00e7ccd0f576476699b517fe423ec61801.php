@@ -53,44 +53,48 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
         // line 20
         echo twig_include($this->env, $context, "partials/top_bar.twig");
         echo "
+        ";
+        // line 21
+        echo twig_include($this->env, $context, "partials/breadcrumbs.twig");
+        echo "
         <div class=\"wrapper\">
             <div class=\"page-header clear-filter\">
                 <div class=\"content\">
                     <div class=\"container\">
                         ";
-        // line 25
+        // line 26
         if (($context["error"] ?? null)) {
-            // line 26
+            // line 27
             echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_error.twig");
             echo "
                         ";
         }
-        // line 28
+        // line 29
         echo "                        ";
         if (($context["success"] ?? null)) {
-            // line 29
+            // line 30
             echo "                            ";
             echo twig_include($this->env, $context, "partials/alert_success.twig");
             echo "
                         ";
         }
-        // line 31
+        // line 32
         echo "                        ";
         $this->displayBlock('content', $context, $blocks);
-        // line 32
+        // line 33
         echo "                    </div>
                 </div>
             </div>
         ";
-        // line 35
+        // line 36
         echo twig_include($this->env, $context, "partials/footer.twig");
         echo "
     </body>
 </html>";
     }
 
-    // line 31
+    // line 32
     public function block_content($context, array $blocks = array())
     {
     }
@@ -107,7 +111,7 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
 
     public function getDebugInfo()
     {
-        return array (  94 => 31,  87 => 35,  82 => 32,  79 => 31,  73 => 29,  70 => 28,  64 => 26,  62 => 25,  54 => 20,  50 => 19,  37 => 9,  33 => 8,  24 => 1,);
+        return array (  98 => 32,  91 => 36,  86 => 33,  83 => 32,  77 => 30,  74 => 29,  68 => 27,  66 => 26,  58 => 21,  54 => 20,  50 => 19,  37 => 9,  33 => 8,  24 => 1,);
     }
 
     public function getSourceContext()
@@ -132,6 +136,7 @@ class __TwigTemplate_46abae2062c64d5d89fbec19fda9d97bdcf7bbc88351bbb888e5b416f0b
     </head>
     <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">
         {{ include('partials/top_bar.twig') }}
+        {{ include('partials/breadcrumbs.twig') }}
         <div class=\"wrapper\">
             <div class=\"page-header clear-filter\">
                 <div class=\"content\">

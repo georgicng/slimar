@@ -39,44 +39,26 @@ class __TwigTemplate_26fde37acfe2f6bf56c1c12fde35c795d31c2713e1faa8bb0115bb5b33a
         // line 14
         if ((twig_length_filter($this->env, ($context["games"] ?? null)) > 0)) {
             // line 15
-            echo "        <div class=\"mb-3\">
-            <a href=\"index.php\" class=\"btn ";
-            // line 16
-            echo $context["check"]->macro_bold("latest", ($context["primary"] ?? null));
-            echo "\">Latest</a>
-            <a href=\"index.php?s=rated\" class=\"btn ";
-            // line 17
-            echo $context["check"]->macro_bold("rated", ($context["primary"] ?? null));
-            echo "\">Top Rated</a>
-            <a href=\"index.php?s=popular\"class=\"btn ";
-            // line 18
-            echo $context["check"]->macro_bold("popular", ($context["primary"] ?? null));
-            echo "\">Popular</a>
-            <a href=\"index.php?s=random\" class=\"btn ";
-            // line 19
-            echo $context["check"]->macro_bold("random", ($context["primary"] ?? null));
-            echo "\">Random</a>
-        </div>
-        <div class=\"row\">
+            echo "        <div class=\"row\">
         ";
-            // line 22
+            // line 16
             $context['_parent'] = $context;
             $context['_seq'] = twig_ensure_traversable(($context["games"] ?? null));
             foreach ($context['_seq'] as $context["ind"] => $context["g"]) {
-                // line 23
-                echo "                <div class=\"col-sm-6 col-lg-4\">
+                // line 17
+                echo "                <div class=\"col-sm-6\">
                     <div class=\"card\">
                         <img class=\"card-img-top\" src=\"";
-                // line 25
+                // line 19
                 echo twig_escape_filter($this->env, (((($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 = $context["g"]) && is_array($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5) || $__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 instanceof ArrayAccess ? ($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5["image"] ?? null) : null)) ? ((($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a = $context["g"]) && is_array($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a) || $__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a instanceof ArrayAccess ? ($__internal_3e28b7f596c58d7729642bcf2acc6efc894803703bf5fa7e74cd8d2aa1f8c68a["image"] ?? null) : null)) : ("//placehold.it/400x300")), "html", null, true);
                 echo "\" alt=\"Card image cap\">
                         <div class=\"card-body\">
                             <h4 class=\"card-title\">";
-                // line 27
+                // line 21
                 echo twig_escape_filter($this->env, (($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 = $context["g"]) && is_array($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57) || $__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57 instanceof ArrayAccess ? ($__internal_b0b3d6199cdf4d15a08b3fb98fe017ecb01164300193d18d78027218d843fc57["title"] ?? null) : null), "html", null, true);
                 echo "</h4>
                             <a href=\"play.php?g=";
-                // line 28
+                // line 22
                 echo twig_escape_filter($this->env, (($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 = $context["g"]) && is_array($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9) || $__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9 instanceof ArrayAccess ? ($__internal_81ccf322d0988ca0aa9ae9943d772c435c5ff01fb50b956278e245e40ae66ab9["url"] ?? null) : null), "html", null, true);
                 echo "\" class=\"btn btn-primary\">Play</a>
                         </div>
@@ -87,16 +69,16 @@ class __TwigTemplate_26fde37acfe2f6bf56c1c12fde35c795d31c2713e1faa8bb0115bb5b33a
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['ind'], $context['g'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 33
+            // line 27
             echo "        </div>
         <a href=\"games.php\" class=\"btn btn-primary\">View ALL games</a>
     ";
         } else {
-            // line 36
+            // line 30
             echo "        <div class=\"alert alert-warning\" role=\"alert\">There are no existing games</div>
     ";
         }
-        // line 37
+        // line 31
         echo "\t\t\t\t\t\t 
 </div>
 ";
@@ -145,7 +127,7 @@ class __TwigTemplate_26fde37acfe2f6bf56c1c12fde35c795d31c2713e1faa8bb0115bb5b33a
 
     public function getDebugInfo()
     {
-        return array (  126 => 5,  122 => 3,  119 => 2,  106 => 1,  100 => 37,  96 => 36,  91 => 33,  80 => 28,  76 => 27,  71 => 25,  67 => 23,  63 => 22,  57 => 19,  53 => 18,  49 => 17,  45 => 16,  42 => 15,  40 => 14,  37 => 13,  35 => 12,  32 => 11,  15 => 9,);
+        return array (  108 => 5,  104 => 3,  101 => 2,  88 => 1,  82 => 31,  78 => 30,  73 => 27,  62 => 22,  58 => 21,  53 => 19,  49 => 17,  45 => 16,  42 => 15,  40 => 14,  37 => 13,  35 => 12,  32 => 11,  15 => 9,);
     }
 
     public function getSourceContext()
@@ -164,15 +146,9 @@ class __TwigTemplate_26fde37acfe2f6bf56c1c12fde35c795d31c2713e1faa8bb0115bb5b33a
 {% import _self as check %}
 <div class=\"content\">
     {% if games|length > 0 %}
-        <div class=\"mb-3\">
-            <a href=\"index.php\" class=\"btn {{ check.bold('latest', primary) }}\">Latest</a>
-            <a href=\"index.php?s=rated\" class=\"btn {{ check.bold('rated', primary) }}\">Top Rated</a>
-            <a href=\"index.php?s=popular\"class=\"btn {{ check.bold('popular', primary) }}\">Popular</a>
-            <a href=\"index.php?s=random\" class=\"btn {{ check.bold('random', primary) }}\">Random</a>
-        </div>
         <div class=\"row\">
         {% for ind, g in games %}
-                <div class=\"col-sm-6 col-lg-4\">
+                <div class=\"col-sm-6\">
                     <div class=\"card\">
                         <img class=\"card-img-top\" src=\"{{g['image']?: '//placehold.it/400x300'}}\" alt=\"Card image cap\">
                         <div class=\"card-body\">

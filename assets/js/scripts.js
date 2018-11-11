@@ -126,6 +126,7 @@ var ScriptLibrary = (function() {
 										window.location = data.url;
 									} else {										
 										$('#user-balance').text( data.balance );
+										$('#bar-user-balance').text( data.balance );
 										hulla.send("Your new balance: "+data.balance, "info");
 									}
 								},

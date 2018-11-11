@@ -1,6 +1,6 @@
 <?php
 
-/* layout/layout.twig */
+/* ./layout/layout.twig */
 class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b47e030 extends Twig_Template
 {
     private $source;
@@ -36,7 +36,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         // line 9
         echo twig_escape_filter($this->env, (($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 = ($context["i"] ?? null)) && is_array($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5) || $__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5 instanceof ArrayAccess ? ($__internal_7cd7461123377b8c9c1b6a01f46c7bbd94bd12e59266005df5e93029ddbc0ec5["url"] ?? null) : null), "html", null, true);
         echo "/\">
-        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+        <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"/>
         <!-- Fonts and icons -->
         <link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700,200\" rel=\"stylesheet\"/>
         <link href=\"https://use.fontawesome.com/releases/v5.0.6/css/all.css\" rel=\"stylesheet\">
@@ -54,72 +54,68 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         // line 21
         echo twig_include($this->env, $context, "partials/top_bar.twig");
         echo "
-        ";
-        // line 22
-        echo twig_include($this->env, $context, "partials/breadcrumbs.twig");
-        echo "
         <div class=\"wrapper\">
             <div class=\"section\">
                 <div class=\"container\">
                     ";
-        // line 26
+        // line 25
         if ((($context["pagename"] ?? null) == "Profile")) {
-            // line 27
+            // line 26
             echo "                        ";
             echo twig_include($this->env, $context, "partials/modal.twig");
             echo "
                     ";
         }
-        // line 29
+        // line 28
         echo "                    <div class=\"row\">
                         <div class=\"d-none d-lg-block col-lg-2\" style=\"padding:10px;padding-top:0px;\">
                             ";
-        // line 31
+        // line 30
         echo twig_include($this->env, $context, "partials/left_sidebar.twig");
         echo "
                         </div>
                         <div class=\"col-md-12 col-lg-10\">
                             ";
-        // line 34
+        // line 33
         if (($context["error"] ?? null)) {
-            // line 35
+            // line 34
             echo "                                ";
             echo twig_include($this->env, $context, "partials/alert_error.twig");
             echo "
                             ";
         }
-        // line 37
+        // line 36
         echo "                            ";
         if (($context["success"] ?? null)) {
-            // line 38
+            // line 37
             echo "                                ";
             echo twig_include($this->env, $context, "partials/alert_success.twig");
             echo "
                             ";
         }
-        // line 40
+        // line 39
         echo "                            <div class=\"container\">
                                 <div class=\"row my-3\"> 
                                     <div class=\"col-md-6 order-md-12\">";
-        // line 42
+        // line 41
         echo twig_include($this->env, $context, "partials/page_header.twig");
         echo "</div>                              
                                     <div class=\"col-md-6 order-md-1\"><h2>";
-        // line 43
+        // line 42
         echo twig_escape_filter($this->env, ($context["pagename"] ?? null), "html", null, true);
         echo "</h2></div>                                    
                                 </div>
                                 <div class=\"content-wrapper\">
                                     ";
-        // line 46
+        // line 45
         $this->displayBlock('content', $context, $blocks);
-        // line 47
+        // line 46
         echo "                                </div>
                             </div>
                         </div>
                         <div class=\"d-none\" style=\"padding:10px;padding-top:0px;\">
                             ";
-        // line 51
+        // line 50
         echo twig_include($this->env, $context, "partials/right_sidebar.twig");
         echo "
                         </div>
@@ -127,21 +123,21 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
                 </div>
             </div>
             ";
-        // line 56
+        // line 55
         echo twig_include($this->env, $context, "partials/footer.twig");
         echo "
     </body>
 </html>";
     }
 
-    // line 46
+    // line 45
     public function block_content($context, array $blocks = array())
     {
     }
 
     public function getTemplateName()
     {
-        return "layout/layout.twig";
+        return "./layout/layout.twig";
     }
 
     public function isTraitable()
@@ -151,7 +147,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
 
     public function getDebugInfo()
     {
-        return array (  138 => 46,  131 => 56,  123 => 51,  117 => 47,  115 => 46,  109 => 43,  105 => 42,  101 => 40,  95 => 38,  92 => 37,  86 => 35,  84 => 34,  78 => 31,  74 => 29,  68 => 27,  66 => 26,  59 => 22,  55 => 21,  51 => 20,  37 => 9,  33 => 8,  24 => 1,);
+        return array (  134 => 45,  127 => 55,  119 => 50,  113 => 46,  111 => 45,  105 => 42,  101 => 41,  97 => 39,  91 => 37,  88 => 36,  82 => 34,  80 => 33,  74 => 30,  70 => 28,  64 => 26,  62 => 25,  55 => 21,  51 => 20,  37 => 9,  33 => 8,  24 => 1,);
     }
 
     public function getSourceContext()
@@ -165,7 +161,7 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
         <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\"/>
         <title>{{pagename}}</title>
         <base href=\"{{i['url']}}/\">
-        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+        <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\"/>
         <!-- Fonts and icons -->
         <link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700,200\" rel=\"stylesheet\"/>
         <link href=\"https://use.fontawesome.com/releases/v5.0.6/css/all.css\" rel=\"stylesheet\">
@@ -177,7 +173,6 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
 
     <body class=\"{{pagename}} sidebar-collapse menu-on-left\" id=\"page\">
         {{ include('partials/top_bar.twig') }}
-        {{ include('partials/breadcrumbs.twig') }}
         <div class=\"wrapper\">
             <div class=\"section\">
                 <div class=\"container\">
@@ -213,6 +208,6 @@ class __TwigTemplate_0fe3f41a5a59008b0f124e9ba904f0db9a34f49b84349f432e7aaabb7b4
             </div>
             {{ include('partials/footer.twig') }}
     </body>
-</html>", "layout/layout.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout.twig");
+</html>", "./layout/layout.twig", "C:\\wamp64\\www\\slimar\\views\\layout\\layout.twig");
     }
 }

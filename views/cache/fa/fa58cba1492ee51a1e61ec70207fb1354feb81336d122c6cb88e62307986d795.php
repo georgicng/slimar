@@ -64,7 +64,7 @@ class __TwigTemplate_28397253cc38ffc21846b004f92536e4354356a60344fff71785564eb22
             // line 30
             echo twig_escape_filter($this->env, ($context["profilepic"] ?? null), "html", null, true);
             echo "\" class=\"profilepic\" width=\"25px\" height=\"25px\">
-                        <b>user</b>
+                        <b>user menu</b>
                         <span class=\"caret\"></span></a>
                     <div class=\"dropdown-menu\">
                         <a href=\"#\" class=\"d-sm-none dropdown-item font-weight-bold\">
@@ -150,7 +150,7 @@ class __TwigTemplate_28397253cc38ffc21846b004f92536e4354356a60344fff71785564eb22
                 <li class=\"nav-item dropdown overflow\">
                     <a href=\"#\" class=\"nav-link dropdown-toggle\" data-toggle=\"dropdown\">
                         <img src=\"{{profilepic}}\" class=\"profilepic\" width=\"25px\" height=\"25px\">
-                        <b>user</b>
+                        <b>user menu</b>
                         <span class=\"caret\"></span></a>
                     <div class=\"dropdown-menu\">
                         <a href=\"#\" class=\"d-sm-none dropdown-item font-weight-bold\">
